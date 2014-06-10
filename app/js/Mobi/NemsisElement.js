@@ -1,0 +1,7 @@
+    }
+
+
+
+});
+
+BaseController.$inject = ['$scope'];
