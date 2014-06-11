@@ -1,17 +1,18 @@
 'use strict';
 
 angular
-  .module('channelBuilder', [
+  .module('dojo', [
     'ngCookies',
     'ngResource',
     'ngSanitize',
-    'ngRoute'
+    'ngRoute',
+    'dojoServices'
   ])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'partials/main.html',
-        controller: 'MainCtrl'
+        templateUrl: 'partials/login.html',
+        controller: 'LoginCtrl'
       })
       .otherwise({
         redirectTo: '/'
