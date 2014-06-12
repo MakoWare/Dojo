@@ -1,1 +1,9 @@
 //TODO
+
+Where is the best place to start?
+
+Can I genericly CRUD all of these objects?
+
+I think I may be able too.
+
+-Create Models for each object in JSON
