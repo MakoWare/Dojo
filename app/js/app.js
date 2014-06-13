@@ -14,9 +14,17 @@ angular
         templateUrl: 'partials/login.html',
         controller: 'LoginCtrl'
       })
-      .when('/edit', {
-        templateUrl: 'partials/crud.html',
-        controller: 'CrudCtrl'
+      .when('/users/add', {
+        templateUrl: 'partials/create.html',
+        controller: 'CreateCtrl'
+      })
+      .when('/users', {
+        templateUrl: 'partials/read.html',
+        controller: 'ReadCtrl'
+      })
+      .when('/users/:id', {
+        templateUrl: 'partials/update.html',
+        controller: 'UpdateCtrl'
       })
       .otherwise({
         redirectTo: '/'

@@ -1,0 +1,17 @@
+<div ng-include="'partials/nav.html'"></div>
+
+<div class="container-widescreen" style="margin-right : 5%; margin-left: 5%">
+  <div class="page-header" style="margin-top: 10px;">
+    <div class="row">
+      <div class="col-sm-6">
+        <h1>New {{objectType}}</h1>
+      </div>
+      <div class="col-sm-4 col-sm-offset-2">
+        <button class="btn btn-lg btn-primary" style="margin-top: 15px;">Save</button>
+      </div>
+      <br>
+      <br>
+      <div ng-include="getPartial()"></div>
+    </div>
+  </div>
+</div>

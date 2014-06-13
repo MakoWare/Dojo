@@ -1,4 +1,0 @@
-var MainCtrl = function(){
-
-
-};
