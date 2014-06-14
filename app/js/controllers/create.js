@@ -4,6 +4,7 @@ var CreateCtrl = function($scope, $location){
 
     $scope.init = function(){
         $scope.ObjectType = $scope.getObjectType();
+        $scope.object = {};
         $scope.getPartial();
     },
 
@@ -17,7 +18,10 @@ var CreateCtrl = function($scope, $location){
         return "partials/nemsis/" + nemsisPartial + ".html";
     };
 
+    $scope.saveObject = function(){
+        console.log($scope.object);
+    };
+
     //Init Controller
     $scope.init();
-
 };
