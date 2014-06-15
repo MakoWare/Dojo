@@ -1,0 +1,22 @@
+<div ng-include="'partials/nav.html'"></div>
+
+<div class="container-widescreen" style="margin-right : 5%; margin-left: 5%">
+  <div class="page-header" style="margin-top: 10px; margin-bottom: 15px;">
+    <div class="row">
+      <div class="col-sm-6">
+        <h1>Search {{objectType}}s</h1>
+      </div>
+      <div class="col-sm-6" style="margin-top: 28px;">
+        <form class="form-horizontal" role="form">
+          <div class="form-group" style="margin-bottom: 5px;">
+            <label for="searchText" class="col-sm-2 control-label">Search:</label>
+            <div class="col-sm-10">
+	      <input ng-model="search.$" class="form-control">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div ng-include="getPartial()"></div>
+</div>
