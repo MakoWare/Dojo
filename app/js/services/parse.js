@@ -2,7 +2,6 @@
 angular.module('dojoServices', ['ngResource'])
     .factory('ParseService', function($resource){
 
-        /*
         //Init Parse
 	Parse.initialize("8vNcAs6Z0c4jyHvuW5zezUXij8DquZLeYP4pFicD", "Ipw8skfNMGvX9uGc8LHn0qCbAIhWjrZP5LEHm9vI");
 
@@ -36,7 +35,7 @@ angular.module('dojoServices', ['ngResource'])
 
 
             //Object Factory
-            createNemsisElement : function(){
+            createNemsisElement: function(){
                 var nemsisElement = new NemsisElement();
                 nemsisElement.setACL(acl);
                 nemsisElement.set('title', "");
@@ -48,7 +47,7 @@ angular.module('dojoServices', ['ngResource'])
                 return(nemsisElement);
             },
 
-            createSection : function(){
+            createSection: function(){
                 var section = new Section();
                 section.setACL(acl);
                 section.set('name', "");
@@ -62,7 +61,7 @@ angular.module('dojoServices', ['ngResource'])
             },
 
             //Login
-            login : function(username, password, callback) {
+            login: function(username, password, callback) {
 		Parse.User.logIn(username, password, {
 		    success: function(user) {
 			currentUser = user;
@@ -75,9 +74,22 @@ angular.module('dojoServices', ['ngResource'])
 	    },
 
             //Logout
-            logout : function(){
+            logout: function(){
               Parse.User.logOut();
+            },
+
+            //Get Objects
+            getObjects: function(objectType, searchParam, filterParam, callback){
+                var query = new Parse.Query(objectType);
+                query.find({
+                    success: function(results){
+                        callback(results);
+                    },
+                    error: function(error){
+                        alert("Error: " + error.message);
+                    }
+                });
             }
         };
-*/
+        return ParseService;
     });

@@ -1,29 +1,24 @@
 <div class="content-widscreen" style="margin: 20px;">
-  <form name="patientForm" novalidate role="form" class="form-horizontal">
-    <div class="row">
-      <div class="form-group col-sm-4">
-          <label for="firstName">First Name*</label>
-          <input ng-model="object.firstName" type="text" class="form-control" id="firstName" placeholder="First Name" required/>
-        </div>
-        <div class="form-group col-sm-1" style="margin-left: 2px">
-          <label for="middleInitial">M.I</label>
-          <input ng-model="object.middleInitial" type="text" class="form-control" id="middleInitial" placeholder="M.I"/>
-        </div>
-        <div class="form-group col-sm-4" style="margin-left: 2px">
-          <label for="lastName">Last Name*</label>
-          <input ng-model="object.lastName" type="text" class="form-control" id="lastName" placeholder="Last Name" required/>
-        </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-md-2" style="margin-left: 2px;">
-          <label for="phone">Phone Number</label>
-          <input ng-model="object.phone" type="text" class="form-control" id="phone" placeholder="Phone"/>
-        </div>
-        <div class="form-group col-md-2" style="margin-left: 2px;">
-          <label for="phone">Email</label>
-          <input ng-model="object.email" type="text" class="form-control" id="email" placeholder="Email"/>
-        </div>
-      </div>
-    </form>
-</div>
+  <div class="row">
+    <div id="dispatchTable" align="center" class="table-responsive">
+      <table ng-table="tableParams" class="table table-bordered">
+        <thead>
+	  <tr>
+            <th><a href="" ng-click="predicate = 'name'; reverse=!reverse">Name</a></th>
+            <th><a href="" ng-click="predicate = 'createdAt'; reverse=!reverse">Joined</a></th>
+            <th><a href="" ng-click="predicate = 'role'; reverse=!reverse">Role</a></th>
+            <th>Edit</th>
+	  </tr>
+        </thead>
+        <tbody>
+	  <tr ng-repeat="user in users | filter:search.$ | orderBy:predicate:reverse">
+	    <td>{{user.attributes.username}}</td>
+	    <td>{{user.createdAt}}</td>
+	    <td>{{user.get('role')}}</td>
+            <td><a href="#/users/{{user.id}}"> <button class="btn btn-primary">Edit</button></a></td>
+	  </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

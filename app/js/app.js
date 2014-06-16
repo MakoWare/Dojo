@@ -1,7 +1,6 @@
 'use strict';
 
-angular
-  .module('dojo', [
+angular.module('dojo', [
     'ngCookies',
     'ngResource',
     'ngSanitize',

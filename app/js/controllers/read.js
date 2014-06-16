@@ -1,11 +1,14 @@
 //Crud Controller
 
-var ReadCtrl = function($scope, $location){
+var ReadCtrl = function($scope, $location, ParseService){
 
     $scope.init = function(){
-        $scope.ObjectType = $scope.getObjectType();
-        $scope.object = {};
+        $scope.objects = {};
+        $scope.searchParam = "";
+        $scope.filterParam = "";
+        $scope.objectType = $scope.getObjectType();
         $scope.getPartial();
+        $scope.getObjects($scope.objectType, $scope.searchParam, $scope.filterParam);
     },
 
     $scope.getObjectType = function(){
@@ -13,13 +16,15 @@ var ReadCtrl = function($scope, $location){
 
         //Take plurals off directory names and Capitalize First Character
         if($scope.dir.endsWith("ies")){
-            $scope.objectType = $scope.dir.charAt(0).toUpperCase() + $scope.dir.slice(1, $scope.dir.length - 3) + "y";
+            return $scope.dir.charAt(0).toUpperCase() + $scope.dir.slice(1, $scope.dir.length - 3) + "y";
         } else if($scope.dir.endsWith("es")){
-            $scope.objectType = $scope.dir.charAt(0).toUpperCase() + $scope.dir.slice(1, $scope.dir.length - 2);
+            return $scope.dir.charAt(0).toUpperCase() + $scope.dir.slice(1, $scope.dir.length - 2);
         } else if($scope.dir.endsWith("s")){
-            $scope.objectType = $scope.dir.charAt(0).toUpperCase() + $scope.dir.slice(1, $scope.dir.length - 1);
+            return $scope.dir.charAt(0).toUpperCase() + $scope.dir.slice(1, $scope.dir.length - 1);
+        } else {
+            alert("An Error occured, please contact us");
+            return "ERROR";
         }
-        console.log($scope.objectType);
     },
 
     $scope.getPartial = function(){
@@ -28,12 +33,13 @@ var ReadCtrl = function($scope, $location){
         return "partials/" + partialLocation;
     };
 
-    $scope.saveObject = function(){
-        console.log($scope.object);
+    $scope.getObjects = function(objectType, searchParam, filterParam){
+        ParseService.getObjects(objectType, searchParam, filterParam, function(results){
+            console.log(results);
+        });
     };
 
-
-    //Init Controller
+    //Init
     $scope.init();
 };
 
