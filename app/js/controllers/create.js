@@ -1,21 +1,19 @@
 //Create Controller
 
-var CreateCtrl = function($scope, $location){
+var CreateCtrl = function($scope, $location, GlobalService){
 
     $scope.init = function(){
-        $scope.ObjectType = $scope.getObjectType();
         $scope.object = {};
+        $scope.dir = $location.url().slice(1).split("/")[0];
+        $scope.objectType = GlobalService.getObjectType($scope.dir);
         $scope.getPartial();
-    },
-
-    $scope.getObjectType = function(){
-        $scope.objectType  = $location.url().substr(1).split("/")[0].substr(0, $location.url().substr(1).split("/")[0].length - 1);
-        $scope.objectType  = $scope.objectType.charAt(0).toUpperCase() + $scope.objectType.substr(1, $scope.objectType.length);
+        console.log(GlobalService);
     },
 
     $scope.getPartial = function(){
-        var nemsisPartial = "create" + $scope.objectType;
-        return "partials/nemsis/" + nemsisPartial + ".html";
+        var object = $scope.objectType.charAt(0).toLowerCase() + $scope.objectType.slice(1);
+        var partialLocation = $scope.dir + "/" + object + ".html";
+        return "partials/" + partialLocation;
     };
 
     $scope.saveObject = function(){

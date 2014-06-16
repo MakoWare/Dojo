@@ -1,4 +1,4 @@
-//Parse Services
+//Parse Service
 angular.module('dojoServices', ['ngResource'])
     .factory('ParseService', function($resource){
 
