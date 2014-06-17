@@ -3,11 +3,13 @@
 <div class="container-widescreen" style="margin-right : 5%; margin-left: 5%">
   <div class="page-header" style="margin-top: 10px; margin-bottom: 15px;">
     <div class="row">
-      <div class="col-sm-6">
-        <h1>New {{objectType}}</h1>
+      <div class="col-sm-4">
+        <h1>Update {{objectType}}</h1>
       </div>
-      <div class="col-sm-4 col-sm-offset-2">
-        <button class="btn btn-lg btn-primary" style="margin-top: 15px;" ng-click="saveObject()">Save</button>
+      <div class="col-sm-3 col-sm-offset-1">
+        <button class="btn btn-lg btn-primary" style="margin-top: 15px;" ng-click="updateObject()">Update</button>
+        <div class="col-sm-3 col-sm-offset-1">
+          <button class="btn btn-lg btn-primary" style="margin-top: 15px;" ng-click="deleteObject()">Delete</button>
       </div>
     </div>
   </div>

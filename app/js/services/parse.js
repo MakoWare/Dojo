@@ -33,7 +33,6 @@ angular.module('dojoServices', ['ngResource'])
 
         var ParseService = {
 
-
             //Object Factory
             createNemsisElement: function(){
                 var nemsisElement = new NemsisElement();
