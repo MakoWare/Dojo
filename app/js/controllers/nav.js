@@ -1,7 +1,8 @@
 'use strict';
 
 //Nav Controller
-var NavCtrl = function($scope, $location, $route, ParseService){
+var NavCtrl = function($scope, $location, $route){
+//var NavCtrl = function($scope, $location, $route, ParseService){
     $scope.pathInit = function(path){
 	var path = path.split('#')[path.split('#').length - 1].substr(1);
 	$scope.path.home = false;

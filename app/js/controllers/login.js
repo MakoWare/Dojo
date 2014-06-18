@@ -1,5 +1,6 @@
 //Login Controller
-var LoginCtrl = function($rootScope, $scope, $location, ParseService){
+//var LoginCtrl = function($rootScope, $scope, $location, ParseService){
+var LoginCtrl = function($rootScope, $scope, $location){
 
     //Login
     $scope.login = function(){

@@ -1,6 +1,7 @@
 //Update Controller
 
-var UpdateCtrl = function($scope, $location, ParseService, GlobalService){
+//var UpdateCtrl = function($scope, $location, ParseService, GlobalService){
+var UpdateCtrl = function($scope, $location, GlobalService){
 
     $scope.init = function(){
         $scope.object = {};
@@ -14,7 +15,7 @@ var UpdateCtrl = function($scope, $location, ParseService, GlobalService){
 
     $scope.getPartial = function(){
         var object = $scope.objectType.charAt(0).toLowerCase() + $scope.objectType.slice(1);
-        var partialLocation = $scope.dir + "/" + object + "List.html";
+        var partialLocation = $scope.dir + "/" + object + ".html";
         return "partials/" + partialLocation;
     };
 

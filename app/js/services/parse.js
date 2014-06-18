@@ -1,7 +1,7 @@
 //Parse Service
 angular.module('dojoServices', ['ngResource'])
-    .factory('ParseService', function($resource){
-
+    .factory('ParseService', function(){
+/*
         //Init Parse
 	Parse.initialize("8vNcAs6Z0c4jyHvuW5zezUXij8DquZLeYP4pFicD", "Ipw8skfNMGvX9uGc8LHn0qCbAIhWjrZP5LEHm9vI");
 
@@ -30,7 +30,7 @@ angular.module('dojoServices', ['ngResource'])
         acl.setRoleReadAccess("Dispatcher", true);
         acl.setPublicWriteAccess(false);
         acl.setPublicReadAccess(false);
-
+*/
         var ParseService = {
 
             //Object Factory
@@ -77,8 +77,21 @@ angular.module('dojoServices', ['ngResource'])
               Parse.User.logOut();
             },
 
-            //Get Objects
-            getObjects: function(objectType, searchParam, filterParam, callback){
+            //Get Object
+            getObject: function(objectType, objectId, callback){
+                var query = new Parse.Query(objectType);
+                query.get(objectId, {
+                    success: function(results){
+                        callback(results);
+                    },
+                    error: function(error){
+                        alert("Error: " + error.message);
+                    }
+                });
+            },
+
+            //Find Objects
+            findObjects: function(objectType, searchParam, filterParam, callback){
                 var query = new Parse.Query(objectType);
                 query.find({
                     success: function(results){
@@ -88,7 +101,18 @@ angular.module('dojoServices', ['ngResource'])
                         alert("Error: " + error.message);
                     }
                 });
+            },
+
+            //Update Object
+            updateObject: function(object){
+                //TODO
+            },
+
+            //Delete Object
+            deleteObject: function(object){
+                //TODO
             }
         };
+
         return ParseService;
     });

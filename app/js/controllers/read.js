@@ -1,6 +1,7 @@
 //Read Controller
 
-var ReadCtrl = function($scope, $location, ParseService, GlobalService){
+//var ReadCtrl = function($scope, $location, ParseService, GlobalService){
+var ReadCtrl = function($scope, $location, GlobalService){
 
     $scope.init = function(){
         $scope.objects = {};
@@ -10,7 +11,7 @@ var ReadCtrl = function($scope, $location, ParseService, GlobalService){
         $scope.objectType = GlobalService.getObjectType($scope.dir);
         console.log($scope.objectType);
         $scope.getPartial();
-        $scope.getObjects($scope.objectType, $scope.searchParam, $scope.filterParam);
+//        $scope.findObjects($scope.objectType, $scope.searchParam, $scope.filterParam);
     },
 
     $scope.getPartial = function(){
@@ -19,8 +20,8 @@ var ReadCtrl = function($scope, $location, ParseService, GlobalService){
         return "partials/" + partialLocation;
     };
 
-    $scope.getObjects = function(objectType, searchParam, filterParam){
-        ParseService.getObjects(objectType, searchParam, filterParam, function(results){
+    $scope.findObjects = function(objectType, searchParam, filterParam){
+        ParseService.findObjects(objectType, searchParam, filterParam, function(results){
             console.log(results);
         });
     };
