@@ -103,6 +103,12 @@ angular.module('dojoServices', ['ngResource'])
                 });
             },
 
+
+            //Create Object
+            createObject: function(objectType, callback){
+                //TODO
+            },
+
             //Update Object
             updateObject: function(object){
                 //TODO

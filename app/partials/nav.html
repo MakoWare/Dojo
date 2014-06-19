@@ -5,25 +5,29 @@
         <a class="navbar-brand" href="#">Mobi</a>
       </div>
       <div ng-show="loggedIn">
-        <ul class="nav navbar-nav navbar-right">
-          <li ng-class="{active: path.home}"><a href="#/home">Home</a></li>
-          <li ng-class="{active: path.dispatch}"><a href="#/map">Dispatch</a></li>
-          <li ng-show="isManager" ng-class="{active: path.users}"><a href="#/users">Users</a></li>
-          <li ng-show="isManager" ng-class="{active: path.vehicles}" ><a href="#/vehicles">Vehicles</a></li>
-          <li ng-show="isManager" ng-class="{active: path.pcrs}"><a href="#/pcrs">PCRs</a></li>
-          <li ng-show="isManager" ng-class="{active: path.configuration}"><a href="#/configs">Configuration</a></li>
-          <li ng-show="isManager" ng-class="{active: path.files}"><a href="#/files">Files</a></li>
-          <li ng-class="{active: path.documentation}"><a href="#/documentation">Documentation</a></li>
-          <li ng-class="{active: path.contact}"><a href="#/contact">Contact</a></li>
-          <li><a href="#">Logout</a></li>
-        </ul>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li ng-class="{active: path.home}"><a href="#/home">Home</a></li>
+            <li ng-class="{active: path.dispatch}"><a href="#/map">Dispatch</a></li>
+            <li ng-show="isManager" ng-class="{active: path.users}"><a href="#/users">Users</a></li>
+            <li ng-show="isManager" ng-class="{active: path.vehicles}" ><a href="#/vehicles">Vehicles</a></li>
+            <li ng-show="isManager" ng-class="{active: path.pcrs}"><a href="#/pcrs">PCRs</a></li>
+            <li ng-show="isManager" ng-class="{active: path.configuration}"><a href="#/configs">Configuration</a></li>
+            <li ng-show="isManager" ng-class="{active: path.files}"><a href="#/files">Files</a></li>
+            <li ng-class="{active: path.documentation}"><a href="#/documentation">Documentation</a></li>
+            <li ng-class="{active: path.contact}"><a href="#/contact">Contact</a></li>
+            <li><a href="#">Logout</a></li>
+          </ul>
+        </div>
       </div>
-      <div ng-show="!loggedIn">
-        <ul class="nav navbar-nav navbar-right">
-          <li ng-class="{active: path.signUp}"><a href="#/signUp">Sign Up</a></li>
-          <li ng-class="{active: path.documentation}"><a href="#/documentation">Documentation</a></li>
-          <li ng-class="{active: path.contact}"><a href="#/contact">Contact</a></li>
-        </ul>
+      <div class="collapse navbar-collapse">
+        <div ng-show="!loggedIn">
+          <ul class="nav navbar-nav navbar-right">
+            <li ng-class="{active: path.signUp}"><a href="#/signUp">Sign Up</a></li>
+            <li ng-class="{active: path.documentation}"><a href="#/documentation">Documentation</a></li>
+            <li ng-class="{active: path.contact}"><a href="#/contact">Contact</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </nav>

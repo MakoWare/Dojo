@@ -1,6 +1,6 @@
 <div ng-include="'partials/nav.html'"></div>
 
-<div class="container-widescreen" style="margin-right : 5%; margin-left: 5%">
+<div class="container-widescreen" style="margin-right: 5%; margin-left: 5%">
   <div class="page-header" style="margin-top: 10px; margin-bottom: 15px;">
     <div class="row">
       <div class="col-sm-6">
@@ -13,4 +13,6 @@
   </div>
 
   <div ng-include="getPartial()"></div>
+
+  <div ng-if="object.nemsis" ng-include="'partials/nemsis/nemsis.html'" style="margin-right: 2%; margin-left: 2%"></div>
 </div>
