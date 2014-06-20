@@ -4,14 +4,13 @@
 var ReadCtrl = function($scope, $location, GlobalService){
 
     $scope.init = function(){
-        $scope.objects = {};
+        $scope.objects = [];
         $scope.searchParam = "";
-        $scope.filterParam = "";
+        $scope.predicate = "";
         $scope.dir = $location.url().slice(1);
         $scope.objectType = GlobalService.getObjectType($scope.dir);
-        console.log($scope.objectType);
         $scope.getPartial();
-//        $scope.findObjects($scope.objectType, $scope.searchParam, $scope.filterParam);
+        $scope.findObjects($scope.objectType, $scope.searchParam, $scope.filterParam);
     },
 
     $scope.getPartial = function(){
@@ -21,9 +20,23 @@ var ReadCtrl = function($scope, $location, GlobalService){
     };
 
     $scope.findObjects = function(objectType, searchParam, filterParam){
+        for(var i=0; i < 10; i++){
+            var object = {};
+            object.attributes = {};
+            object.attributes.id = i;
+            object.attributes.username = "Balls Sack" + i;
+            object.attributes.createdAt = new Date();
+            object.attributes.role = "Dick Role" + (10 / i);
+            $scope.objects.push(object);
+        }
+            console.log($scope.objects);
+
+        /*
         ParseService.findObjects(objectType, searchParam, filterParam, function(results){
             console.log(results);
         });
+         */
+
     };
 
     //Init

@@ -1,9 +1,15 @@
+//Notes
+
+Looks like the Generic CRUD will work well for all of the Parse Objects
+
+This Every day commit thing is working really well, it feels like I'm getting
+quite a bit of work done. Interested to see where this goes.
+
+
 //TODO
 
-Where is the best place to start?
+Learn to properly implement search Paramaters/Predicates on tables.
 
-Can I genericly CRUD all of these objects?
+New scheme for NesisElement CRUD - Have NemsisElement keep a pointer to the header?
 
-I think I may be able too.
-
--Create Models for each object in JSON
+talk to derek about last idea.

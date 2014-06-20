@@ -4,18 +4,18 @@
       <table ng-table="tableParams" class="table table-bordered">
         <thead>
 	  <tr>
-            <th><a href="" ng-click="predicate = 'name'; reverse=!reverse">Name</a></th>
+            <th><a href="" ng-click="predicate = 'username'; reverse=!reverse">Name</a></th>
             <th><a href="" ng-click="predicate = 'createdAt'; reverse=!reverse">Joined</a></th>
             <th><a href="" ng-click="predicate = 'role'; reverse=!reverse">Role</a></th>
             <th>Edit</th>
 	  </tr>
         </thead>
         <tbody>
-	  <tr ng-repeat="user in users | filter:search.$ | orderBy:predicate:reverse">
-	    <td>{{user.attributes.username}}</td>
-	    <td>{{user.createdAt}}</td>
-	    <td>{{user.get('role')}}</td>
-            <td><a href="#/users/{{user.id}}"> <button class="btn btn-primary">Edit</button></a></td>
+	  <tr ng-repeat="object in objects | filter:searchParam.$ | orderBy:predicate:reverse">
+	    <td>{{object.attributes.username}}</td>
+	    <td>{{object.attributes.createdAt}}</td>
+	    <td>{{object.attributes.role}}</td>
+            <td><a href="#/users/{{object.attributes.id}}"> <button class="btn btn-primary">Edit</button></a></td>
 	  </tr>
         </tbody>
       </table>

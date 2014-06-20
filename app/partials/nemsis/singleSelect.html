@@ -1,0 +1,4 @@
+<div>
+  <select ng-model="element.attributes.value" class="form-control" ng-options="code.get('code') as code.get('codeDescription') for code in element.codes" ng-change="elementChange(element)">
+  </select>
+</div>

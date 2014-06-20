@@ -5,8 +5,6 @@ angular.module('dojoServices', ['ngResource'])
         var GlobalService = {
 
             getObjectType: function(url){
-
-                console.log(url);
                 switch (url){
                 case "devices":
                     return "Device";
