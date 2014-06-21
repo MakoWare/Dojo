@@ -9,6 +9,7 @@ quite a bit of work done. Interested to see where this goes.
 //TODO
 
 Learn to properly implement search Paramaters/Predicates on tables.
+I think it is because it's not looking at object.attributes.var
 
 New scheme for NesisElement CRUD - Have NemsisElement keep a pointer to the header?
 
