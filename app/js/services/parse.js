@@ -64,8 +64,14 @@ angular.module('parseService', [])
             },
 
             //Dispatch
-            createDispatch: function(){
-
+            createDispatch: function(callback){
+                var dispatch = new Parse.Object("Dispatch");
+                dispatch.set('agencyId', currentUser.get('agencyId'));
+                dispatch.set('comments', null);
+                dispatch.set('creatorId', currentUser.id);
+                dispatch.set('dropOffAddress', null);
+                dispatch.set('dropOffCity', null);
+                dispatch.set('dropOffDate', null);
             },
 
             //Device
@@ -78,9 +84,10 @@ angular.module('parseService', [])
                 var object;
                 switch(objectType) {
                 case "Dispatch":
-                    object = this.createDispatch();
+                    object = this.createDispatch(function(results){
+                        callback(results);
+                    });
                     break;
-
                 }
             },
 

@@ -1,0 +1,15 @@
+//Notes
+
+Looks like the Generic CRUD will work well for all of the Parse Objects
+
+This Every day commit thing is working really well, it feels like I'm getting
+quite a bit of work done. Interested to see where this goes.
+
+
+//TODO
+
+Learn to properly implement search Paramaters/Predicates on tables.
+
+New scheme for NesisElement CRUD - Have NemsisElement keep a pointer to the header?
+
+talk to derek about last idea.
