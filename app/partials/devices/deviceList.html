@@ -10,7 +10,7 @@
 	  </tr>
         </thead>
         <tbody>
-	  <tr ng-repeat="object in objects | filter:searchParam.$ | orderBy:predicate:reverse">
+	  <tr ng-repeat="object in objects | filter:searchParam.attributes.$ | orderBy:predicate:reverse">
 	    <td>{{object.attributes.id}}</td>
 	    <td>{{object.attributes.name}}</td>
             <td><a href="#/devices/{{object.id}}"> <button class="btn btn-primary">Edit</button></a></td>

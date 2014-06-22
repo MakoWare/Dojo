@@ -1,11 +1,12 @@
 'use strict';
 
 angular.module('dojo', [
+    'globalService',
+    'parseService',
     'ngCookies',
     'ngResource',
     'ngSanitize',
-    'ngRoute',
-    'dojoServices'
+    'ngRoute'
   ])
   .config(function ($routeProvider) {
     $routeProvider

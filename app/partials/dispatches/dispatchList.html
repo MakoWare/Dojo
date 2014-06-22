@@ -4,15 +4,19 @@
       <table class="table table-bordered">
         <thead>
 	  <tr>
-            <th><a href="" ng-click="predicate = 'name'; reverse=!reverse">Name</a></th>
+            <th><a href="" ng-click="predicate = 'attributes.priority'; reverse=!reverse">Priority</a></th>
+            <th><a href="" ng-click="predicate = 'attributes.status'; reverse=!reverse">Status</a></th>
+            <th><a href="" ng-click="predicate = 'attributes.pickUpAddress'; reverse=!reverse">Pick-up Address</a></th>
             <th><a href="" ng-click="predicate = 'createdAt'; reverse=!reverse">Id</a></th>
             <th>Edit</th>
 	  </tr>
         </thead>
         <tbody>
-	  <tr ng-repeat="object in objects | filter:searchParam.$ | orderBy:predicate:reverse">
-	    <td>{{object.attributes.id}}</td>
-	    <td>{{object.attributes.name}}</td>
+	  <tr ng-repeat="object in objects | filter:searchParam | orderBy:predicate:reverse">
+	    <td>{{object.attributes.priority}}</td>
+	    <td>{{object.attributes.status}}</td>
+	    <td>{{object.attributes.pickUpAddress}}</td>
+	    <td>{{object.id}}</td>
             <td><a href="#/devices/{{object.id}}"> <button class="btn btn-primary">Edit</button></a></td>
 	  </tr>
         </tbody>

@@ -1,5 +1,5 @@
 //Global Service
-angular.module('dojoServices', ['ngResource'])
+angular.module('globalService', [])
     .factory('GlobalService', function(){
 
         var GlobalService = {
