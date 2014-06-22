@@ -35,6 +35,8 @@ angular.module('parseService', [])
         var ParseService = {
 
             //Object Factory
+
+            //NemsisElement
             createNemsisElement: function(){
                 var nemsisElement = new NemsisElement();
                 nemsisElement.setACL(acl);
@@ -47,6 +49,7 @@ angular.module('parseService', [])
                 return(nemsisElement);
             },
 
+            //Section
             createSection: function(){
                 var section = new Section();
                 section.setACL(acl);
@@ -60,22 +63,25 @@ angular.module('parseService', [])
                 return section;
             },
 
-            //Login
-            login: function(username, password, callback) {
-		Parse.User.logIn(username, password, {
-		    success: function(user) {
-			currentUser = user;
-			callback(user);
-		    },
-		    error: function(user, error) {
-			alert("Error: " + error.message);
-		    }
-		});
-	    },
+            //Dispatch
+            createDispatch: function(){
 
-            //Logout
-            logout: function(){
-              Parse.User.logOut();
+            },
+
+            //Device
+            createDevice: function(){
+
+            },
+
+            //Create Object
+            createObject: function(objectType, callback){
+                var object;
+                switch(objectType) {
+                case "Dispatch":
+                    object = this.createDispatch();
+                    break;
+
+                }
             },
 
             //Get Object
@@ -104,11 +110,6 @@ angular.module('parseService', [])
                 });
             },
 
-            //Create Object
-            createObject: function(objectType, callback){
-                //TODO
-            },
-
             //Update Object
             updateObject: function(object){
                 //TODO
@@ -117,6 +118,24 @@ angular.module('parseService', [])
             //Delete Object
             deleteObject: function(object){
                 //TODO
+            },
+
+            //Login
+            login: function(username, password, callback) {
+		Parse.User.logIn(username, password, {
+		    success: function(user) {
+			currentUser = user;
+			callback(user);
+		    },
+		    error: function(user, error) {
+			alert("Error: " + error.message);
+		    }
+		});
+	    },
+
+            //Logout
+            logout: function(){
+              Parse.User.logOut();
             }
         };
 
