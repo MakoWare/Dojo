@@ -92,6 +92,14 @@ angular.module('dojo', [
         templateUrl: 'partials/update.html',
         controller: 'UpdateCtrl'
       })
+      .when('/nemsis', {
+        templateUrl: 'partials/read.html',
+        controller: 'ReadCtrl'
+      })
+      .when('/nemsis/:id', {
+        templateUrl: 'partials/update.html',
+        controller: 'UpdateCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
