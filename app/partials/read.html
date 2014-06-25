@@ -6,7 +6,7 @@
       <div class="col-sm-6">
         <h1>Search {{dir.charAt(0).toUpperCase() + dir.slice(1)}}</h1>
       </div>
-      <div class="col-sm-6" style="margin-top: 28px;">
+      <div class="col-sm-4" style="margin-top: 28px;">
         <form class="form-horizontal" role="form">
           <div class="form-group" style="margin-bottom: 5px;">
             <label for="searchParam" class="col-sm-2 control-label">Search:</label>
@@ -16,6 +16,10 @@
           </div>
         </form>
       </div>
+      <div class="col-sm-2" style="margin-top: 20px;">
+        <a ng-href={{"/" + objectType + "/add"}}><button class="btn btn-lg btn-success" >Add {{objectType}}</button></a>
+      </div>
+
     </div>
   </div>
   <div ng-include="getPartial()"></div>

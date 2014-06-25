@@ -5,7 +5,7 @@
 </div>
 
   <div class="row">
-    <h3>{{section.get('name')}}</h3>
+    <h3>{{object.section.get('name')}}</h3>
     <table ng-table="tableParams" class="table table-bordered">
       <thead>
         <tr>
@@ -19,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-	<tr ng-repeat="element in section.get('elements')">
+	<tr ng-repeat="element in object.section.get('elements')">
           <td class="col-xs-1">{{element.get('title')}}</td>
           <td class="col-xs-1">{{element.get('header').get('ElementName')}}</td>
           <td class="col-xs-3">{{element.get('header').get('Definition')}}</td>
@@ -33,7 +33,7 @@
   </div>
 
 
-  <div class="row" ng-if="section.get('sections')">
+  <div class="row" ng-if="object.section.get('sections')">
     <h3>Sub Sections</h3>
     <table ng-table="tableParams" class="table table-bordered">
       <thead>
@@ -47,7 +47,7 @@
         </tr>
         </thead>
       <tbody>
-        <tr ng-repeat="section2 in section.get('sections')">
+        <tr ng-repeat="section2 in object.section.get('sections')">
           <td class="col-xs-1">{{section2.get('name')}}</td>
           <td class="col-xs-1">{{section2.createdAt}}</td>
           <td class="col-xs-1">{{section2.id}}</td>
