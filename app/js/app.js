@@ -53,6 +53,11 @@ angular.module('dojo', [
         templateUrl: 'partials/update.html',
         controller: 'UpdateCtrl'
       })
+//Map
+      .when('/map', {
+        templateUrl: 'partials/map.html',
+        controller: 'MapCtrl'
+      })
 //Patients
       .when('/patients/add', {
         templateUrl: 'partials/create.html',
