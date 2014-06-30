@@ -7,29 +7,29 @@
             <th><a href="" ng-click="predicate = 'attributes.priority'; reverse=!reverse">Priority</a></th>
             <th><a href="" ng-click="predicate = 'attributes.status'; reverse=!reverse">Status</a></th>
             <th><a href="" ng-click="predicate = 'attributes.pickUpAddress'; reverse=!reverse">Pick-up Address</a></th>
-            <th><a href="" ng-click="predicate = 'attributes.pickUpTime'; reverse=!reverse">Pick-up Time</a></th>
+            <th><a href="" ng-click="predicate = 'attributes.pickUpDate'; reverse=!reverse">Pick-up Time</a></th>
             <th><a href="" ng-click="predicate = 'attributes.dropOffAddress'; reverse=!reverse">Drop-off Address</a></th>
-            <th><a href="" ng-click="predicate = 'attributes.dropOffTime'; reverse=!reverse">Drop-off Time</a></th>
+            <th><a href="" ng-click="predicate = 'attributes.dropOffDate'; reverse=!reverse">Drop-off Time</a></th>
             <th>Info</th>
-            <th>Patient</th>
-            <th>Vehicle</th>
-            <th>Edit Dispatch</th>
+            <th>View Patient</th>
+            <th>View Vehicle</th>
+            <th>View Dispatch</th>
 	  </tr>
         </thead>
         <tbody>
 	  <tr ng-repeat="object in objects | filter:searchParam | orderBy:predicate:reverse">
 	    <td class="col-sm-1">{{object.attributes.priority}}</td>
-	    <td class="col-sm-2">{{object.attributes.status}}</td>
+	    <td class="col-sm-1">{{object.attributes.status}}</td>
             <td class="col-xs-2">{{object.attributes.pickUpAddress + " " + object.attributes.pickUpCity + " " + object.attributes.pickUpState}}</td>
             <td class="col-xs-1">{{object.attributes.pickUpDate.getHours() + ":" + object.attributes.pickUpDate.getMinutes() + " " + (object.attributes.pickUpDate.getMonth() + 1) + "/" + object.attributes.pickUpDate.getDate() + "/" + object.attributes.pickUpDate.getFullYear();}}</td>
-            <td class="col-xs-1">{{object.attributes.dropOffAddress + " " + object.attributes.dropOffCity + " " + object.attributes.dropOffState}}</td>
+            <td class="col-xs-2">{{object.attributes.dropOffAddress + " " + object.attributes.dropOffCity + " " + object.attributes.dropOffState}}</td>
             <td class="col-xs-1">{{(object.attributes.dropOffDate.getMonth() + 1) + "/" + object.attributes.dropOffDate.getDate() + "/" + object.attributes.dropOffDate.getFullYear() + " " +  object.attributes.dropOffDate.getHours() + ":" + object.attributes.dropOffDate.getMinutes()}}</td>
             <td class="col-xs-1">{{object.attributes.comments}}</td>
 
 
-            <td><a ng-href={{"/patients/" + object.attributes.patient.id}}><button class="btn btn-primary">{{object.attributes.patient.firstName + " " + object.attributes.patient.lastName}}</button></a></td>
-            <td><button class="btn btn-primary">{{object.attributes.vehicle.name}}</button></td>
-            <td><button class="btn btn-primary">{{object.id}}</button></td>
+            <td class="col-xs-1"><a ng-href="#/patients/{{object.attributes.patient.id}}"><button class="btn btn-primary">{{object.attributes.patient.id}}</button></a></td>
+            <td class="col-xs-1"><a ng-href="#/vehicles/{{object.attributes.vehicle.id}}"><button class="btn btn-primary">{{object.attributes.vehicle.id}}</button></a></td>
+            <td class="col-xs-1"><a ng-href="#/dispatches/{{object.id}}" <button class="btn btn-primary">{{object.id}}</button></a></td>
 	  </tr>
         </tbody>
       </table>
