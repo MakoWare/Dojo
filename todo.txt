@@ -1,12 +1,21 @@
-//Notes
+Why have I continued down this rabbit hole of bullshit. 
 
-Looks like the Generic CRUD will work well for all of the Parse Objects
+This project was doomed before it started. 
 
-This Every day commit thing is working really well, it feels like I'm getting
-quite a bit of work done. Interested to see where this goes.
+Reasons to quit (highest importance to lowest)
 
+1. I don't enjoy working on it. 
 
-//TODO
-Actually doing things
+2. There is still a lot of tedious work to be done.
 
+3. All of this code may just go into the trash. 
 
+4. Neil has not and probably will not contribute any code that we will use. 
+
+Reasons to stay on 
+
+1. Could actually work (one day)
+
+2. Invested 6 months of my life in a basement 
+
+3. Feel bad for Derek
