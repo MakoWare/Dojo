@@ -98,8 +98,8 @@ angular.module('dojo', [
         controller: 'UpdateCtrl'
       })
       .when('/nemsis', {
-        templateUrl: 'partials/read.html',
-        controller: 'ReadCtrl'
+        templateUrl: 'partials/nemsis/nemsisConfigurations.html',
+        controller: 'NemsisNavCtrl'
       })
       .when('/nemsis/:id', {
         templateUrl: 'partials/update.html',
