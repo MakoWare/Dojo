@@ -154,6 +154,51 @@ angular.module('dojo', [
         templateUrl: 'partials/nemsis/nemsisRead.html',
         controller: 'NemsisReadCtrl'
       })
+//Nemsis Update
+      .when('/configurations/nemsis/dAgency/:id', {
+        templateUrl: 'partials/nemsis/nemsisUpdate.html',
+        controller: 'NemsisUpdateCtrl'
+      })
+      .when('/configurations/nemsis/dConfiguration/:id', {
+        templateUrl: 'partials/nemsis/nemsisUpdate.html',
+        controller: 'NemsisUpdateCtrl'
+      })
+      .when('/configurations/nemsis/dContact/:id', {
+        templateUrl: 'partials/nemsis/nemsisUpdate.html',
+        controller: 'NemsisUpdateCtrl'
+      })
+      .when('/configurations/nemsis/dCustomConfiguration/:id', {
+        templateUrl: 'partials/nemsis/nemsisUpdate.html',
+        controller: 'NemsisUpdateCtrl'
+      })
+      .when('/configurations/nemsis/dCustomResults/:id', {
+        templateUrl: 'partials/nemsis/nemsisUpdate.html',
+        controller: 'NemsisUpdateCtrl'
+      })
+      .when('/configurations/nemsis/dDevice/:id', {
+        templateUrl: 'partials/nemsis/nemsisUpdate.html',
+        controller: 'NemsisUpdateCtrl'
+      })
+      .when('/configurations/nemsis/dFacility/:id', {
+        templateUrl: 'partials/nemsis/nemsisUpdate.html',
+        controller: 'NemsisUpdateCtrl'
+      })
+      .when('/configurations/nemsis/dLocation/:id', {
+        templateUrl: 'partials/nemsis/nemsisUpdate.html',
+        controller: 'NemsisUpdateCtrl'
+      })
+      .when('/configurations/nemsis/dPersonnel/:id', {
+        templateUrl: 'partials/nemsis/nemsisUpdate.html',
+        controller: 'NemsisUpdateCtrl'
+      })
+      .when('/configurations/nemsis/dState/:id', {
+        templateUrl: 'partials/nemsis/nemsisUpdate.html',
+        controller: 'NemsisUpdateCtrl'
+      })
+      .when('/configurations/nemsis/dVehicle/:id', {
+        templateUrl: 'partials/nemsis/nemsisUpdate.html',
+        controller: 'NemsisUpdateCtrl'
+      })
 //Patients
       .when('/patients/add', {
         templateUrl: 'partials/create.html',

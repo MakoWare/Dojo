@@ -4,15 +4,12 @@
   <div class="page-header" style="margin-top: 10px; margin-bottom: 15px;">
     <div class="row">
       <div class="col-sm-6">
-        <h1>//Todo</h1>
+        <h1>New {{nemsisObjectType}}</h1>
       </div>
       <div class="col-sm-4 col-sm-offset-2">
         <button class="btn btn-lg btn-primary" style="margin-top: 15px;" ng-click="saveObject()">Save</button>
       </div>
     </div>
   </div>
-
   <div ng-include="getPartial()"></div>
-
-  <div ng-if="object.nemsis" ng-include="'partials/nemsis/nemsis.html'" style="margin-right: 2%; margin-left: 2%"></div>
 </div>

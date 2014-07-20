@@ -1,7 +1,9 @@
 //Update Controller
+/*Todo :
+Bunch
 
-//var UpdateCtrl = function($scope, $location, ParseService, GlobalService){
-var UpdateCtrl = function($scope, $location, GlobalService){
+*/
+var UpdateCtrl = function($scope, $location, ParseService, GlobalService){
 
     $scope.init = function(){
         $scope.object = {};
