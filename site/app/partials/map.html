@@ -1,0 +1,44 @@
+<div class="content-widscreen">
+  <google-map id="mymap" center="center" zoom="zoom" draggable="true" mark-click="false">
+    <markers>
+      <marker ng-repeat="marker in markers" coords="marker" icon="marker.icon">
+	<window>
+	  <div ng-controller="WindowCtrl">
+	    <table class="table table-condensed table-bordered" style="font-size: 18px;">
+	      <tr>
+		<th>Vehicle:</th>
+		<th><button class="btn btn-primary" ng-click="viewVehicle('{{marker}}')">{{marker.title}}</button></th>
+	      </tr>
+	      <tr>
+		<th>Dispatch:</th>
+		<th><button class="btn btn-primary" ng-click="viewDispatch('{{marker}}')">{{marker.dispatch}}</button></th>
+	      </tr>
+	      <tr>
+		<th>Status:</th>
+		<th>{{marker.status}}</th>
+	      </tr>
+	    </table>
+	  </div>
+	</window>
+      </marker>
+    </markers>
+  </google-map>
+  <div id="toolbar" style="position: absolute; top: 60px; left: 150px;">
+    <div class="row">
+      <div class="form-group">
+	<button id="refreshButton" class="btn btn-primary" ng-click="updateMap()">Update Map</button>
+	<button id="dispatchButton" class="btn btn-primary" ng-click="openDispatches()">Dispatches</button>
+	<button id="patientButton" class="btn btn-primary" ng-click="openPatients()">Patients</button>
+	<button id="vehicleButton" class="btn btn-primary" ng-click="openVehicles()" style="margin-right: 40px;">Vehicles</button>
+	  <input type="text" id="foo" class="span3" value="" style="width: 400px;" data-slider-min="-100" data-slider-max="0" data-slider-step="5" data-slider-value="0" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="hide">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-4">
+	<input id="searchAddress" class="form-control" ng-model="map.address" placeholder="Address Search">
+      </div>
+    </div>
+
+    </div>
+  </div>
+</div>
