@@ -3,7 +3,6 @@ angular.module('parseService', [])
     .factory('ParseService', function(){
 
         //Init Parse
-
 	Parse.initialize("8vNcAs6Z0c4jyHvuW5zezUXij8DquZLeYP4pFicD", "Ipw8skfNMGvX9uGc8LHn0qCbAIhWjrZP5LEHm9vI");
 
 	//Define Parse Objects

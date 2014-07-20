@@ -1,6 +1,4 @@
 //Read Controller
-
-//var ReadCtrl = function($scope, $location, GlobalService){
 var ReadCtrl = function($scope, $location, GlobalService, ParseService){
 
     $scope.init = function(){

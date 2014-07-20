@@ -1,7 +1,6 @@
 'use strict';
 //Map Controller
-//var MapCtrl = function($rootScope, $scope, $location, ParseService){
-var MapCtrl = function($rootScope, $scope, $location){
+var MapCtrl = function($rootScope, $scope, $location, ParseService){
 
     //Tool bar
     var height = $(window).height();
@@ -22,8 +21,6 @@ var MapCtrl = function($rootScope, $scope, $location){
         .on('slide', function(ev){
             $('#bar').val(ev.value);
         });
-
-
 
     //Map
     $scope.initMap = function(){

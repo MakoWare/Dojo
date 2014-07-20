@@ -15,8 +15,8 @@
         <tbody>
 	  <tr ng-repeat="object in objects | filter:searchParam | orderBy:predicate:reverse">
             <td>{{object.attributes.firstName + " " + object.attributes.lastName}}</td>
-	    <td>{{object.attribute.address}}</td>
-            <td>{{(object.attributes.dob.getMonth() + 1) + "/" + object.attributes.dob.getDate() + "/" + object.attributesdob.getFullYear();}}</td>
+	    <td>{{object.attributes.address}}</td>
+            <td>{{(object.attributes.dob.getMonth() + 1) + "/" + object.attributes.dob.getDate() + "/" + object.attributes.dob.getFullYear();}}</td>
             <td>{{"xxx-xx-" + object.attributes.ssn.substr(object.attributes.ssn.length - 4);}}</td>
             <td>{{object.attributes.phone}}</td>
             <td><a ng-href={{"/patients/" + object.id}}><button class="btn btn-primary">{{object.id}}</button></a></td>

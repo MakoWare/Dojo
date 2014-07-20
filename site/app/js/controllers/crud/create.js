@@ -1,7 +1,5 @@
 //Create Controller
-
-//var CreateCtrl = function($scope, $location, ParseService, GlobalService){
-var CreateCtrl = function($scope, $location, GlobalService){
+var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     $scope.init = function(){
         $scope.object = {};
