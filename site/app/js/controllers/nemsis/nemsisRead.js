@@ -2,9 +2,8 @@
 var NemsisReadCtrl = function($scope, $location, GlobalService, ParseService){
 
     $scope.init = function(){
-        $scope.objects = [];
+        $scope.section = {};
         $scope.dir = $location.url().slice(1);
-        $scope.objectType = GlobalService.getObjectType($scope.dir);
         $scope.getPartial();
         $scope.findObjects($scope.objectType, $scope.searchParam, $scope.filterParam);
     },

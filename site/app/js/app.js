@@ -65,137 +65,17 @@ angular.module('dojo', [
         controller: 'MapCtrl'
       })
 //Nemsis Create
-      .when('/configurations/nemsis/dAgency/add', {
-        templateUrl: 'partials/nemsis/nemsisCreate.html',
-        controller: 'NemsisCreateCtrl'
-      })
-      .when('/configurations/nemsis/dConfiguration/add', {
-        templateUrl: 'partials/nemsis/nemsisCreate.html',
-        controller: 'NemsisCreateCtrl'
-      })
-      .when('/configurations/nemsis/dContact/add', {
-        templateUrl: 'partials/nemsis/nemsisCreate.html',
-        controller: 'NemsisCreateCtrl'
-      })
-      .when('/configurations/nemsis/dCustomConfiguration/add', {
-        templateUrl: 'partials/nemsis/nemsisCreate.html',
-        controller: 'NemsisCreateCtrl'
-      })
-      .when('/configurations/nemsis/dCustomResults/add', {
-        templateUrl: 'partials/nemsis/nemsisCreate.html',
-        controller: 'NemsisCreateCtrl'
-      })
-      .when('/configurations/nemsis/dDevice/add', {
-        templateUrl: 'partials/nemsis/nemsisCreate.html',
-        controller: 'NemsisCreateCtrl'
-      })
-      .when('/configurations/nemsis/dFacility/add', {
-        templateUrl: 'partials/nemsis/nemsisCreate.html',
-        controller: 'NemsisCreateCtrl'
-      })
-      .when('/configurations/nemsis/dLocation/add', {
-        templateUrl: 'partials/nemsis/nemsisCreate.html',
-        controller: 'NemsisCreateCtrl'
-      })
-      .when('/configurations/nemsis/dPersonnel/add', {
-        templateUrl: 'partials/nemsis/nemsisCreate.html',
-        controller: 'NemsisCreateCtrl'
-      })
-      .when('/configurations/nemsis/dState/add', {
-        templateUrl: 'partials/nemsis/nemsisCreate.html',
-        controller: 'NemsisCreateCtrl'
-      })
-      .when('/configurations/nemsis/dVehicle/add', {
+      .when('/configurations/nemsis/:sectionName/add', {
         templateUrl: 'partials/nemsis/nemsisCreate.html',
         controller: 'NemsisCreateCtrl'
       })
 //Nemsis Read
-      .when('/configurations/nemsis/dAgency', {
-        templateUrl: 'partials/nemsis/nemsisRead.html',
-        controller: 'NemsisReadCtrl'
-      })
-      .when('/configurations/nemsis/dConfiguration', {
-        templateUrl: 'partials/nemsis/nemsisRead.html',
-        controller: 'NemsisReadCtrl'
-      })
-      .when('/configurations/nemsis/dContact', {
-        templateUrl: 'partials/nemsis/nemsisRead.html',
-        controller: 'NemsisReadCtrl'
-      })
-      .when('/configurations/nemsis/dCustomConfiguration', {
-        templateUrl: 'partials/nemsis/nemsisRead.html',
-        controller: 'NemsisReadCtrl'
-      })
-      .when('/configurations/nemsis/dCustomResults', {
-        templateUrl: 'partials/nemsis/nemsisRead.html',
-        controller: 'NemsisReadCtrl'
-      })
-      .when('/configurations/nemsis/dDevice', {
-        templateUrl: 'partials/nemsis/nemsisRead.html',
-        controller: 'NemsisReadCtrl'
-      })
-      .when('/configurations/nemsis/dFacility', {
-        templateUrl: 'partials/nemsis/nemsisRead.html',
-        controller: 'NemsisReadCtrl'
-      })
-      .when('/configurations/nemsis/dLocation', {
-        templateUrl: 'partials/nemsis/nemsisRead.html',
-        controller: 'NemsisReadCtrl'
-      })
-      .when('/configurations/nemsis/dPersonnel', {
-        templateUrl: 'partials/nemsis/nemsisRead.html',
-        controller: 'NemsisReadCtrl'
-      })
-      .when('/configurations/nemsis/dState', {
-        templateUrl: 'partials/nemsis/nemsisRead.html',
-        controller: 'NemsisReadCtrl'
-      })
-      .when('/configurations/nemsis/dVehicle', {
+      .when('/configurations/nemsis/:sectionName', {
         templateUrl: 'partials/nemsis/nemsisRead.html',
         controller: 'NemsisReadCtrl'
       })
 //Nemsis Update
-      .when('/configurations/nemsis/dAgency/:id', {
-        templateUrl: 'partials/nemsis/nemsisUpdate.html',
-        controller: 'NemsisUpdateCtrl'
-      })
-      .when('/configurations/nemsis/dConfiguration/:id', {
-        templateUrl: 'partials/nemsis/nemsisUpdate.html',
-        controller: 'NemsisUpdateCtrl'
-      })
-      .when('/configurations/nemsis/dContact/:id', {
-        templateUrl: 'partials/nemsis/nemsisUpdate.html',
-        controller: 'NemsisUpdateCtrl'
-      })
-      .when('/configurations/nemsis/dCustomConfiguration/:id', {
-        templateUrl: 'partials/nemsis/nemsisUpdate.html',
-        controller: 'NemsisUpdateCtrl'
-      })
-      .when('/configurations/nemsis/dCustomResults/:id', {
-        templateUrl: 'partials/nemsis/nemsisUpdate.html',
-        controller: 'NemsisUpdateCtrl'
-      })
-      .when('/configurations/nemsis/dDevice/:id', {
-        templateUrl: 'partials/nemsis/nemsisUpdate.html',
-        controller: 'NemsisUpdateCtrl'
-      })
-      .when('/configurations/nemsis/dFacility/:id', {
-        templateUrl: 'partials/nemsis/nemsisUpdate.html',
-        controller: 'NemsisUpdateCtrl'
-      })
-      .when('/configurations/nemsis/dLocation/:id', {
-        templateUrl: 'partials/nemsis/nemsisUpdate.html',
-        controller: 'NemsisUpdateCtrl'
-      })
-      .when('/configurations/nemsis/dPersonnel/:id', {
-        templateUrl: 'partials/nemsis/nemsisUpdate.html',
-        controller: 'NemsisUpdateCtrl'
-      })
-      .when('/configurations/nemsis/dState/:id', {
-        templateUrl: 'partials/nemsis/nemsisUpdate.html',
-        controller: 'NemsisUpdateCtrl'
-      })
-      .when('/configurations/nemsis/dVehicle/:id', {
+      .when('/configurations/nemsis/:sectionName/:id', {
         templateUrl: 'partials/nemsis/nemsisUpdate.html',
         controller: 'NemsisUpdateCtrl'
       })

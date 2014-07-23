@@ -2,33 +2,29 @@
 var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     $scope.init = function(){
-        $scope.object = {};
+        $scope.section = {};
         $scope.dir = $location.url().slice(1).split("/")[0];
-        $scope.nemsisObjectType = $location.url().split("nemsis/")[1].split("/")[0];
+        $scope.nemsisSectionName = $location.url().split("nemsis/")[1].split("/")[0];
 
-        console.log($scope);
-
-
-//        $scope.createObject($scope.objectType);
-//        $scope.getPartial(); //may need to go in createObject callback
+//        $scope.createSection($scope.nemsisSectionName);
     },
 
-    //Create Object
-    $scope.createObject = function(objectType){
-        ParseService.createObject(objectType, function(results){
+    //Create Section
+    $scope.createSection = function(sectionName){
+        ParseService.createSection(sectionName, function(results){
             console.log(results);
-            $scope.object = results;
+            $scope.section = results;
         });
     },
 
-    //Save Object
-    $scope.saveObject = function(){
-        ParseService.saveObject($scope.object);
+    //Save Section
+    $scope.saveSection = function(){
+        ParseService.saveSection($scope.section);
     };
 
     //Get Partial
     $scope.getPartial = function(){
-        return "partials/nemsis/" + $scope.nemsisObjectType + "/" + $scope.nemsisObjectType + ".html";
+        return "partials/nemsis/" + $scope.nemsisSectionName + "/" + $scope.nemsisSectionName + ".html";
     };
 
     //Init Controller
