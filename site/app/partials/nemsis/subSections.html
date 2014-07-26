@@ -1,15 +1,12 @@
-<div>
-  <h1>dAgency Partial</h1>
-
-</div>
-<div class="row">
-  <header>
-    <h3>Nemsis Information</h3>
-  </header>
-</div>
+<div class="container-widescreen" style="margin-right: 2%; margin-left: 2%">
+  <div class="row">
+    <header>
+      <h3>Sub Sections</h3>
+    </header>
+  </div>
 
   <div class="row">
-    <h3>{{object.section.get('name')}}</h3>
+    <h3>{{section.get('name')}}</h3>
     <table ng-table="tableParams" class="table table-bordered">
       <thead>
         <tr>
@@ -23,7 +20,7 @@
         </tr>
       </thead>
       <tbody>
-	<tr ng-repeat="element in object.section.get('elements')">
+        <tr ng-repeat="element in section.get('elements')">
           <td class="col-xs-1">{{element.get('title')}}</td>
           <td class="col-xs-1">{{element.get('header').get('ElementName')}}</td>
           <td class="col-xs-3">{{element.get('header').get('Definition')}}</td>
@@ -31,7 +28,8 @@
           <td><div ng-include="element.template"></div></td>
           <td class="col-xs-1"><button class="btn btn-default" ng-show="element.isMulti" ng-click="addElement(section, element)">Add</button></td>
           <td class="col-xs-1"><button class="btn btn-default" ng-show="canDeleteElement(section, element)" ng-click="deleteElement(section, element)">Delete</button></td>
-	</tr>
+        </tr>
       </tbody>
     </table>
   </div>
+</div>
