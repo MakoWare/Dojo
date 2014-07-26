@@ -22,6 +22,7 @@ angular.module('parseService', [])
 	var NemsisHeader = Parse.Object.extend("NemsisHeader");
 	var IpadConfiguration = Parse.Object.extend("IpadConfiguration");
 
+
         //Define ACL for Parse Objects
         var acl = new Parse.ACL();
         acl.setRoleWriteAccess("Manager", true);
@@ -32,8 +33,6 @@ angular.module('parseService', [])
         acl.setPublicReadAccess(false);
 
         var ParseService = {
-
-            //Object Factory
 
             //NemsisElement
             createNemsisElement: function(){
@@ -49,17 +48,14 @@ angular.module('parseService', [])
             },
 
             //Section
-            createSection: function(){
-                var section = new Section();
-                section.setACL(acl);
-                section.set('name', "");
-                section.set('elements', {});
-                section.set('sections', {});
-                section.set('createdBy', currentUser);
-                section.set('agencyId', currentUser.get('agencyId'));
-                section.set('pcrId', "");
+            createSection: function(name, callback){
+                console.log("ParseService.createSection");
+                var agencyId = "531531"; //Parse.User.current().get("agencyId");
+                var userId = "531531"; //Parse.User.current().id;
 
-                return section;
+                ObjectHelper.createSection(agencyId, userId, name, function(results){
+                    callback(results);
+                });
             },
 
             //Dispatch

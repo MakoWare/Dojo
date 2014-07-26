@@ -12,6 +12,7 @@ var ObjectHelper = {
     Patient: Parse.Object.extend("Patient"),
     Personnel: Parse.Object.extend("Personnel"),
     Vehicle: Parse.Object.extend("Vehicle"),
+    Section: Parse.Object.extend("Section"),
     NemsisElement: Parse.Object.extend("NemsisElement"),
     NemsisElementCode: Parse.Object.extend("NemsisElementCode"),
     NemsisHeader: Parse.Object.extend("NemsisHeader"),
@@ -164,29 +165,39 @@ var ObjectHelper = {
 
     //Nemsis Objects
     //Create Section
-    createSection: function(agencyId, userId, sectionName, recursive, callback){
-        var section1 = new Section();
-        section1.set("agencyId", agencyId);
-        section1.set("createdBy", userId);
-        section1.set("name", sectionName);
-        section1.set("pcrId", "");
-        section1.set("elements", []);
-        section1.set("sections", []);
+    createSection: function(agencyId, userId, sectionName, callback){
+        console.log("ObjectHelper.createSection");
+        console.log(arguments);
+
+        var section = new this.Section();
+        section.set("agencyId", agencyId);
+        section.set("createdBy", userId);
+        section.set("name", sectionName);
+        section.set("pcrId", "");
+        section.set("elements", []);
+        section.set("sections", []);
 
         //Get NemsisSection
         var query = new Parse.Query("NemsisSection");
         query.equalTo("name", sectionName);
         query.include("headers");
-        query.include("sections.headers");
-        query.include("sections.sections.headers");
-        var promise1 = query.first({
+        var promise = query.first({
             success: function(results){
-                console.log(results);
-
+                return results;
             },
             error: function(error){
                 console.log(error);
             }
+        }).then(function(results){
+            section.set("nemsisSection", results);
+
+            //Get NemsisElements
+            var elementNumbers = [];
+            results.get('headers').forEach(function(header){
+                elementNumbers.push(header.get("ElementNumber"));
+            });
+
+            callback(section);
         });
 
     },

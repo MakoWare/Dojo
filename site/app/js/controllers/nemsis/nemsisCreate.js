@@ -6,14 +6,16 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
         $scope.dir = $location.url().slice(1).split("/")[0];
         $scope.nemsisSectionName = $location.url().split("nemsis/")[1].split("/")[0];
 
-//        $scope.createSection($scope.nemsisSectionName);
+        $scope.createSection($scope.nemsisSectionName);
     },
 
     //Create Section
     $scope.createSection = function(sectionName){
         ParseService.createSection(sectionName, function(results){
-            console.log(results);
-            $scope.section = results;
+            $scope.$apply(function(){
+                console.log(results);
+                $scope.section = results;
+            });
         });
     },
 
