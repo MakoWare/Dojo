@@ -36,15 +36,7 @@ angular.module('parseService', [])
 
             //NemsisElement
             createNemsisElement: function(){
-                var nemsisElement = new NemsisElement();
-                nemsisElement.setACL(acl);
-                nemsisElement.set('title', "");
-                nemsisElement.set('value', "");
-                nemsisElement.set('createdBy', currentUser);
-                nemsisElement.set('agencyId', currentUser.get('agencyId'));
-                nemsisElement.set('pcrId', "");
 
-                return(nemsisElement);
             },
 
             //Section

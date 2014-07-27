@@ -6,7 +6,6 @@
   </div>
 
   <div class="row">
-    <h3>{{section.get('name')}}</h3>
     <table ng-table="tableParams" class="table table-bordered">
       <thead>
         <tr>
@@ -14,9 +13,7 @@
           <th>Element Name</th>
           <th>Definition</th>
           <th>Usage</th>
-          <th>Current Value</th>
-          <th>Add Element</th>
-          <th>Delete Element</th>
+          <th>Value</th>
         </tr>
       </thead>
       <tbody>
@@ -26,8 +23,6 @@
           <td class="col-xs-3">{{element.get('header').get('Definition')}}</td>
           <td class="col-xs-1">{{element.get('header').get('Usage')}}</td>
           <td><div ng-include="element.template"></div></td>
-          <td class="col-xs-1"><button class="btn btn-default" ng-show="element.isMulti" ng-click="addElement(section, element)">Add</button></td>
-          <td class="col-xs-1"><button class="btn btn-default" ng-show="canDeleteElement(section, element)" ng-click="deleteElement(section, element)">Delete</button></td>
         </tr>
       </tbody>
     </table>

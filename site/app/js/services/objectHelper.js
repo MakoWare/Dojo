@@ -191,39 +191,55 @@ var ObjectHelper = {
         }).then(function(results){
             section.set("nemsisSection", results);
 
-            //Get NemsisElements
-            var elementNumbers = [];
-            results.get('headers').forEach(function(header){
-                elementNumbers.push(header.get("ElementNumber"));
+            //create NemsisElements
+            var elementHeaders =  results.get('headers');
+
+            var nemsisElements = [];
+            var promises = [];
+            elementHeaders.forEach(function(elementHeader){
+                var promise = ObjectHelper.createNemsisElement(agencyId, userId, elementHeader.get('ElementNumber'), elementHeader, function(results){
+                    nemsisElements.push(results);
+                });
+                promises.push(promise);
             });
 
-            callback(section);
+            Parse.Promise.when(promises).then(function(results){
+                console.log("Done Promise");
+                console.log(nemsisElements);
+                section.set('elements', nemsisElements);
+                callback(section);
+            });
         });
 
     },
 
     //Create NemsisElement
-    createNemsisElement: function(agencyId, userId, elementNumber, callback){
-        var element = new NemsisElement();
+    createNemsisElement: function(agencyId, userId, elementNumber, header, callback){
+        var element = new this.NemsisElement();
         element.set("agencyId", agencyId);
         element.set("createdBy", userId);
-        element.set("elementNumber", elementNumber);
+        element.set("title", elementNumber);
         element.set("pcrId", "");
         element.set("value", "");
 
         //All elements are going to have references to their NemsisHeaders
-        var query = new Parse.Query(NemsisHeader);
-        query.equalTo("ElementNumber", elementNumber);
-        query.first({
-            success: function(result){
-                element.set(header, result);
-                callback(element);
-            },
-            error: function(error){
-                console.log(error);
-                callback(error);
-            }
-        });
+        if(header){
+            element.set('header', header);
+            callback(element);
+        } else {
+            var query = new Parse.Query("NemsisHeader");
+            query.equalTo("ElementNumber", elementNumber);
+            query.first({
+                success: function(result){
+                    element.set(header, result);
+                    callback(element);
+                },
+                error: function(error){
+                    console.log(error);
+                    callback(error);
+                }
+            });
+        }
     },
 
     //Save
