@@ -9,25 +9,47 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
         $scope.createSection($scope.nemsisSectionName);
     },
 
-    //Create Section
+    //1. Create Section
     $scope.createSection = function(sectionName){
         ParseService.createSection(sectionName, function(results){
             $scope.$apply(function(){
                 console.log(results);
                 $scope.section = results;
+                $scope.subNemsisSections = $scope.nemsisSection.get('sections');
+                if($scope.subNemsisSections){
+                    $scope.generateSubSections();
+                }
             });
         });
     },
+
+    //2. Get Partial
+    $scope.getPartial = function(){
+        return "partials/nemsis/" + $scope.nemsisSectionName + "/" + $scope.nemsisSectionName + ".html";
+    };
+
+    //3. Create Subsection Objects
+    $scope.generateSubSections = function(){
+        //Inverse the Section - NemsisSection relationship
+        var subSections = $scope.section.get('sections');
+        subSections.forEach(function(subSection){
+            $scope.subNemsisSections.forEach(function(subNemsisSection){
+                subNemsisSection.sections = [];
+                if(subSection.get('name') === subNemsisSection.get('name')){
+                    subNemsisSection.sections.push(subSection);
+                }
+            });
+        });
+
+        console.log("subNemsisSections:");
+        console.log($scope.subNemsisSections);
+    };
 
     //Save Section
     $scope.saveSection = function(){
         ParseService.saveSection($scope.section);
     };
 
-    //Get Partial
-    $scope.getPartial = function(){
-        return "partials/nemsis/" + $scope.nemsisSectionName + "/" + $scope.nemsisSectionName + ".html";
-    };
 
     //Init Controller
     $scope.init();

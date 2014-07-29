@@ -6,13 +6,14 @@ var NemsisUpdateCtrl = function($scope, $location, ParseService, GlobalService){
         $scope.dir = $location.url().slice(1).split("/")[0];
         $scope.sectionId = $location.url().slice(1).split("/")[0]; //Fix
 
-        //$scope.getSection($scope.sectionId);
+        $scope.getSection($scope.sectionId);
     },
 
+    //1. Get Section
     $scope.getSection = function(sectionId){
-        ParseService.getObject(sectionId, function(results){
+        ParseService.getSection(sectionId, function(results){
             console.log(results);
-            //$scope.getPartial();
+            $scope.section = results;
         });
     };
 

@@ -21,7 +21,7 @@ angular.module('parseService', [])
 	var NemsisElementCode = Parse.Object.extend("NemsisElementCode");
 	var NemsisHeader = Parse.Object.extend("NemsisHeader");
 	var IpadConfiguration = Parse.Object.extend("IpadConfiguration");
-
+        var ERRORMESSAGE = "An Error has occured, please contact us with this error message: ";
 
         //Define ACL for Parse Objects
         var acl = new Parse.ACL();
@@ -33,6 +33,9 @@ angular.module('parseService', [])
         acl.setPublicReadAccess(false);
 
         var ParseService = {
+
+            //Nemsis Object Helpers
+            //Create
 
             //NemsisElement
             createNemsisElement: function(){
@@ -49,6 +52,36 @@ angular.module('parseService', [])
                     callback(results);
                 });
             },
+
+            //Read
+            //NemsisElement
+            getNemsisElement: function(objectId, callback){
+                var query = new Parse.Query("NemsisElement");
+                query.get(objectId, {
+                    success: function(results){
+                        callback(resutlts);
+                    },
+                    error: function(error){
+                        alert(ERRORMESSAGE + error.message);
+                    }
+                });
+            },
+
+            //Section
+            getSection: function(objectId, callback){
+                var query = new Parse.Query("Section");
+                query.get(objectId, {
+                    success: function(results){
+                        callback(resutlts);
+                    },
+                    error: function(error){
+                        alert(ERRORMESSAGE + error.message);
+                    }
+                });
+            },
+
+            //Parse Object Helpers
+            //Create
 
             //Dispatch
             createDispatch: function(callback){

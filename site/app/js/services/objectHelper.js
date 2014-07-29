@@ -181,6 +181,7 @@ var ObjectHelper = {
         var query = new Parse.Query("NemsisSection");
         query.equalTo("name", sectionName);
         query.include("headers");
+        query.include("sections");
         var promise = query.first({
             success: function(results){
                 return results;
