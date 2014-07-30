@@ -44,7 +44,6 @@ angular.module('parseService', [])
 
             //Section
             createSection: function(name, callback){
-                console.log("ParseService.createSection");
                 var agencyId = "531531"; //Parse.User.current().get("agencyId");
                 var userId = "531531"; //Parse.User.current().id;
 
@@ -71,6 +70,20 @@ angular.module('parseService', [])
             getSection: function(objectId, callback){
                 var query = new Parse.Query("Section");
                 query.get(objectId, {
+                    success: function(results){
+                        callback(resutlts);
+                    },
+                    error: function(error){
+                        alert(ERRORMESSAGE + error.message);
+                    }
+                });
+            },
+
+            //NemsisElementCodes
+            getNemsisElementCodes: function(elementNumbers, callback){
+                var query = new Parse.Query("NemsisElementCodes");
+                query.containedIn("elementNumber", elementNumbers);
+                query.find({
                     success: function(results){
                         callback(resutlts);
                     },

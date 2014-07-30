@@ -16,6 +16,7 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
                 $scope.section = results;
                 $scope.nemsisSection = results.get('nemsisSection');
                 $scope.subNemsisSections = $scope.nemsisSection.get('sections');
+                $scope.getNemsisElementCodes();
                 if($scope.subNemsisSections){
                     $scope.generateSubSections();
                 }
@@ -23,12 +24,25 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
         });
     },
 
-    //2. Get Partial
+    //2. Get NemsisElementCodes for this Section
+    $scope.getNemsisElementCodes = function(){
+        var elementNumbers = [];
+        $scope.nemsisSection.get('headers').forEach(function(header){
+            elementNumbers.push(header.get('elementNumber'));
+        });
+        ParseService.getNemsisElementCodes(elementNumbers, function(results){
+            $scope.$apply(function(){
+                $scope.nemsisElementCodes = results;
+            });
+        });
+    };
+
+    //3. Get Partial
     $scope.getPartial = function(){
         return "partials/nemsis/" + $scope.nemsisSectionName + "/" + $scope.nemsisSectionName + ".html";
     };
 
-    //3. Create Subsection Objects
+    //4. Create Subsection Objects
     $scope.generateSubSections = function(){
         //Inverse the Section - NemsisSection relationship
         var subSections = $scope.section.get('sections');
@@ -43,6 +57,11 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
 
         console.log("subNemsisSections:");
         console.log($scope.subNemsisSections);
+    };
+
+    //Get Element Template ***TODO***
+    $scope.getElementTemplate = function(element){
+        return "partials/nemsis/elementPartials/textInput.html";
     };
 
     //Save Section

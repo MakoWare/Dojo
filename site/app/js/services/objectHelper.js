@@ -164,11 +164,8 @@ var ObjectHelper = {
     },
 
     //Nemsis Objects
-    //Create Section
+    //Create Section   ***Fix - Needs to Look at NemsisSection to see if subsections are mandatory
     createSection: function(agencyId, userId, sectionName, callback){
-        console.log("ObjectHelper.createSection");
-        console.log(arguments);
-
         var section = new this.Section();
         section.set("agencyId", agencyId);
         section.set("createdBy", userId);
@@ -205,8 +202,6 @@ var ObjectHelper = {
             });
 
             Parse.Promise.when(promises).then(function(results){
-                console.log("Done Promise");
-                console.log(nemsisElements);
                 section.set('elements', nemsisElements);
                 callback(section);
             });
