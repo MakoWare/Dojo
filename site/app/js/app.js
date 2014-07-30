@@ -3,9 +3,6 @@
 angular.module('dojo', [
     'globalService',
     'parseService',
-    'ngCookies',
-    'ngResource',
-    'ngSanitize',
     'ngRoute'
   ])
   .config(function ($routeProvider) {
