@@ -20,8 +20,8 @@
           </thead>
           <tbody>
             <tr ng-repeat="section in nemsisSection.sections">
-              <td class="col-xs-3">{{section.id)}}</td>
-              <td class="col-xs-3">{{section.createdAt)}}</td>
+              <td class="col-xs-3">{{section.id}}</td>
+              <td class="col-xs-3">{{section.createdAt}}</td>
               <td class="col-xs-3">{{section.get('createdBy')}}</td>
               <td class="col-xs-3"><a ng-href={{"#/configurations/nemsis/" + section.get('name') + "/" + section.id}}><button class="btn btn-default">Edit</button></a></td>
             </tr>
