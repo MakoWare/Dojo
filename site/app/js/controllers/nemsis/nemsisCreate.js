@@ -22,7 +22,7 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
                 }
             });
         });
-    },
+    };
 
     //2. Get NemsisElementCodes for this Section
     $scope.getNemsisElementCodes = function(){
@@ -60,6 +60,21 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
     $scope.getElementTemplate = function(element){
         return "partials/nemsis/elementPartials/textInput.html";
     };
+
+    //Can Add Section
+    $scope.canAddSection = function(nemsisSection){
+        if(nemsisSection.get('maxOccurence') === "M"){
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    //Add Section
+    $scope.addSection = function(nemsisSection){
+
+    };
+
 
     //Save Section
     $scope.saveSection = function(){

@@ -7,25 +7,29 @@
 
   <div ng-repeat="nemsisSection in subNemsisSections">
     <div class="row">
-      <h3>{{nemsisSection.get('name')}}</h3>
-      <table ng-table="tableParams" class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Object ID</th>
-            <th>Created At</th>
-            <th>Created By</th>
-            <th>Edit Section</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="section in nemsisSection.sections">
-            <td class="col-xs-3">{{section.id}}</td>
-            <td class="col-xs-3">{{section.createdAt}}</td>
-            <td class="col-xs-3">{{section.get('createdBy')}}</td>
-            <td class="col-xs-3"><a ng-href={{"#/configurations/nemsis/" + section.get('name') + "/" + section.id}}><button class="btn btn-default">Edit</button></a></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="col-sm-6">
+        <h3>{{nemsisSection.get('name')}}</h3>
+      </div>
+      <div class="col-sm-4 col-sm-offset-2">
+        <button class="btn btn-lg btn-primary" style="margin-top: 15px;" ng-show="canAddSection(nemsisSection)" ng-click="addSection(nemsisSection)">Save</button>
     </div>
+    <table ng-table="tableParams" class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Object ID</th>
+          <th>Created At</th>
+          <th>Created By</th>
+          <th>Edit Section</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="section in nemsisSection.sections">
+          <td class="col-xs-3">{{section.id}}</td>
+          <td class="col-xs-3">{{section.createdAt}}</td>
+          <td class="col-xs-3">{{section.get('createdBy')}}</td>
+          <td class="col-xs-3"><a ng-href={{"#/configurations/nemsis/" + section.get('name') + "/" + section.id}}><button class="btn btn-default">Edit</button></a></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
