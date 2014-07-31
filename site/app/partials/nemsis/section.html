@@ -22,7 +22,7 @@
           <td class="col-xs-1">{{element.get('header').get('ElementName')}}</td>
           <td class="col-xs-3">{{element.get('header').get('Definition')}}</td>
           <td class="col-xs-1">{{element.get('header').get('Usage')}}</td>
-          <td><div ng-include={{getElementTemplate(element)}}></div></td>
+          <td><div ng-include="getElementTemplate(element)"></div></td>
         </tr>
       </tbody>
     </table>

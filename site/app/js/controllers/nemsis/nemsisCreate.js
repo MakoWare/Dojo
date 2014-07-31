@@ -54,9 +54,6 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
                 }
             });
         });
-
-        console.log("subNemsisSections:");
-        console.log($scope.subNemsisSections);
     };
 
     //Get Element Template ***TODO***

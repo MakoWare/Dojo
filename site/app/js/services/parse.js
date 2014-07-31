@@ -85,7 +85,7 @@ angular.module('parseService', [])
                 query.containedIn("elementNumber", elementNumbers);
                 query.find({
                     success: function(results){
-                        callback(resutlts);
+                        callback(results);
                     },
                     error: function(error){
                         alert(ERRORMESSAGE + error.message);
