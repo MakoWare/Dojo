@@ -4,7 +4,7 @@
   <div class="page-header" style="margin-top: 10px; margin-bottom: 15px;">
     <div class="row">
       <div class="col-sm-6">
-        <h1>Search {{dir.charAt(0).toUpperCase() + dir.slice(1)}}</h1>
+        <h1>Search {{sectionName}}</h1>
       </div>
       <div class="col-sm-4" style="margin-top: 28px;">
         <form class="form-horizontal" role="form">
@@ -17,8 +17,25 @@
         </form>
       </div>
       <div class="col-sm-2" style="margin-top: 20px;">
-        <a ng-href={{"/" + objectType + "/add"}}><button class="btn btn-lg btn-success" >Add {{objectType}}</button></a>
+        <a ng-href={{"/" + sectionName + "/add"}}><button class="btn btn-lg btn-success" >Add {{objectType}}</button></a>
       </div>
+
+      <div class="row">
+        <div align="center" class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+	      <tr>
+                <th><a href="" ng-click="predicate = 'attributes.pickUpDate'; reverse=!reverse">Pic	      </tr>
+            </thead>
+            <tbody>
+	      <tr ng-repeat="object in objects | filter:searchParam | orderBy:predicate:reverse">
+	        <td class="col-sm-1">{{object.attributes.priority}}</td>
+	      </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
 
     </div>
   </div>

@@ -79,6 +79,22 @@ angular.module('parseService', [])
                 });
             },
 
+            getSectionByName: function(sectionName, callback){
+                var query = new Parse.Query("Section");
+                query.equalTo("name", sectionName);
+//                query.equalTo("agencyId", Parse.User.current().get('agencyId'));
+                query.include('sections');
+                query.first({
+                    success: function(results){
+                        callback(resutlts);
+                    },
+                    error: function(error){
+                        alert(ERRORMESSAGE + error.message);
+                    }
+                });
+            },
+
+
             //NemsisElementCodes
             getNemsisElementCodes: function(elementNumbers, callback){
                 var query = new Parse.Query("NemsisElementCodes");
