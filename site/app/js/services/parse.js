@@ -85,6 +85,7 @@ angular.module('parseService', [])
                 query.equalTo("name", sectionName);
 //                query.equalTo("agencyId", Parse.User.current().get('agencyId'));
                 query.include('sections');
+                query.include('nemsisSection.sections.sections');
                 query.first({
                     success: function(results){
                         callback(results);

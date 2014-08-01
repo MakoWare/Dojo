@@ -17,26 +17,28 @@
         </form>
       </div>
       <div class="col-sm-2" style="margin-top: 20px;">
-        <a ng-href={{"/" + sectionName + "/add"}}><button class="btn btn-lg btn-success" >Add {{objectType}}</button></a>
+        <a ng-href={{"/" + sectionName + "/add"}} ng-show="canAddSection()"><button class="btn btn-lg btn-success" >Add {{childSections[0].get('name')}}</button></a>
       </div>
+    </div>
+  </div>
 
-      <div class="row">
-        <div align="center" class="table-responsive">
-          <table class="table table-bordered">
-            <thead>
-	      <tr>
-                <th><a href="" ng-click="predicate = 'attributes.pickUpDate'; reverse=!reverse">Pic	      </tr>
-            </thead>
-            <tbody>
-	      <tr ng-repeat="object in objects | filter:searchParam | orderBy:predicate:reverse">
-	        <td class="col-sm-1">{{object.attributes.priority}}</td>
-	      </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-
+  <div class="row">
+    <div align="center" class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+	  <tr>
+            <th><a href="" ng-click="predicate = id; reverse=!reverse">ID #</tr>
+            <th><a href="" ng-click="predicate = createdAt.; reverse=!reverse">Created At</tr>
+            <th>Edit Section</tr>
+        </thead>
+        <tbody>
+	  <tr ng-repeat="section in childSections | filter:searchParam | orderBy:predicate:reverse">
+	    <td class="col-sm-1">{{section.id}}</td>
+	    <td class="col-sm-1">{{section.createdAt}}</td>
+	    <td class="col-sm-1"><a ng-href={{"/" + sectionName + "/" + section.id}}><button class="btn btn-primary">Edit</a></td>
+	  </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
