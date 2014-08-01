@@ -4,6 +4,7 @@ var NemsisReadCtrl = function($scope, $location, GlobalService, ParseService){
     $scope.init = function(){
         $scope.sections = {};
         $scope.sectionName = $location.url().split("nemsis/")[1];
+        console.log($scope);
         $scope.getSection($scope.sectionName);
     };
 

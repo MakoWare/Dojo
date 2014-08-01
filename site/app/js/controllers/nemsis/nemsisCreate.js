@@ -5,7 +5,6 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
         $scope.section = {};
         $scope.dir = $location.url().slice(1).split("/")[0];
         $scope.nemsisSectionName = $location.url().split("nemsis/")[1].split("/")[0];
-
         $scope.createSection($scope.nemsisSectionName);
     },
 

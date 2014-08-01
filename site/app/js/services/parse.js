@@ -81,12 +81,13 @@ angular.module('parseService', [])
 
             getSectionByName: function(sectionName, callback){
                 var query = new Parse.Query("Section");
+                console.log(sectionName);
                 query.equalTo("name", sectionName);
 //                query.equalTo("agencyId", Parse.User.current().get('agencyId'));
                 query.include('sections');
                 query.first({
                     success: function(results){
-                        callback(resutlts);
+                        callback(results);
                     },
                     error: function(error){
                         alert(ERRORMESSAGE + error.message);
