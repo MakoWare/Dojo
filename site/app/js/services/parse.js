@@ -71,6 +71,7 @@ angular.module('parseService', [])
                 var query = new Parse.Query("Section");
                 query.include("sections");
                 query.include("elements");
+                query.include("elements.header");
                 query.include("nemsisSection");
                 query.include("nemsisSection.sections");
                 query.get(objectId, {
