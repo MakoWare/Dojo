@@ -192,19 +192,23 @@ var ObjectHelper = {
             //create NemsisElements
             var elementHeaders =  results.get('headers');
 
-            var nemsisElements = [];
-            var promises = [];
-            elementHeaders.forEach(function(elementHeader){
-                var promise = ObjectHelper.createNemsisElement(agencyId, userId, elementHeader.get('ElementNumber'), elementHeader, function(results){
-                    nemsisElements.push(results);
+            if(typeof elementHeaders !== "undefined"){
+                var nemsisElements = [];
+                var promises = [];
+                elementHeaders.forEach(function(elementHeader){
+                    var promise = ObjectHelper.createNemsisElement(agencyId, userId, elementHeader.get('ElementNumber'), elementHeader, function(results){
+                        nemsisElements.push(results);
+                    });
+                    promises.push(promise);
                 });
-                promises.push(promise);
-            });
 
-            Parse.Promise.when(promises).then(function(results){
-                section.set('elements', nemsisElements);
+                Parse.Promise.when(promises).then(function(results){
+                    section.set('elements', nemsisElements);
+                    callback(section);
+                });
+            } else {
                 callback(section);
-            });
+            }
         });
 
     },
