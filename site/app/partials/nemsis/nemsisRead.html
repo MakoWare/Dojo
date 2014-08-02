@@ -3,10 +3,10 @@
 <div class="container-widescreen" style="margin-right : 5%; margin-left: 5%">
   <div class="page-header" style="margin-top: 10px; margin-bottom: 15px;">
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-4">
         <h1>Search {{sectionName}}</h1>
       </div>
-      <div class="col-sm-4" style="margin-top: 28px;">
+      <div class="col-sm-3" style="margin-top: 28px;">
         <form class="form-horizontal" role="form">
           <div class="form-group" style="margin-bottom: 5px;">
             <label for="searchParam" class="col-sm-2 control-label">Search:</label>
@@ -17,7 +17,7 @@
         </form>
       </div>
       <div class="col-sm-2" style="margin-top: 20px;">
-        <a ng-href={{"/" + sectionName + "/add"}} ng-show="canAddSection()"><button class="btn btn-lg btn-success" >Add {{childSections[0].get('name')}}</button></a>
+        <a ng-href={{"/" + sectionName + "/add"}} ng-show="canAddSection()"><button class="btn btn-lg btn-success" >Add {{childNemsisSectionName}}</button></a>
       </div>
     </div>
   </div>
@@ -27,15 +27,17 @@
       <table class="table table-bordered">
         <thead>
 	  <tr>
-            <th><a href="" ng-click="predicate = id; reverse=!reverse">ID #</tr>
-            <th><a href="" ng-click="predicate = createdAt.; reverse=!reverse">Created At</tr>
-            <th>Edit Section</tr>
+            <td><a href="" ng-click="predicate = id; reverse=!reverse">ID #</a></td>
+            <td><a href="" ng-click="predicate = createdAt; reverse=!reverse">Created At</a></td>
+            <td><a href="" ng-click="predicate = attributes.creadetBy; reverse=!reverse">Created By</a></td>
+            <td>Edit Section</td>
         </thead>
         <tbody>
 	  <tr ng-repeat="section in childSections | filter:searchParam | orderBy:predicate:reverse">
 	    <td class="col-sm-1">{{section.id}}</td>
 	    <td class="col-sm-1">{{section.createdAt}}</td>
-	    <td class="col-sm-1"><a ng-href={{"/" + sectionName + "/" + section.id}}><button class="btn btn-primary">Edit</a></td>
+	    <td class="col-sm-1">{{section.attributes.createdBy}}<a ng-href={{"/users/" + section.attributes.createdBy}}><button class="btn btn-warning">Edit User</button></td>
+	    <td class="col-sm-1"><a ng-href={{"/" + sectionName + "/" + section.id}}><button class="btn btn-warning">Edit Section</button></a></td>
 	  </tr>
         </tbody>
       </table>

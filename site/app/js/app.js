@@ -10,7 +10,7 @@ angular.module('dojo', [
 //Configurations
       .when('/configurations', {
         templateUrl: 'partials/configurations.html',
-        controller: 'CreateCtrl'
+        controller: 'ConfigCtrl'
       })
 //Devices
       .when('/devices/add', {

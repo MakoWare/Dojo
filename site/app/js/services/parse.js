@@ -69,11 +69,15 @@ angular.module('parseService', [])
             //Section
             getSection: function(objectId, callback){
                 var query = new Parse.Query("Section");
+                query.include("sections");
+                query.include("elements");
+                query.include("nemsisSection");
+                query.include("nemsisSection.sections");
                 query.get(objectId, {
                     success: function(results){
-                        callback(resutlts);
+                        callback(results);
                     },
-                    error: function(error){
+                    error: function(object, error){
                         alert(ERRORMESSAGE + error.message);
                     }
                 });
@@ -81,9 +85,8 @@ angular.module('parseService', [])
 
             getSectionByName: function(sectionName, callback){
                 var query = new Parse.Query("Section");
-                console.log(sectionName);
                 query.equalTo("name", sectionName);
-//                query.equalTo("agencyId", Parse.User.current().get('agencyId'));
+                query.equalTo("agencyId", Parse.User.current().get('agencyId'));
                 query.include('sections');
                 query.include('nemsisSection.sections.sections');
                 query.first({
