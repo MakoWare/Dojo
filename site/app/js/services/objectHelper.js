@@ -189,28 +189,44 @@ var ObjectHelper = {
         }).then(function(results){
             section.set("nemsisSection", results);
 
-            //create NemsisElements
-            var elementHeaders =  results.get('headers');
+            //create NemsisElements for each of the headers
+            var elementHeaders =  results.get('headers') || [];
 
-            if(typeof elementHeaders !== "undefined"){
-                var nemsisElements = [];
+            var nemsisElements = [];
+            var promises = [];
+            elementHeaders.forEach(function(elementHeader){
+                var promise = ObjectHelper.createNemsisElement(agencyId, userId, elementHeader.get('ElementNumber'), elementHeader, function(results){
+                    //nemsisElements.push(results);
+                    section.add('elements', results);
+                });
+                promises.push(promise);
+            });
+
+            Parse.Promise.when(promises).then(function(results){
+                //section.set('elements', nemsisElements);
+
+                //Check if sub Sections are required
+                var requiredSubSectionNames = [];
+                section.get('nemsisSection').get('sections').forEach(function(section){
+                    if(section.get('minOccurence' === 1)){
+                        requiredSubSectionNames.push(section.get('name'));
+                    }
+                });
+
+                //Create required sub Sections Recursively
                 var promises = [];
-                elementHeaders.forEach(function(elementHeader){
-                    var promise = ObjectHelper.createNemsisElement(agencyId, userId, elementHeader.get('ElementNumber'), elementHeader, function(results){
-                        nemsisElements.push(results);
+                requiredSubSectionNames.forEach(function(sectionName){
+                    var promise = ObjectHelper.createSection(agencyId, userId, sectionName, function(result){
+                        section.add('sections', result);
                     });
                     promises.push(promise);
                 });
 
-                Parse.Promise.when(promises).then(function(results){
-                    section.set('elements', nemsisElements);
+                Parse.Promise.when(promises).then(function(){
                     callback(section);
                 });
-            } else {
-                callback(section);
-            }
+            });
         });
-
     },
 
     //Create NemsisElement
@@ -240,6 +256,34 @@ var ObjectHelper = {
                 }
             });
         }
+    },
+
+    //Create Agency ***Wow, look how much code this is, fucking awesome, and easy to extend
+    createAgency: function(userId, callback){
+        var agency = new Agency();
+        agency.set("createdBy", userId);
+
+        //Save the new agency to give it an id
+        agency.save({
+            success: function(agency){
+                var sectionNames = ["dAgency", "dConfiguration", "dContact", "dCustomConfiguration", "dCustomResults", "dDevice", "dFacility", "dLocation", "dPersonnel", "dState", "dVehicle"];
+
+                var promises = [];
+                sectionNames.forEach(function(sectionName){
+                    var promise = ObjectHelper.createSection(agency.id, agency.get("createdBy"), sectionName, function(section){
+                        agency.set('sectionName', section);
+                    });
+                    promises.push(promise);
+                });
+
+                Parse.Promise.when(promises).then(function(){
+                    callback(agency);
+                });
+            },
+            error: function(object, error){
+                callback(error);
+            }
+        });
     },
 
     //Save
