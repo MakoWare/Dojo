@@ -1,4 +1,4 @@
-//This may go in cloud code
+//This *should go in cloud code
 
 //Utility Class for Objects
 var ObjectHelper = {
