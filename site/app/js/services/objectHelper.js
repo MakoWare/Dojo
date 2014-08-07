@@ -164,7 +164,7 @@ var ObjectHelper = {
     },
 
     //Nemsis Objects
-    //Create Section   ***Fix - Needs to Look at NemsisSection to see if subsections are mandatory
+    //Create Section   ***Fix this needs to return a promise
     createSection: function(agencyId, userId, sectionName, callback){
         var section = new this.Section();
         section.set("agencyId", agencyId);
@@ -207,22 +207,27 @@ var ObjectHelper = {
 
                 //Check if sub Sections are required
                 var requiredSubSectionNames = [];
-                section.get('nemsisSection').get('sections').forEach(function(section){
-                    if(section.get('minOccurence' === 1)){
-                        requiredSubSectionNames.push(section.get('name'));
-                    }
-                });
-
+                if(section.get('nemsisSection').get('sections')){
+                    section.get('nemsisSection').get('sections').forEach(function(section){
+                        if(section.get('min')  == 1){
+                            requiredSubSectionNames.push(section.get('name'));
+                        }
+                    });
+                }
                 //Create required sub Sections Recursively
-                var promises = [];
+                var subSectionPromises = [];
                 requiredSubSectionNames.forEach(function(sectionName){
                     var promise = ObjectHelper.createSection(agencyId, userId, sectionName, function(result){
+                        console.log(result);
                         section.add('sections', result);
                     });
-                    promises.push(promise);
+                    console.log(promise);
+                    subSectionPromises.push(promise);
                 });
+                console.log(subSectionPromises);
 
-                Parse.Promise.when(promises).then(function(){
+                Parse.Promise.when(subSectionPromises).then(function(){
+                    console.log("returning the whole shabang");
                     callback(section);
                 });
             });

@@ -12,6 +12,8 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
     $scope.createSection = function(sectionName){
         ParseService.createSection(sectionName, function(results){
             $scope.$apply(function(){
+                console.log('back to fast');
+                console.log(results);
                 $scope.section = results;
                 $scope.nemsisSection = results.get('nemsisSection');
                 $scope.subNemsisSections = $scope.nemsisSection.get('sections');
