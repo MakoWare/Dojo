@@ -12,8 +12,6 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
     $scope.createSection = function(sectionName){
         ParseService.createSection(sectionName, function(results){
             $scope.$apply(function(){
-                console.log('back to fast');
-                console.log(results);
                 $scope.section = results;
                 $scope.nemsisSection = results.get('nemsisSection');
                 $scope.subNemsisSections = $scope.nemsisSection.get('sections');
@@ -47,14 +45,18 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
     $scope.generateSubSections = function(){
         //Inverse the Section - NemsisSection relationship
         var subSections = $scope.section.get('sections');
-        subSections.forEach(function(subSection){
-            $scope.subNemsisSections.forEach(function(subNemsisSection){
-                subNemsisSection.sections = [];
+        $scope.subNemsisSections.forEach(function(subNemsisSection){
+            subNemsisSection.sections = [];
+            subSections.forEach(function(subSection){
                 if(subSection.get('name') === subNemsisSection.get('name')){
+                    console.log("adding subSection to SubNemsisSection");
                     subNemsisSection.sections.push(subSection);
                 }
+                console.log("subNemsisSection.sections");
+                console.log(subNemsisSection.sections);
             });
         });
+        console.log($scope.subNemsisSections);
     };
 
     //Get Element Template ***TODO***

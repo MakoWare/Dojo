@@ -164,7 +164,7 @@ var ObjectHelper = {
     },
 
     //Nemsis Objects
-    //Create Section   ***Fix this needs to return a promise
+    //Create Section   *Think I got it, boss ass async function
     createSection: function(agencyId, userId, sectionName, callback){
         var section = new this.Section();
         section.set("agencyId", agencyId);
@@ -196,14 +196,12 @@ var ObjectHelper = {
             var promises = [];
             elementHeaders.forEach(function(elementHeader){
                 var promise = ObjectHelper.createNemsisElement(agencyId, userId, elementHeader.get('ElementNumber'), elementHeader, function(results){
-                    //nemsisElements.push(results);
                     section.add('elements', results);
                 });
                 promises.push(promise);
             });
 
-            Parse.Promise.when(promises).then(function(results){
-                //section.set('elements', nemsisElements);
+            Parse.Promise.when(promises).then(function(){
 
                 //Check if sub Sections are required
                 var requiredSubSectionNames = [];
@@ -215,23 +213,36 @@ var ObjectHelper = {
                     });
                 }
                 //Create required sub Sections Recursively
-                var subSectionPromises = [];
-                requiredSubSectionNames.forEach(function(sectionName){
-                    var promise = ObjectHelper.createSection(agencyId, userId, sectionName, function(result){
-                        console.log(result);
-                        section.add('sections', result);
-                    });
-                    console.log(promise);
-                    subSectionPromises.push(promise);
-                });
-                console.log(subSectionPromises);
+                //Why can NemsisElement be serialized and not Section? fuck Parse
+                if(requiredSubSectionNames.length > 0){
+                    var subSectionPromises = [];
+                    var subSections = [];
+                    requiredSubSectionNames.forEach(function(sectionName){
+                        var promise = ObjectHelper.createSection(agencyId, userId, sectionName, function(result){
 
-                Parse.Promise.when(subSectionPromises).then(function(){
-                    console.log("returning the whole shabang");
+                            subSections.push(result);
+                        });
+                        subSectionPromises.push(promise);
+                    });
+
+                    Parse.Promise.when(subSectionPromises).then(function(){
+                        Parse.Object.saveAll(subSections, {
+                            success: function(results){
+                                section.set('sections', results);
+                            },
+                            error: function(object, error){
+                                callback(error);
+                            }
+                        }).then(function(){
+                            callback(section);
+                        });
+                    });
+                } else {
                     callback(section);
-                });
+                }
             });
         });
+        return promise;
     },
 
     //Create NemsisElement
