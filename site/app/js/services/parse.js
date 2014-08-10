@@ -118,6 +118,14 @@ angular.module('parseService', [])
             //Parse Object Helpers
             //Create
 
+            //Agency
+            createAgency: function(name, callback){
+                var userId = Parse.User.current().id;
+                ObjectHelper.createAgency(name, userId, function(results){
+                    callback(results);
+                });
+            },
+
             //Dispatch
             createDispatch: function(callback){
                 var dispatch = new Parse.Object("Dispatch");

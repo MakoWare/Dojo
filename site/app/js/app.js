@@ -7,6 +7,11 @@ angular.module('dojo', [
   ])
   .config(function ($routeProvider) {
     $routeProvider
+//Admin
+      .when('/admin', {
+        templateUrl: 'partials/admin.html',
+        controller: 'AdminCtrl'
+      })
 //Configurations
       .when('/configurations', {
         templateUrl: 'partials/configurations.html',

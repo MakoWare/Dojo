@@ -219,12 +219,12 @@ var ObjectHelper = {
                     var subSections = [];
                     requiredSubSectionNames.forEach(function(sectionName){
                         var promise = ObjectHelper.createSection(agencyId, userId, sectionName, function(result){
-
                             subSections.push(result);
                         });
                         subSectionPromises.push(promise);
                     });
 
+                    //After all subsections have been created, save them, Parse - can't serialize
                     Parse.Promise.when(subSectionPromises).then(function(){
                         Parse.Object.saveAll(subSections, {
                             success: function(results){
@@ -234,10 +234,22 @@ var ObjectHelper = {
                                 callback(error);
                             }
                         }).then(function(){
-                            callback(section);
+                            //After all of the subsections are saved, save the section
+                            section.save({
+                                success: function(result){
+                                    console.log("subsections saved, now calling back section");
+                                    console.log(result.get('name'));
+                                    callback(result);
+                                },
+                                error: function(object, error){
+                                    callback(error);
+                                }
+                            });
                         });
                     });
                 } else {
+                    console.log("createSection");
+                    console.log(section.get('name'));
                     callback(section);
                 }
             });
@@ -275,9 +287,10 @@ var ObjectHelper = {
     },
 
     //Create Agency ***Wow, look how much code this is, fucking awesome, and easy to extend
-    createAgency: function(userId, callback){
-        var agency = new Agency();
+    createAgency: function(name, userId, callback){
+        var agency = new this.Agency();
         agency.set("createdBy", userId);
+        agency.set("name", name);
 
         //Save the new agency to give it an id
         agency.save({
@@ -287,13 +300,20 @@ var ObjectHelper = {
                 var promises = [];
                 sectionNames.forEach(function(sectionName){
                     var promise = ObjectHelper.createSection(agency.id, agency.get("createdBy"), sectionName, function(section){
-                        agency.set('sectionName', section);
+                        console.log(sectionName);
+                        agency.set(sectionName, section);
                     });
                     promises.push(promise);
                 });
-
                 Parse.Promise.when(promises).then(function(){
-                    callback(agency);
+                    agency.save({
+                        success: function(results){
+                            callback(results);
+                        },
+                        error: function(object, error){
+                            callback(error);
+                        }
+                    });
                 });
             },
             error: function(object, error){
