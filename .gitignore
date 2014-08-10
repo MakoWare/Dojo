@@ -6,3 +6,4 @@ dist
 .editorconfig
 .jshintrc
 app/bower_components
+parseCode

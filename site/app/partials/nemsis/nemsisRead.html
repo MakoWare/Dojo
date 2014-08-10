@@ -17,7 +17,7 @@
         </form>
       </div>
       <div class="col-sm-2" style="margin-top: 20px;">
-        <a ng-href={{"/" + childNemsisSectionName + "/add"}} ng-show="canAddSection()"><button class="btn btn-lg btn-success" >Add {{childNemsisSectionName}}</button></a>
+        <a ng-href="#/configurations/nemsis/{{childNemsisSectionName}}/add" ng-show="canAddSection()"><button class="btn btn-lg btn-success" >Add {{childNemsisSectionName}}</button></a>
       </div>
     </div>
   </div>
@@ -36,8 +36,8 @@
 	  <tr ng-repeat="section in childSections | filter:searchParam | orderBy:predicate:reverse">
 	    <td class="col-sm-1">{{section.id}}</td>
 	    <td class="col-sm-1">{{section.createdAt}}</td>
-	    <td class="col-sm-1">{{section.attributes.createdBy}}<a ng-href={{"/users/" + section.attributes.createdBy}}><button class="btn btn-warning">Edit User</button></td>
-	    <td class="col-sm-1"><a ng-href={{"/" + sectionName + "/" + section.id}}><button class="btn btn-warning">Edit Section</button></a></td>
+	    <td class="col-sm-1"><a ng-href="#/users/{{section.attributes.createdBy}}"><button class="btn btn-warning">Edit User</button></a></td>
+	    <td class="col-sm-1"><a ng-href="#/configurations/nemsis/{{sectionName}}/{{section.id}}"><button class="btn btn-warning">Edit Section</button></a></td>
 	  </tr>
         </tbody>
       </table>

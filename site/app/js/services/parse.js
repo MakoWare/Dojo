@@ -44,8 +44,8 @@ angular.module('parseService', [])
 
             //Section
             createSection: function(name, callback){
-                var agencyId = "531531"; //Parse.User.current().get("agencyId");
-                var userId = "531531"; //Parse.User.current().id;
+                var agencyId = Parse.User.current().get("agencyId");
+                var userId = Parse.User.current().id;
 
                 ObjectHelper.createSection(agencyId, userId, name, function(results){
                     callback(results);
