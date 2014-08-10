@@ -174,19 +174,23 @@ var ObjectHelper = {
         section.set("elements", []);
         section.set("sections", []);
 
+        var subSections = [];
+
         //Get NemsisSection
         var query = new Parse.Query("NemsisSection");
         query.equalTo("name", sectionName);
         query.include("headers");
         query.include("sections");
-        var promise = query.first({
+        var promise1 = query.first({
             success: function(results){
                 return results;
             },
             error: function(error){
                 console.log(error);
             }
-        }).then(function(results){
+        });
+
+        var promise2 = promise1.then(function(results){
             section.set("nemsisSection", results);
 
             //create NemsisElements for each of the headers
@@ -200,61 +204,57 @@ var ObjectHelper = {
                 });
                 promises.push(promise);
             });
-
             Parse.Promise.when(promises).then(function(){
+                return;
+            });
+        });
+        var promise3 = promise2.then(function(){
 
-                //Check if sub Sections are required
-                var requiredSubSectionNames = [];
-                if(section.get('nemsisSection').get('sections')){
-                    section.get('nemsisSection').get('sections').forEach(function(section){
-                        if(section.get('min')  == 1){
-                            requiredSubSectionNames.push(section.get('name'));
+            //Check if sub Sections are required
+            var requiredSubSectionNames = [];
+            if(section.get('nemsisSection').get('sections')){
+                section.get('nemsisSection').get('sections').forEach(function(section){
+                    if(section.get('min')  == 1){
+                        requiredSubSectionNames.push(section.get('name'));
+                    }
+                });
+            }
+            //Create required sub Sections Recursively
+            //Why can NemsisElement be serialized and not Section? fuck Parse
+            var subSectionPromises = [];
+            requiredSubSectionNames.forEach(function(sectionName){
+                var promise = ObjectHelper.createSection(agencyId, userId, sectionName, function(result){
+                    subSections.push(result);
+                });
+                subSectionPromises.push(promise);
+            });
+
+            //After all subsections have been created, save them, Parse - can't serialize
+            Parse.Promise.when(subSectionPromises).then(function(){
+                return;
+            });
+        });
+        var promise4 = promise3.then(function(){
+            Parse.Object.saveAll(subSections, {
+                success: function(results){
+                    section.set('sections', results);
+                    section.save({
+                        success: function(result){
+                            console.log("subsections saved, now calling back section");
+                            console.log(result.get('name'));
+                            callback(result);
+                        },
+                        error: function(object, error){
+                            callback(error);
                         }
                     });
-                }
-                //Create required sub Sections Recursively
-                //Why can NemsisElement be serialized and not Section? fuck Parse
-                if(requiredSubSectionNames.length > 0){
-                    var subSectionPromises = [];
-                    var subSections = [];
-                    requiredSubSectionNames.forEach(function(sectionName){
-                        var promise = ObjectHelper.createSection(agencyId, userId, sectionName, function(result){
-                            subSections.push(result);
-                        });
-                        subSectionPromises.push(promise);
-                    });
-
-                    //After all subsections have been created, save them, Parse - can't serialize
-                    Parse.Promise.when(subSectionPromises).then(function(){
-                        Parse.Object.saveAll(subSections, {
-                            success: function(results){
-                                section.set('sections', results);
-                            },
-                            error: function(object, error){
-                                callback(error);
-                            }
-                        }).then(function(){
-                            //After all of the subsections are saved, save the section
-                            section.save({
-                                success: function(result){
-                                    console.log("subsections saved, now calling back section");
-                                    console.log(result.get('name'));
-                                    callback(result);
-                                },
-                                error: function(object, error){
-                                    callback(error);
-                                }
-                            });
-                        });
-                    });
-                } else {
-                    console.log("createSection");
-                    console.log(section.get('name'));
-                    callback(section);
+                },
+                error: function(object, error){
+                    callback(error);
                 }
             });
         });
-        return promise;
+        return promise4;
     },
 
     //Create NemsisElement
