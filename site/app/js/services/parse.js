@@ -128,13 +128,7 @@ angular.module('parseService', [])
 
             //Dispatch
             createDispatch: function(callback){
-                var dispatch = new Parse.Object("Dispatch");
-                dispatch.set('agencyId', currentUser.get('agencyId'));
-                dispatch.set('comments', null);
-                dispatch.set('creatorId', currentUser.id);
-                dispatch.set('dropOffAddress', null);
-                dispatch.set('dropOffCity', null);
-                dispatch.set('dropOffDate', null);
+
             },
 
             //Device
@@ -206,7 +200,13 @@ angular.module('parseService', [])
             //Logout
             logout: function(){
               Parse.User.logOut();
+            },
+
+            //Get Current User
+            getCurrentUser: function(){
+                return Parse.User.current();
             }
+
         };
 
         return ParseService;
