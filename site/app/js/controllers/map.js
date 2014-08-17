@@ -17,10 +17,12 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService){
 	window.open("#/patients", "", wh);
     };
 
+    /*
     $('#foo').slider()
         .on('slide', function(ev){
             $('#bar').val(ev.value);
         });
+     */
 
     //Map
     $scope.initMap = function(){
@@ -94,21 +96,6 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService){
 	if($scope.currentUser == undefined){
 	    $location.path('/');
 	}
-	//Auth Manager
-	ParseService.hasRole('Manager', function(results){
-	    $scope.$apply(function(){
-                $scope.isManager = results;
-            });
-	    //Auth Dispatcher
-	    ParseService.hasRole('Dispatcher', function(results){
-		$scope.$apply(function(){
-		    $scope.isDispatcher = results;
-		});
-		if(!$scope.isManager && !$scope.isDispatcher){
-		    $location.path('/');
-		}
-	    });
-	});
 
 	$scope.geocoder = new google.maps.Geocoder();
 	$scope.initMap();

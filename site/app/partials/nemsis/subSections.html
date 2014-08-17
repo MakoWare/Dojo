@@ -11,7 +11,7 @@
         <h3>{{nemsisSection.get('name')}}</h3>
       </div>
       <div class="col-sm-4 col-sm-offset-2">
-        <button class="btn btn-lg btn-primary" style="margin-top: 15px;" ng-show="canAddSection(nemsisSection)" ng-click="addSection(nemsisSection)">Save</button>
+        <button class="btn btn-success" style="margin-top: 15px;" ng-show="canAddSection(nemsisSection)" ng-click="addSection(nemsisSection)">Add Section</button>
     </div>
     <table ng-table="tableParams" class="table table-bordered">
       <thead>
@@ -27,7 +27,7 @@
           <td class="col-xs-3">{{section.id}}</td>
           <td class="col-xs-3">{{section.createdAt}}</td>
           <td class="col-xs-3">{{section.get('createdBy')}}</td>
-          <td class="col-xs-3"><a ng-href="#/configurations/nemsis/{{section.get('name')}}/{{section.id}"><button class="btn btn-default">Edit</button></a></td>
+          <td class="col-xs-3"><a ng-href="#/configurations/nemsis/{{section.get('name')}}/{{section.id}}"><button class="btn btn-default">Edit</button></a></td>
         </tr>
       </tbody>
     </table>

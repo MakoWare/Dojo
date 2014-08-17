@@ -56,6 +56,11 @@ angular.module('dojo', [
         templateUrl: 'partials/update.html',
         controller: 'UpdateCtrl'
       })
+//Files  *** TODO ***
+      .when('/files', {
+        templateUrl: 'partials/read.html',
+        controller: 'ReadCtrl'
+      })
 //Login
       .when('/', {
         templateUrl: 'partials/login.html',
@@ -91,6 +96,15 @@ angular.module('dojo', [
         controller: 'ReadCtrl'
       })
       .when('/patients/:id', {
+        templateUrl: 'partials/update.html',
+        controller: 'UpdateCtrl'
+      })
+//PCRs
+      .when('/pcrs', {
+        templateUrl: 'partials/read.html',
+        controller: 'ReadCtrl'
+      })
+      .when('/pcrs/:id', {
         templateUrl: 'partials/update.html',
         controller: 'UpdateCtrl'
       })

@@ -12,7 +12,6 @@ var NemsisUpdateCtrl = function($scope, $location, ParseService, GlobalService){
     $scope.getSection = function(sectionId){
         ParseService.getSection(sectionId, function(results){
             $scope.$apply(function(){
-                console.log(results);
                 $scope.section = results;
                 $scope.nemsisSection = results.get('nemsisSection');
                 $scope.subNemsisSections = $scope.nemsisSection.get('sections');
@@ -39,13 +38,14 @@ var NemsisUpdateCtrl = function($scope, $location, ParseService, GlobalService){
         });
     };
 
+
     //4. Create Subsection Objects
     $scope.generateSubSections = function(){
         //Inverse the Section - NemsisSection relationship
         var subSections = $scope.section.get('sections');
-        subSections.forEach(function(subSection){
-            $scope.subNemsisSections.forEach(function(subNemsisSection){
-                subNemsisSection.sections = [];
+        $scope.subNemsisSections.forEach(function(subNemsisSection){
+            subNemsisSection.sections = [];
+            subSections.forEach(function(subSection){
                 if(subSection.get('name') === subNemsisSection.get('name')){
                     subNemsisSection.sections.push(subSection);
                 }
@@ -53,6 +53,31 @@ var NemsisUpdateCtrl = function($scope, $location, ParseService, GlobalService){
         });
     };
 
+    //Can Add Section
+    $scope.canAddSection = function(nemsisSection){
+        if(typeof nemsisSection.get !== "function"){
+            return false;
+        } else {
+            if(nemsisSection.get('max') === "M"){
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    //Can Delete Section
+    $scope.canDeleteSection = function(nemsisSection){
+        if(typeof nemsisSection.get !== "function"){
+            return false;
+        } else {
+            if(nemsisSection.get('max') === "0"){
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
 
     //Get Element Template ***TODO***
     $scope.getElementTemplate = function(element){

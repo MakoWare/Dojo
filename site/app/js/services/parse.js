@@ -164,6 +164,7 @@ angular.module('parseService', [])
             //Find Objects
             findObjects: function(objectType, searchParam, filterParam, callback){
                 var query = new Parse.Query(objectType);
+                query.equalTo("agencyId", Parse.User.current().get('agencyId'));
                 query.find({
                     success: function(results){
                         callback(results);
@@ -205,7 +206,50 @@ angular.module('parseService', [])
             //Get Current User
             getCurrentUser: function(){
                 return Parse.User.current();
-            }
+            },
+
+            //MAP
+            getMarkers : function(callback){
+		currentUser = Parse.User.current();
+		var query = new Parse.Query(Vehicle);
+		query.equalTo('agencyId', currentUser.get('agencyId'));
+		query.equalTo('active', true);
+		query.include('currentDispatch');
+		query.find({
+		    success: function(vehicles){
+			var markers = [];
+			vehicles.forEach(function(vehicle){
+			    var latitude = parseFloat(vehicle.get('lat'));
+			    var longitude = parseFloat(vehicle.get('lon'));
+			    var icon = createIcon(vehicle.get('status'), vehicle.get('type'));
+			    var title = vehicle.get('name');
+			    var status = vehicle.get('status');
+			    var dispatch = "None";
+			    var vehicleId = vehicle.id;
+			    if(vehicle.get('currentDispatch') != undefined){
+				dispatch = vehicle.get('currentDispatch').id;
+			    }
+			    var marker = {
+				latitude: latitude,
+				longitude: longitude,
+				icon : icon,
+				title: title,
+				status: status,
+				dispatch: dispatch,
+				vehicleId: vehicleId,
+				animation: google.maps.Animation.DROP
+			    };
+			    markers.push(marker);
+			});
+			callback(markers);
+		    },
+		    error: function(error){
+			alert("Error: " + error.message);
+		    }
+		});
+	    }
+
+
 
         };
 

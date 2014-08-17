@@ -18,7 +18,6 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
     $scope.findObjects = function(objectType, searchParam, filterParam){
         ParseService.findObjects(objectType, searchParam, filterParam, function(results){
             $scope.$apply(function(){
-                console.log(results);
                 $scope.objects = results;
             });
         });
