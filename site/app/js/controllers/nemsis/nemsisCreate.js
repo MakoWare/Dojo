@@ -59,10 +59,21 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
         console.log($scope.subNemsisSections);
     };
 
-    //Get Element Template ***TODO***
+    //Get Element Template ***TODO*** Fix
     $scope.getElementTemplate = function(element){
-        return "partials/nemsis/elementPartials/textInput.html";
+        $scope.nemsisElementCodes.forEach(function(code){
+            if(code.get('elementNumber') == element.get('number')){
+                if(element.get('header').get('maxOccurences') == "M"){
+                    return "partials/nemsis/elementPartials/multiSelect.html";
+                } else {
+                    return "partials/nemsis/elementPartials/singleSelect.html";
+                }
+            } else {
+                return "partials/nemsis/elementPartials/textInput.html";
+            }
+        });
     };
+
 
     //Can Add Section
     $scope.canAddSection = function(nemsisSection){
@@ -73,11 +84,26 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
         }
     };
 
-    //Add Section
-    $scope.addSection = function(nemsisSection){
+    //***TODO*** Fix
+    $scope.addSection = function(parentSection, childSection){
+        //First check if current Section is dirty
+        alert("Current Section isn't Saved, please save before adding another section");
 
-    };
+        ParseService.createSection(childSection.get('name'), function(results){
+            $scope.$apply(function(){
+                $scope.section = results;
+                $scope.nemsisSection = results.get('nemsisSection');
+                $scope.subNemsisSections = $scope.nemsisSection.get('sections');
+                $scope.getNemsisElementCodes();
+                if($scope.subNemsisSections){
+                    $scope.generateSubSections();
+                }
 
+                //Add section to previous
+                parentSection.add("sections", $scope.section);
+            });
+        });
+    },
 
     //Save Section
     $scope.saveSection = function(){
