@@ -83,8 +83,8 @@ angular.module('dojo', [
       })
 //Nemsis Update
       .when('/configurations/nemsis/:sectionName/:id', {
-        templateUrl: 'partials/nemsis/nemsisUpdate.html',
-        controller: 'NemsisUpdateCtrl'
+        templateUrl: 'partials/nemsis/nemsisCreate.html',
+        controller: 'NemsisCreateCtrl'
       })
 //Patients
       .when('/patients/add', {

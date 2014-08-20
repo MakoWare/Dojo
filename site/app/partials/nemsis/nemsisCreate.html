@@ -4,14 +4,16 @@
   <div class="page-header" style="margin-top: 10px; margin-bottom: 15px;">
     <div class="row">
       <div class="col-sm-6">
-        <h1>New {{nemsisSectionName}}</h1>
+        <h1>{{type}} {{nemsisSectionName}}</h1>
       </div>
-      <div class="col-sm-4 col-sm-offset-2">
-        <button class="btn btn-lg btn-primary" style="margin-top: 15px;" ng-click="saveObject()">Save</button>
+      <div class="col-sm-2 col-sm-offset-3">
+        <button class="btn btn-lg btn-primary" style="margin-top: 15px;" ng-click="saveSection(section)">Save</button>
+      </div>
+      <div class="col-sm-2">
+        <button class="btn btn-lg btn-danger" style="margin-top: 15px;" ng-show="canDeleteSection(section)" ng-click="deleteSection(section)">Delete</button>
       </div>
     </div>
   </div>
-
   <div ng-include="'partials/nemsis/section.html'"></div>
   <div ng-if="subNemsisSections" ng-include="'partials/nemsis/subSections.html'"></div>
 </div>

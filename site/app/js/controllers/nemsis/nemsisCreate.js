@@ -1,14 +1,22 @@
-//Nemsis Create Controller
+//Nemsis Create and Update Controller
 var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     $scope.init = function(){
         $scope.section = {};
         $scope.dir = $location.url().slice(1).split("/")[0];
         $scope.nemsisSectionName = $location.url().split("nemsis/")[1].split("/")[0];
-        $scope.createSection($scope.nemsisSectionName);
+
+        $scope.sectionId = $location.url().split("/")[$location.url().split("/").length - 1];
+        if($scope.sectionId == "add"){
+            $scope.type = "Create";
+            $scope.createSection($scope.nemsisSectionName);
+        } else {
+            $scope.type = "Update";
+            $scope.getSection($scope.sectionId);
+        }
     },
 
-    //1. Create Section
+    //1a. Create Section
     $scope.createSection = function(sectionName){
         ParseService.createSection(sectionName, function(results){
             $scope.$apply(function(){
@@ -21,7 +29,23 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
                 }
             });
         });
-    };
+    },
+
+    //1b. Get Section
+    $scope.getSection = function(sectionId){
+        ParseService.getSection(sectionId, function(results){
+            $scope.$apply(function(){
+                $scope.section = results;
+                $scope.nemsisSection = results.get('nemsisSection');
+                $scope.subNemsisSections = $scope.nemsisSection.get('sections');
+                $scope.getNemsisElementCodes();
+                if($scope.subNemsisSections){
+                    $scope.generateSubSections();
+                }
+
+            });
+        });
+    },
 
     //2. Get NemsisElementCodes for this Section
     $scope.getNemsisElementCodes = function(){
@@ -34,14 +58,10 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
                 $scope.nemsisElementCodes = results;
             });
         });
-    };
+    },
 
-    //3. Get Partial
-    $scope.getPartial = function(){
-        return "partials/nemsis/" + $scope.nemsisSectionName + "/" + $scope.nemsisSectionName + ".html";
-    };
 
-    //4. Create Subsection Objects
+    //3. Create Subsection Objects
     $scope.generateSubSections = function(){
         //Inverse the Section - NemsisSection relationship
         var subSections = $scope.section.get('sections');
@@ -49,15 +69,11 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
             subNemsisSection.sections = [];
             subSections.forEach(function(subSection){
                 if(subSection.get('name') === subNemsisSection.get('name')){
-                    console.log("adding subSection to SubNemsisSection");
                     subNemsisSection.sections.push(subSection);
                 }
-                console.log("subNemsisSection.sections");
-                console.log(subNemsisSection.sections);
             });
         });
-        console.log($scope.subNemsisSections);
-    };
+    },
 
     //Get Element Template ***TODO*** Fix
     $scope.getElementTemplate = function(element){
@@ -72,19 +88,50 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
                 return "partials/nemsis/elementPartials/textInput.html";
             }
         });
-    };
-
+    },
 
     //Can Add Section
     $scope.canAddSection = function(nemsisSection){
-        if(nemsisSection.get('maxOccurence') === "M"){
-            return true;
-        } else {
+        if(typeof nemsisSection.get !== "function"){
             return false;
+        } else {
+            if(nemsisSection.get('max') === "M"){
+                return true;
+            } else {
+                return false;
+            }
         }
-    };
+    },
 
-    //***TODO*** Fix
+    //Can Delete Section
+    $scope.canDeleteSection = function(nemsisSection){
+        if(typeof nemsisSection.get !== "function"){
+            return false;
+        } else {
+            if(nemsisSection.get('max') === "0"){
+                return true;
+            } else {
+                return false;
+            }
+        }
+    },
+
+    //Can Add Element         ***TODO***
+    $scope.canAddElement = function(parentSection, element){
+
+    },
+
+    //Can Delete Section      ***TODO***
+    $scope.canDeleteElement = function(parentSection, element){
+
+    },
+
+    //Add Element             ***TODO***
+    $scope.addElement = function(parentSection, element){
+
+    },
+
+    //Add Section             ***TODO*** Fix
     $scope.addSection = function(parentSection, childSection){
         //First check if current Section is dirty
         alert("Current Section isn't Saved, please save before adding another section");
@@ -108,7 +155,14 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
     //Save Section
     $scope.saveSection = function(){
         ParseService.saveSection($scope.section);
-    };
+    },
+
+    //Delete Section
+    $scope.deleteSection = function(section){
+        ParseService.deleteSection(section, function(results){
+            console.log(results);
+        });
+    },
 
 
     //Init Controller
