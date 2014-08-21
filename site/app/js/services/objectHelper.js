@@ -240,8 +240,6 @@ var ObjectHelper = {
                     section.set('sections', results);
                     section.save({
                         success: function(result){
-                            console.log("subsections saved, now calling back section");
-                            console.log(result.get('name'));
                             callback(result);
                         },
                         error: function(object, error){
@@ -300,7 +298,6 @@ var ObjectHelper = {
                 var promises = [];
                 sectionNames.forEach(function(sectionName){
                     var promise = ObjectHelper.createSection(agency.id, agency.get("createdBy"), sectionName, function(section){
-                        console.log(sectionName);
                         agency.set(sectionName, section);
                     });
                     promises.push(promise);

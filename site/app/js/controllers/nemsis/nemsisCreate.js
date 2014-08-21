@@ -5,7 +5,6 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
         $scope.section = {};
         $scope.dir = $location.url().slice(1).split("/")[0];
         $scope.nemsisSectionName = $location.url().split("nemsis/")[1].split("/")[0];
-
         $scope.sectionId = $location.url().split("/")[$location.url().split("/").length - 1];
         if($scope.sectionId == "add"){
             $scope.type = "Create";
@@ -24,6 +23,8 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
                 $scope.nemsisSection = results.get('nemsisSection');
                 $scope.subNemsisSections = $scope.nemsisSection.get('sections');
                 $scope.getNemsisElementCodes();
+                $scope.canDelete = $scope.canDeleteSection($scope.section);
+                console.log($scope.canDelete);
                 if($scope.subNemsisSections){
                     $scope.generateSubSections();
                 }
@@ -39,6 +40,8 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
                 $scope.nemsisSection = results.get('nemsisSection');
                 $scope.subNemsisSections = $scope.nemsisSection.get('sections');
                 $scope.getNemsisElementCodes();
+                $scope.canDelete = $scope.canDeleteSection($scope.section);
+                console.log($scope.canDelete);
                 if($scope.subNemsisSections){
                     $scope.generateSubSections();
                 }
@@ -105,16 +108,13 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
         }
     },
 
-    //Can Delete Section
-    $scope.canDeleteSection = function(nemsisSection){
-        if(typeof nemsisSection.get !== "function"){
-            return false;
+    //Can Delete Section  ***TODO*** add case with other sections
+    $scope.canDeleteSection = function(section){
+        console.log(section.get('nemsisSection'));
+        if(section.get('nemsisSection').get('min') === "0"){
+            return true;
         } else {
-            if(nemsisSection.get('max') === "0"){
-                return true;
-            } else {
-                return false;
-            }
+            return false;
         }
     },
 
@@ -166,11 +166,15 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     //Delete Section
     $scope.deleteSection = function(section){
-        ParseService.deleteSection(section, function(results){
-            console.log(results);
+        section.destroy({
+            success: function(result){
+                alert("Section successfully deleted");
+            },
+            error: function(object, error){
+                alert("Error deleting section: " + error.message);
+            }
         });
     },
-
 
     //Init Controller
     $scope.init();
