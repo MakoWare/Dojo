@@ -73,6 +73,7 @@ angular.module('parseService', [])
                 query.include("elements");
                 query.include("elements.header");
                 query.include("nemsisSection");
+                query.include("nemsisSection.headers");
                 query.include("nemsisSection.sections");
                 query.get(objectId, {
                     success: function(results){
@@ -101,9 +102,9 @@ angular.module('parseService', [])
             },
 
 
-            //NemsisElementCodes
+            //Get NemsisElementCodes
             getNemsisElementCodes: function(elementNumbers, callback){
-                var query = new Parse.Query("NemsisElementCodes");
+                var query = new Parse.Query(NemsisElementCode);
                 query.containedIn("elementNumber", elementNumbers);
                 query.find({
                     success: function(results){

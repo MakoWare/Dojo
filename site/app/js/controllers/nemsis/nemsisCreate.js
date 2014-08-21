@@ -51,7 +51,7 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
     $scope.getNemsisElementCodes = function(){
         var elementNumbers = [];
         $scope.nemsisSection.get('headers').forEach(function(header){
-            elementNumbers.push(header.get('elementNumber'));
+            elementNumbers.push(header.get('ElementNumber'));
         });
         ParseService.getNemsisElementCodes(elementNumbers, function(results){
             $scope.$apply(function(){
@@ -77,17 +77,19 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     //Get Element Template ***TODO*** Fix
     $scope.getElementTemplate = function(element){
-        $scope.nemsisElementCodes.forEach(function(code){
-            if(code.get('elementNumber') == element.get('number')){
-                if(element.get('header').get('maxOccurences') == "M"){
-                    return "partials/nemsis/elementPartials/multiSelect.html";
+        if($scope.nemsisElementCodes){
+            $scope.nemsisElementCodes.forEach(function(code){
+                if(code.get('elementNumber') == element.get('number')){
+                    if(element.get('header').get('maxOccurences') == "M"){
+                        return "partials/nemsis/elementPartials/multiSelect.html";
+                    } else {
+                        return "partials/nemsis/elementPartials/singleSelect.html";
+                    }
                 } else {
-                    return "partials/nemsis/elementPartials/singleSelect.html";
+                    return "partials/nemsis/elementPartials/textInput.html";
                 }
-            } else {
-                return "partials/nemsis/elementPartials/textInput.html";
-            }
-        });
+            });
+        }
     },
 
     //Can Add Section
@@ -131,23 +133,28 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     },
 
-    //Add Section             ***TODO*** Fix
-    $scope.addSection = function(parentSection, childSection){
+    //Add Section             ***TODO***  Add Dirty Check
+    $scope.addSection = function(childSection){
         //First check if current Section is dirty
-        alert("Current Section isn't Saved, please save before adding another section");
+        //alert("Current Section isn't Saved, please save before adding another section");
 
         ParseService.createSection(childSection.get('name'), function(results){
-            $scope.$apply(function(){
-                $scope.section = results;
-                $scope.nemsisSection = results.get('nemsisSection');
-                $scope.subNemsisSections = $scope.nemsisSection.get('sections');
-                $scope.getNemsisElementCodes();
-                if($scope.subNemsisSections){
-                    $scope.generateSubSections();
-                }
+            var childName = results.get('name');
+            var childId = results.id;
+            var newPath = "/configurations/nemsis/" + childName + "/" + childId;
 
-                //Add section to previous
-                parentSection.add("sections", $scope.section);
+            //Add childSection to current Section
+            $scope.section.add("sections", results);
+            $scope.section.save({
+                success: function(result){
+                    //now Change location to the child's update url
+                    $scope.$apply(function(){
+                        $location.path(newPath);
+                    });
+                },
+                error: function(object, error){
+                    alert("Error, please contact us with this error: " + error.message);
+                }
             });
         });
     },
