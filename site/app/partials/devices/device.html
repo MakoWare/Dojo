@@ -1,17 +1,9 @@
 <div class="content-widscreen" style="margin: 20px;">
-  <form name="patientForm" novalidate role="form" class="form-horizontal">
+  <form name="deviceForm" novalidate role="form" class="form-horizontal">
     <div class="row">
       <div class="form-group col-sm-4">
-        <label for="firstName">Name*</label>
+        <label for="firstName">Device ID*</label>
         <input ng-model="object.attributes.firstName" type="text" class="form-control" id="firstName" placeholder="First Name" required/>
-      </div>
-      <div class="form-group col-sm-1" style="margin-left: 2px; margin-right: 2px;">
-        <label for="middleInitial">M.I</label>
-        <input ng-model="object.attributes.middleInitial" type="text" class="form-control" id="middleInitial" placeholder="M.I"/>
-      </div>
-      <div class="form-group col-sm-4">
-        <label for="lastName">Last Name*</label>
-        <input ng-model="object.attributes.lastName" type="text" class="form-control" id="lastName" placeholder="Last Name" required/>
       </div>
     </div>
   </form>

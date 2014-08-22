@@ -1,108 +1,104 @@
-      <form name="vehicleForm" novalidate role="form" class="form-horizontal">
-	<fieldset disabled>
-	  <div class="row">
-            <div class="form-group col-md-3">
-              <label for="name">Name</label>
-              <input ng-model="form.name" type="text" class="form-control" id="name" placeholder="Name" required/>
-            </div>
-            <div class="form-group col-md-4" style="margin-left: 2px">
-              <label for="currentLocation">Current Location</label>
-              <input ng-model="form.currentLocation" type="text" class="form-control" id="curretLocation" placeholder="Current Location"/>
-            </div>
-	  </div>
-	</fieldset>
-	<div class="row">
-          <div class="form-group col-md-3">
-            <label for="status">Status</label>
-	    <select class="form-control" id="status" ng-model="form.status">
-              <option class="form-control" value=""></option>
-              <option class="form-control" value="available">available</option>
-              <option class="form-control" value="en route">en route</option>
-              <option class="form-control" value="unavailable">unavailable</option>
-            </select>
-          </div>
-          <div class="form-group col-md-2" style="margin-left: 2px;">
-            <label for="type">Type</label>
-	    <select class="form-control" id="type" ng-model="form.type">
-              <option class="form-control" value=""></option>
-              <option class="form-control" value="ambulance">ambulance</option>
-              <option class="form-control" value="wheelchair">wheelchair</option>
-            </select>
-          </div>
-	  <div class="form-group col-md-2" style="margin-left: 2px;">
-            <label for="active">Active</label>
-	    <select class="form-control" id="active" ng-model="form.active">
-              <option class="form-control" value="yes">Yes</option>
-              <option class="form-control" value="no">No</option>
-            </select>
-          </div>
-	</div>
-
-	<div class="row">
-	<h4>First Personnel</h4>
-          <div class="form-group col-md-3">
-            <label for="personnel1">Personnel Name</label>
-            <input ng-model="form.personnel1" type="text" class="form-control" id="personnel1" placeholder="Staff"/>
-          </div>
-          <div class="form-group col-md-2" style="margin-left: 2px;">
-            <label for="personnel1Role">Role</label>
-	    <select class="form-control" id="personnel1Role" ng-model="form.personnel1.role">
-              <option class="form-control" value=""></option>
-              <option class="form-control" value="ambulance">driver</option>
-              <option class="form-control" value="wheelchair">emt</option>
-            </select>
-          </div>
-	  <div class="form-group col-md-2" style="margin-left: 2px;">
-            <label for="personnel1Start">Start shift</label>
-	    <select class="form-control" id="personnel1Start" ng-model="form.personnel1.startShift">
-              <option class="form-control" value=""></option>
-              <option class="form-control" value="true">Yes</option>
-              <option class="form-control" value="false">No</option>
-            </select>
-          </div>
-	  <div class="form-group col-md-2" style="margin-left: 2px;">
-            <label for="personnel1End">End shift</label>
-	    <select class="form-control" id="personnel1End" ng-model="form.personnel1.endShift">
-              <option class="form-control" value=""></option>
-              <option class="form-control" value="true">Yes</option>
-              <option class="form-control" value="false">No</option>
-            </select>
-          </div>
-	</div>
-
-	<div class="row">
-	<h4>Second Personnel</h4>
-          <div class="form-group col-md-3">
-            <label for="personnel2">Personnel Name</label>
-            <input ng-model="form.personnel2" type="text" class="form-control" id="personnel2" placeholder="Staff"/>
-          </div>
-          <div class="form-group col-md-2" style="margin-left: 2px;">
-            <label for="personnel2Role">Role</label>
-	    <select class="form-control" id="personnel2Role" ng-model="form.personnel2.role">
-              <option class="form-control" value=""></option>
-              <option class="form-control" value="ambulance">driver</option>
-              <option class="form-control" value="wheelchair">emt</option>
-            </select>
-          </div>
-	  <div class="form-group col-md-2" style="margin-left: 2px;">
-            <label for="personnel2Start">Start shift</label>
-	    <select class="form-control" id="personnel1Start" ng-model="form.personnel2.startShift">
-              <option class="form-control" value=""></option>
-              <option class="form-control" value="true">Yes</option>
-              <option class="form-control" value="false">No</option>
-            </select>
-          </div>
-	  <div class="form-group col-md-2" style="margin-left: 2px;">
-            <label for="personnel2End">End shift</label>
-	    <select class="form-control" id="personnel2End" ng-model="form.personnel2.endShift">
-              <option class="form-control" value=""></option>
-              <option class="form-control" value="true">Yes</option>
-              <option class="form-control" value="false">No</option>
-            </select>
-          </div>
-	</div>
-
-      </form>
+<form name="vehicleForm" novalidate role="form" class="form-horizontal">
+  <fieldset>
+    <div class="row">
+      <div class="form-group col-md-3">
+        <label for="name">Name</label>
+        <input ng-model="form.name" type="text" class="form-control" id="name" placeholder="Name" required/>
+      </div>
+      <div class="form-group col-md-4" style="margin-left: 2px">
+        <label for="currentLocation">Current Location</label>
+        <input ng-model="form.currentLocation" type="text" class="form-control" id="curretLocation" placeholder="Current Location"/>
+      </div>
+    </div>
+  </fieldset>
+  <div class="row">
+    <div class="form-group col-md-3">
+      <label for="status">Status</label>
+      <select class="form-control" id="status" ng-model="form.status">
+        <option class="form-control" value=""></option>
+        <option class="form-control" value="available">available</option>
+        <option class="form-control" value="en route">en route</option>
+        <option class="form-control" value="unavailable">unavailable</option>
+      </select>
+    </div>
+    <div class="form-group col-md-2" style="margin-left: 2px;">
+      <label for="type">Type</label>
+      <select class="form-control" id="type" ng-model="form.type">
+        <option class="form-control" value=""></option>
+        <option class="form-control" value="ambulance">ambulance</option>
+        <option class="form-control" value="wheelchair">wheelchair</option>
+      </select>
+    </div>
+    <div class="form-group col-md-2" style="margin-left: 2px;">
+      <label for="active">Active</label>
+      <select class="form-control" id="active" ng-model="form.active">
+        <option class="form-control" value="yes">Yes</option>
+        <option class="form-control" value="no">No</option>
+      </select>
     </div>
   </div>
-</div>
+
+  <div class="row">
+    <h4>First Personnel</h4>
+    <div class="form-group col-md-3">
+      <label for="personnel1">Personnel Name</label>
+      <input ng-model="form.personnel1" type="text" class="form-control" id="personnel1" placeholder="Staff"/>
+    </div>
+    <div class="form-group col-md-2" style="margin-left: 2px;">
+      <label for="personnel1Role">Role</label>
+      <select class="form-control" id="personnel1Role" ng-model="form.personnel1.role">
+        <option class="form-control" value=""></option>
+        <option class="form-control" value="ambulance">driver</option>
+        <option class="form-control" value="wheelchair">emt</option>
+      </select>
+    </div>
+    <div class="form-group col-md-2" style="margin-left: 2px;">
+      <label for="personnel1Start">Start shift</label>
+      <select class="form-control" id="personnel1Start" ng-model="form.personnel1.startShift">
+        <option class="form-control" value=""></option>
+        <option class="form-control" value="true">Yes</option>
+        <option class="form-control" value="false">No</option>
+      </select>
+    </div>
+    <div class="form-group col-md-2" style="margin-left: 2px;">
+      <label for="personnel1End">End shift</label>
+      <select class="form-control" id="personnel1End" ng-model="form.personnel1.endShift">
+        <option class="form-control" value=""></option>
+        <option class="form-control" value="true">Yes</option>
+        <option class="form-control" value="false">No</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <h4>Second Personnel</h4>
+    <div class="form-group col-md-3">
+      <label for="personnel2">Personnel Name</label>
+      <input ng-model="form.personnel2" type="text" class="form-control" id="personnel2" placeholder="Staff"/>
+    </div>
+    <div class="form-group col-md-2" style="margin-left: 2px;">
+      <label for="personnel2Role">Role</label>
+      <select class="form-control" id="personnel2Role" ng-model="form.personnel2.role">
+        <option class="form-control" value=""></option>
+        <option class="form-control" value="ambulance">driver</option>
+        <option class="form-control" value="wheelchair">emt</option>
+      </select>
+    </div>
+    <div class="form-group col-md-2" style="margin-left: 2px;">
+      <label for="personnel2Start">Start shift</label>
+      <select class="form-control" id="personnel1Start" ng-model="form.personnel2.startShift">
+        <option class="form-control" value=""></option>
+        <option class="form-control" value="true">Yes</option>
+        <option class="form-control" value="false">No</option>
+      </select>
+    </div>
+    <div class="form-group col-md-2" style="margin-left: 2px;">
+      <label for="personnel2End">End shift</label>
+      <select class="form-control" id="personnel2End" ng-model="form.personnel2.endShift">
+        <option class="form-control" value=""></option>
+        <option class="form-control" value="true">Yes</option>
+        <option class="form-control" value="false">No</option>
+      </select>
+    </div>
+  </div>
+</form>

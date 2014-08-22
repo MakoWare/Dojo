@@ -6,7 +6,7 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
         $scope.dir = $location.url().slice(1);
         $scope.objectType = GlobalService.getObjectType($scope.dir);
         $scope.getPartial();
-        $scope.findObjects($scope.objectType, $scope.searchParam, $scope.filterParam);
+        $scope.findObjects($scope.objectType);
     },
 
     $scope.getPartial = function(){
@@ -15,13 +15,13 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
         return "partials/" + partialLocation;
     };
 
-    $scope.findObjects = function(objectType, searchParam, filterParam){
-        ParseService.findObjects(objectType, searchParam, filterParam, function(results){
+    $scope.findObjects = function(objectType){
+        ParseService.findObjectsByAgency(objectType, function(results){
             $scope.$apply(function(){
                 $scope.objects = results;
+                console.log(results);
             });
         });
-
     };
 
     //Init

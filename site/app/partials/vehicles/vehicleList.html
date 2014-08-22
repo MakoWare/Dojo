@@ -19,11 +19,11 @@
             <td>{{object.attributes.name}}</td>
 	    <td>{{object.attributes.status}}</td>
             <td>{{object.attributes.currentLocation}}</td>
-            <td>{{object.attributes.dispatch.attributes.pickUpAddress}}</td>
-            <td>{{object.attributes.dispatch.attributes.dropOffAddress}}</td>
+            <td>{{object.attributes.currentDispatch.attributes.pickUpAddress}}</td>
+            <td>{{object.attributes.currentDispatch.attributes.dropOffAddress}}</td>
             <td><a href="#/patients/{{object.attributes.patient.id}}"> <button class="btn btn-primary">Patient</button></a></td>
-            <td><a href="#/dispatches/{{object.attributes.dispatch.id}}"> <button class="btn btn-primary">Patient</button></a></td>
-            <td><a href="#/vehicles/{{object.id}}"> <button class="btn btn-primary">View Vehicle</button></a></td>
+            <td><a href="#/dispatches/{{object.attributes.currentDispatch.id}}"> <button class="btn btn-primary" ng-show="object.attributes.currentDispatch">Dispatch</button></a></td>
+            <td><a href="#/vehicles/{{object.id}}"><button class="btn btn-primary">View Vehicle</button></a></td>
 	  </tr>
         </tbody>
       </table>

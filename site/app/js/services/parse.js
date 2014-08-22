@@ -70,11 +70,11 @@ angular.module('parseService', [])
             getSection: function(objectId, callback){
                 var query = new Parse.Query("Section");
                 query.include("sections");
+                query.include("sections.nemsisSection.headers");
                 query.include("elements");
                 query.include("elements.header");
                 query.include("nemsisSection");
                 query.include("nemsisSection.headers");
-                query.include("nemsisSection.sections");
                 query.get(objectId, {
                     success: function(results){
                         callback(results);
@@ -90,6 +90,9 @@ angular.module('parseService', [])
                 query.equalTo("name", sectionName);
                 query.equalTo("agencyId", Parse.User.current().get('agencyId'));
                 query.include('sections');
+                query.include("nemsisSection");
+                query.include("nemsisSection.headers");
+                query.include("nemsisSection.sections");
                 query.include('nemsisSection.sections.sections');
                 query.first({
                     success: function(results){
@@ -163,15 +166,29 @@ angular.module('parseService', [])
             },
 
             //Find Objects
-            findObjects: function(objectType, searchParam, filterParam, callback){
-                var query = new Parse.Query(objectType);
-                query.equalTo("agencyId", Parse.User.current().get('agencyId'));
+            findObjectsByAgency: function(objectType, callback){
+                switch (objectType){
+                case "Device" :
+                    ParseService.findDevices(callback);
+                    break;
+                case "Vehicle":
+                    ParseService.findVehicles(callback);
+                    break;
+                }
+            },
+
+            //Find Vehicles by AgencyId
+            findVehicles: function(callback){
+                var query = new Parse.Query(Vehicle);
+                query.equalTo("agencyId", Parse.User.current().get("agencyId"));
+                query.include("currentDispatch");
+                query.include("installation");
                 query.find({
                     success: function(results){
                         callback(results);
                     },
                     error: function(error){
-                        alert("Error: " + error.message);
+                        alert(ERRORMESSAGE + error.message);
                     }
                 });
             },

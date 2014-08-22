@@ -17,12 +17,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="element in section.get('elements')">
-          <td class="col-xs-1">{{element.get('title')}}</td>
-          <td class="col-xs-1">{{element.get('header').get('ElementName')}}</td>
-          <td class="col-xs-3">{{element.get('header').get('Definition')}}</td>
-          <td class="col-xs-1">{{element.get('header').get('Usage')}}</td>
-          <td><div ng-include="getElementTemplate(element)"></div></td>
+        <tr ng-repeat="tmpElement in tmpElements">
+          <td class="col-xs-1">{{tmpElement.name}}</td>
+          <td class="col-xs-1">{{tmpElement.header.get('ElementName')}}</td>
+          <td class="col-xs-3">{{tmpElement.header.get('Definition')}}</td>
+          <td class="col-xs-1">{{tmpElement.header.get('Usage')}}</td>
+          <td><div ng-include="tmpElement.partialLocation"></div></td>
         </tr>
       </tbody>
     </table>
