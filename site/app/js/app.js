@@ -28,7 +28,7 @@ angular.module('dojo', [
       })
       .when('/devices/:id', {
         templateUrl: 'partials/update.html',
-        controller: 'UpdateCtrl'
+        controller: 'CreateCtrl'
       })
 //Dispatches
       .when('/dispatches/add', {
@@ -41,7 +41,7 @@ angular.module('dojo', [
       })
       .when('/dispatches/:id', {
         templateUrl: 'partials/update.html',
-        controller: 'UpdateCtrl'
+        controller: 'CreateCtrl'
       })
 //Facilities
       .when('/facilities/add', {
@@ -54,7 +54,7 @@ angular.module('dojo', [
       })
       .when('/facilities/:id', {
         templateUrl: 'partials/update.html',
-        controller: 'UpdateCtrl'
+        controller: 'CreateCtrl'
       })
 //Files  *** TODO ***
       .when('/files', {
@@ -97,7 +97,7 @@ angular.module('dojo', [
       })
       .when('/patients/:id', {
         templateUrl: 'partials/update.html',
-        controller: 'UpdateCtrl'
+        controller: 'CreateCtrl'
       })
 //PCRs
       .when('/pcrs', {
@@ -106,7 +106,7 @@ angular.module('dojo', [
       })
       .when('/pcrs/:id', {
         templateUrl: 'partials/update.html',
-        controller: 'UpdateCtrl'
+        controller: 'CreateCtrl'
       })
 //Users
       .when('/users/add', {
@@ -119,7 +119,7 @@ angular.module('dojo', [
       })
       .when('/users/:id', {
         templateUrl: 'partials/update.html',
-        controller: 'UpdateCtrl'
+        controller: 'CreateCtrl'
       })
 //Vehicles
       .when('/vehicles/add', {
@@ -132,7 +132,7 @@ angular.module('dojo', [
       })
       .when('/vehicles/:id', {
         templateUrl: 'partials/update.html',
-        controller: 'UpdateCtrl'
+        controller: 'CreateCtrl'
       })
 //Otherwise
       .otherwise({
