@@ -1,7 +1,7 @@
 <div>
   <form role="form">
   <div class="form-group">
-    <input type="text" class="form-control" ng-model="tmpElement.elements[0].attributes.value"/>
+    <input type="text" class="form-control" ng-change="elementChanged(tmpElement)" ng-model="tmpElement.elements[0].attributes.value"/>
   </div>
   </form>
 </div>

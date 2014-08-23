@@ -116,27 +116,6 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
                 }
             });
         });
-        console.log($scope.tmpElements);
-    },
-
-    //Get Element Template ***TODO*** Fix
-    $scope.getElementTemplate = function(element){
-        console.log("getting template for:");
-        console.log(element);
-        $scope.nemsisElementCodes.forEach(function(code){
-            if(code.get('elementNumber') == element.name){
-                if(element.header.get('maxOccurences') == "M"){
-                    console.log("MultiSelect");
-                    return "partials/nemsis/elementPartials/multiSelect.html";
-                } else {
-                    console.log("SingleSelect");
-                    return "partials/nemsis/elementPartials/singleSelect.html";
-                }
-            } else {
-                    console.log("TextInput");
-                return "partials/nemsis/elementPartials/textInput.html";
-            }
-        });
     },
 
     //Can Add Section
@@ -161,6 +140,11 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
             return false;
         }
     },
+
+    $scope.elementChanged = function(element){
+        console.log(element);
+    },
+
 
     //Can Add Element         ***TODO***
     $scope.canAddElement = function(parentSection, element){
@@ -206,15 +190,35 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
     //Save Section         ***TODO*** Test -may need to save elements first
     $scope.saveSection = function(){
         //Replace section.elements with tmpElements.elements
-        $scope.section.set('elements', $scope.tmpElement.elements);
-        $scope.section.save({
-            success: function(result){
-                alert("Section saved successfully");
+        var elements = [];
+        $scope.tmpElements.forEach(function(tmpElement){
+            tmpElement.elements.forEach(function(elem){
+                elements.push(elem);
+            });
+        });
+
+        Parse.Object.saveAll(elements,{
+            success: function(results){
+                console.log(results);
+                $scope.section.set('elements', results);
+                $scope.section.save({
+                    success: function(result){
+                        alert("Section saved successfully");
+                        console.log(result);
+                    },
+                    error: function(object, error){
+                        alert("Error, please contact us with this error: " + error.message);
+                    }
+                });
             },
-            error: function(object, error){
-                alert("Error, please contact us with this error: " + error.message);
+            error: function(error){
+                console.log(error);
+                alert("Error saving section: " + error.message);
             }
         });
+
+
+
     },
 
     //Delete Section
