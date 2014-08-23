@@ -41,6 +41,7 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
                 $scope.subNemsisSections = $scope.nemsisSection.get('sections');
                 $scope.getNemsisElementCodes();
                 $scope.canDelete = $scope.canDeleteSection($scope.section);
+                console.log($scope.subNemsisSections);
                 if($scope.subNemsisSections){
                     $scope.generateSubSections();
                 }
@@ -187,7 +188,7 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
         });
     },
 
-    //Save Section         ***TODO*** Test -may need to save elements first
+    //Save Section
     $scope.saveSection = function(){
         //Replace section.elements with tmpElements.elements
         var elements = [];
@@ -195,6 +196,10 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
             tmpElement.elements.forEach(function(elem){
                 elements.push(elem);
             });
+        });
+
+        elements.forEach(function(element){
+            element.set('value', element.attributes.value);
         });
 
         Parse.Object.saveAll(elements,{
@@ -216,9 +221,6 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
                 alert("Error saving section: " + error.message);
             }
         });
-
-
-
     },
 
     //Delete Section

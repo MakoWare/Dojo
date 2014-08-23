@@ -74,6 +74,7 @@ angular.module('parseService', [])
                 query.include("elements");
                 query.include("elements.header");
                 query.include("nemsisSection");
+                query.include("nemsisSection.sections");
                 query.include("nemsisSection.headers");
                 query.get(objectId, {
                     success: function(results){
