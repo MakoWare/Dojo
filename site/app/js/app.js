@@ -3,6 +3,7 @@
 angular.module('dojo', [
     'globalService',
     'parseService',
+    'multi-select',
     'ngRoute'
   ])
   .config(function ($routeProvider) {

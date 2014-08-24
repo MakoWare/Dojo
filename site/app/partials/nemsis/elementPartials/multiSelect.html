@@ -1,4 +1,8 @@
-<div>
-  <select ng-dropdown-multiselect="" ng-model="element.attributes.value" class="form-control" ng-options="code.get('code') as code.get('codeDescription') for code in element.codes" ng-change="elementChange(element)">
-  </select>
+<div
+   multi-select
+   input-model="tmpElement.codes"
+   button-label="codeDescription"
+   item-label="codeDescription"
+   tick-property="ticked"
+   >
 </div>

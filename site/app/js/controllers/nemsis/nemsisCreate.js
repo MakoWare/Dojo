@@ -1,7 +1,8 @@
 //Nemsis Create and Update Controller
-var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
+var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService){
 
     $scope.init = function(){
+
         $scope.section = {};
         $scope.tmpElements = [];
         $scope.dir = $location.url().slice(1).split("/")[0];
@@ -41,7 +42,6 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
                 $scope.subNemsisSections = $scope.nemsisSection.get('sections');
                 $scope.getNemsisElementCodes();
                 $scope.canDelete = $scope.canDeleteSection($scope.section);
-                console.log($scope.subNemsisSections);
                 if($scope.subNemsisSections){
                     $scope.generateSubSections();
                 }
@@ -92,6 +92,12 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
 
             //Get all codes for the perspective Element
             $scope.nemsisElementCodes.forEach(function(code){
+                //Flatten codes, because people can't make angular directives correctly
+                code.codeDescription = code.get('codeDescription');
+                code.value = code.get('code');
+                code.name = code.get('elementName');
+                code.ticked = false;
+
                 if(code.get('elementNumber') == set.name){
                     set.codes.push(code);
                 }
@@ -115,8 +121,15 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
                 if(element.get('title') == tmpElement.name){
                     tmpElement.elements.push(element);
                 }
+
+                tmpElement.codes.forEach(function(code){
+                    if(element.get('value') == code.value){
+                        code.ticked = true;
+                    }
+                });
             });
         });
+        console.log($scope.tmpElements);
     },
 
     //Can Add Section
@@ -134,7 +147,6 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     //Can Delete Section  ***TODO*** add case with other sections
     $scope.canDeleteSection = function(section){
-//        console.log(section.get('nemsisSection'));
         if(section.get('nemsisSection').get('min') === "0"){
             return true;
         } else {
@@ -193,6 +205,13 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
         //Replace section.elements with tmpElements.elements
         var elements = [];
         $scope.tmpElements.forEach(function(tmpElement){
+            tmpElement.codes.forEach(function(code){
+                if(code.ticked == true){
+                    console.log("create this element");
+                }
+            });
+
+
             tmpElement.elements.forEach(function(elem){
                 elements.push(elem);
             });
@@ -234,6 +253,7 @@ var NemsisCreateCtrl = function($scope, $location, ParseService, GlobalService){
             }
         });
     },
+
 
     //Init Controller
     $scope.init();
