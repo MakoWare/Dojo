@@ -269,6 +269,7 @@ var ObjectHelper = {
             element.set('header', header);
             callback(element);
         } else {
+            console.log("getting header for element");
             var query = new Parse.Query("NemsisHeader");
             query.equalTo("ElementNumber", elementNumber);
             query.first({

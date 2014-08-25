@@ -33,18 +33,30 @@ angular.module('parseService', [])
         acl.setPublicReadAccess(false);
 
         var ParseService = {
-
             //Nemsis Object Helpers
-            //Create
-
             //NemsisElement
             createNemsisElement: function(elementNumber, callback){
                 var agencyId = Parse.User.current().get("agencyId");
                 var userId = Parse.User.current().id;
 
-                ObjectHelper.createElement(agencyId, userId, elementNumber, "", function(results){
-                    callback(results);
+                //First Get the Header
+                var query = new Parse.Query(NemsisHeader);
+                console.log("elementnumber " + elementNumber);
+                query.equalTo("ElementNumber", elementNumber);
+                var promise = query.first({
+                    success: function(result){
+                        ObjectHelper.createNemsisElement(agencyId, userId, elementNumber, result, function(results){
+                            callback(results);
+                        });
+                    },
+                    error: function(error){
+                        console.log(error);
+                        callback(error);
+                    }
                 });
+
+                return promise;
+
             },
 
             //Section

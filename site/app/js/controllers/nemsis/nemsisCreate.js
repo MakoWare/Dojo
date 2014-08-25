@@ -96,6 +96,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                 code.codeDescription = code.get('codeDescription');
                 code.value = code.get('code');
                 code.name = code.get('elementName');
+                code.elementNumber = code.get('elementNumber');
                 code.ticked = false;
 
                 if(code.get('elementNumber') == set.name){
@@ -123,13 +124,12 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                 }
 
                 tmpElement.codes.forEach(function(code){
-                    if(element.get('value') == code.value){
+                    if(element.get('value') === code.value && element.get('title') === code.elementNumber){
                         code.ticked = true;
                     }
                 });
             });
         });
-        console.log($scope.tmpElements);
     },
 
     //Can Add Section
@@ -215,17 +215,24 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                             needToCreate = false;
                         }
                     });
-                    //If No corresponding NemsisElement.
+                    //If No corresponding NemsisElement, Create it
                     if(needToCreate){
-                        // ***TODO This is broken
-                        var element = ParseService.createNemsisElement(code.name);
-                        element.set('value', code.value);
+                        console.log("need to Create");
+                        var createPromise = ParseService.createNemsisElement(code.elementNumber, function(results){
+                            console.log("created new Element");
+                            console.log(results);
+                            var element = results;
+                            element.set('value', code.value);
+                            tmpElement.elements.push(element);
+                        });
+                        promises.push(createPromise);
                     }
                 } else {
                     //Check if There is a NemsisElement that should be deleted
-                    tmpElement.elements.forEach(function(element){
+                    for(var i = 0; i < tmpElement.elements.length; i++){
+                        var element = tmpElement.elements[i];
                         if(element.get('value') == code.value){
-                            var promise = element.destroy({
+                            var deletePromise = element.destroy({
                                 success: function(result){
 
                                 },
@@ -233,44 +240,52 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                                     alert("An Error occurred, please contact us with this error: " + error.message);
                                 }
                             });
-                            promises.push(promise);
-                            //tmpElement.elements.remove(element); Does this work?
+                            promises.push(deletePromise);
+                            tmpElement.elements.splice(i, 1);
                         }
-                    });
+                    };
                 }
             });
+        });
 
+        console.log("promises");
+        console.log(promises);
 
-            //Probably broken
-            Parse.Promise.when(promises).then(function(){
+        //Probably broken
+        Parse.Promise.when(promises).then(function(){
+            $scope.tmpElements.forEach(function(tmpElement){
                 tmpElement.elements.forEach(function(elem){
                     elements.push(elem);
                 });
             });
-        });
 
-        elements.forEach(function(element){
-            element.set('value', element.attributes.value);
-        });
+            console.log("elements to be saved to section");
+            console.log(elements);
 
-        Parse.Object.saveAll(elements,{
-            success: function(results){
-                console.log(results);
-                $scope.section.set('elements', results);
-                $scope.section.save({
-                    success: function(result){
-                        alert("Section saved successfully");
-                        console.log(result);
-                    },
-                    error: function(object, error){
-                        alert("Error, please contact us with this error: " + error.message);
-                    }
-                });
-            },
-            error: function(error){
-                console.log(error);
-                alert("Error saving section: " + error.message);
-            }
+            //Set value, to switch dirty flag
+            elements.forEach(function(element){
+                element.set('value', element.attributes.value);
+            });
+
+            Parse.Object.saveAll(elements,{
+                success: function(results){
+                    $scope.section.set('elements', results);
+                    $scope.section.save({
+                        success: function(result){
+                            alert("Section saved successfully");
+                            console.log("Section after save");
+                            console.log(result);
+                        },
+                        error: function(object, error){
+                            alert("Error, please contact us with this error: " + error.message);
+                        }
+                    });
+                },
+                error: function(error){
+                    console.log(error);
+                    alert("Error saving section: " + error.message);
+                }
+            });
         });
     },
 
