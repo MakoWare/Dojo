@@ -38,8 +38,13 @@ angular.module('parseService', [])
             //Create
 
             //NemsisElement
-            createNemsisElement: function(){
+            createNemsisElement: function(elementNumber, callback){
+                var agencyId = Parse.User.current().get("agencyId");
+                var userId = Parse.User.current().id;
 
+                ObjectHelper.createElement(agencyId, userId, elementNumber, "", function(results){
+                    callback(results);
+                });
             },
 
             //Section

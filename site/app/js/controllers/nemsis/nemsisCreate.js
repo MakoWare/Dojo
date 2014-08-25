@@ -92,7 +92,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
 
             //Get all codes for the perspective Element
             $scope.nemsisElementCodes.forEach(function(code){
-                //Flatten codes, because people can't make angular directives correctly
+                //Flatten codes, because people can't write angular directives correctly
                 code.codeDescription = code.get('codeDescription');
                 code.value = code.get('code');
                 code.name = code.get('elementName');
@@ -204,16 +204,48 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
     $scope.saveSection = function(){
         //Replace section.elements with tmpElements.elements
         var elements = [];
+        var promises = [];
         $scope.tmpElements.forEach(function(tmpElement){
             tmpElement.codes.forEach(function(code){
                 if(code.ticked == true){
-                    console.log("create this element");
+                    //Check if There is already an element holding this value
+                    var needToCreate = true;
+                    tmpElement.elements.forEach(function(element){
+                        if(element.get('value') == code.value){
+                            needToCreate = false;
+                        }
+                    });
+                    //If No corresponding NemsisElement.
+                    if(needToCreate){
+                        // ***TODO This is broken
+                        var element = ParseService.createNemsisElement(code.name);
+                        element.set('value', code.value);
+                    }
+                } else {
+                    //Check if There is a NemsisElement that should be deleted
+                    tmpElement.elements.forEach(function(element){
+                        if(element.get('value') == code.value){
+                            var promise = element.destroy({
+                                success: function(result){
+
+                                },
+                                error: function(object, error){
+                                    alert("An Error occurred, please contact us with this error: " + error.message);
+                                }
+                            });
+                            promises.push(promise);
+                            //tmpElement.elements.remove(element); Does this work?
+                        }
+                    });
                 }
             });
 
 
-            tmpElement.elements.forEach(function(elem){
-                elements.push(elem);
+            //Probably broken
+            Parse.Promise.when(promises).then(function(){
+                tmpElement.elements.forEach(function(elem){
+                    elements.push(elem);
+                });
             });
         });
 

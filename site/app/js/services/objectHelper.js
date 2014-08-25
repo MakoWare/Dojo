@@ -264,8 +264,8 @@ var ObjectHelper = {
         element.set("pcrId", "");
         element.set("value", "");
 
-        //All elements are going to have references to their NemsisHeaders
-        if(header){
+        //All elements are need references to their NemsisHeaders
+        if(header != ""){ //May have broke everything
             element.set('header', header);
             callback(element);
         } else {
