@@ -56,7 +56,6 @@ angular.module('parseService', [])
                 });
 
                 return promise;
-
             },
 
             //Section
@@ -284,10 +283,6 @@ angular.module('parseService', [])
 		    }
 		});
 	    }
-
-
-
         };
-
         return ParseService;
     });

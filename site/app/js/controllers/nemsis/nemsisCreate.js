@@ -2,7 +2,6 @@
 var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService){
 
     $scope.init = function(){
-
         $scope.section = {};
         $scope.tmpElements = [];
         $scope.dir = $location.url().slice(1).split("/")[0];
@@ -130,6 +129,13 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                 });
             });
         });
+
+        console.log("section");
+        console.log($scope.section);
+
+        console.log("tmpElements");
+        console.log($scope.tmpElements);
+
     },
 
     //Can Add Section
@@ -155,9 +161,9 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
     },
 
     $scope.elementChanged = function(element){
-        console.log(element);
+//        console.log("element");
+//        console.log(element);
     },
-
 
     //Can Add Element         ***TODO***
     $scope.canAddElement = function(parentSection, element){
@@ -217,10 +223,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                     });
                     //If No corresponding NemsisElement, Create it
                     if(needToCreate){
-                        console.log("need to Create");
                         var createPromise = ParseService.createNemsisElement(code.elementNumber, function(results){
-                            console.log("created new Element");
-                            console.log(results);
                             var element = results;
                             element.set('value', code.value);
                             tmpElement.elements.push(element);
@@ -231,7 +234,9 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                     //Check if There is a NemsisElement that should be deleted
                     for(var i = 0; i < tmpElement.elements.length; i++){
                         var element = tmpElement.elements[i];
-                        if(element.get('value') == code.value){
+                        if(element.get('value') == code.value && element.get('title') === code.elementNumber && element.get('header').get('MaxOccurs') === "M"){
+                            console.log("deletingElement");
+                            console.log(element);
                             var deletePromise = element.destroy({
                                 success: function(result){
 
@@ -248,10 +253,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
             });
         });
 
-        console.log("promises");
-        console.log(promises);
-
-        //Probably broken
+        //After we have Created/Deleted all of the elements
         Parse.Promise.when(promises).then(function(){
             $scope.tmpElements.forEach(function(tmpElement){
                 tmpElement.elements.forEach(function(elem){
@@ -259,13 +261,13 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                 });
             });
 
-            console.log("elements to be saved to section");
-            console.log(elements);
-
             //Set value, to switch dirty flag
             elements.forEach(function(element){
                 element.set('value', element.attributes.value);
             });
+
+            console.log("Elements to be saved to the Section");
+            console.log(elements);
 
             Parse.Object.saveAll(elements,{
                 success: function(results){
@@ -273,8 +275,6 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                     $scope.section.save({
                         success: function(result){
                             alert("Section saved successfully");
-                            console.log("Section after save");
-                            console.log(result);
                         },
                         error: function(object, error){
                             alert("Error, please contact us with this error: " + error.message);

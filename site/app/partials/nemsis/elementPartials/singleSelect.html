@@ -1,4 +1,4 @@
 <div>
-  <select ng-model="tmpElement.elements[0].attributes.value" class="form-control" ng-options="code.get('code') as code.get('codeDescription') for code in tmpElement.codes" ng-change="elementChange(element)">
+  <select ng-model="tmpElement.elements[0].attributes.value" class="form-control" ng-options="code.get('code') as code.get('codeDescription') for code in tmpElement.codes" ng-change="elementChanged(element, tmpElement)">
   </select>
 </div>
