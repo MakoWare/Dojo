@@ -136,6 +136,13 @@ angular.module('parseService', [])
                 });
             },
 
+            //Has sibling
+            hasSiblingSection: function(section, callback){
+
+
+            },
+
+
             //Parse Object Helpers
             //Create
 

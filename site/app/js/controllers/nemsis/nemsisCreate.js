@@ -146,7 +146,13 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
             if(nemsisSection.get('max') === "M"){
                 return true;
             } else {
-                return false;
+                //Check if there is already one
+                $scope.section.get('sections').forEach(function(section){
+                    if(section.get('name') === nemsisSection.get('name')){
+                        return false;
+                    }
+                });
+                return true;
             }
         }
     },
