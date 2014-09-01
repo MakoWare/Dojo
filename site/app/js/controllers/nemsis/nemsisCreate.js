@@ -4,6 +4,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
     $scope.init = function(){
         $scope.section = {};
         $scope.tmpElements = [];
+        $scope.canDelete = false;
         $scope.dir = $location.url().slice(1).split("/")[0];
         $scope.nemsisSectionName = $location.url().split("nemsis/")[1].split("/")[0];
         $scope.sectionId = $location.url().split("/")[$location.url().split("/").length - 1];
@@ -24,7 +25,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                 $scope.nemsisSection = results.get('nemsisSection');
                 $scope.subNemsisSections = $scope.nemsisSection.get('sections');
                 $scope.getNemsisElementCodes();
-                $scope.canDelete = $scope.canDeleteSection($scope.section);
+                $scope.canDeleteSection($scope.section);
                 if($scope.subNemsisSections){
                     $scope.generateSubSections();
                 }
@@ -40,7 +41,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                 $scope.nemsisSection = results.get('nemsisSection');
                 $scope.subNemsisSections = $scope.nemsisSection.get('sections');
                 $scope.getNemsisElementCodes();
-                $scope.canDelete = $scope.canDeleteSection($scope.section);
+                $scope.canDeleteSection($scope.section);
                 if($scope.subNemsisSections){
                     $scope.generateSubSections();
                 }
@@ -70,7 +71,10 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
         var subSections = $scope.section.get('sections');
         $scope.subNemsisSections.forEach(function(subNemsisSection){
             subNemsisSection.sections = [];
+            console.log(subSections);
             subSections.forEach(function(subSection){
+                console.log(subNemsisSection);
+                console.log(subSection);
                 if(subSection.get('name') === subNemsisSection.get('name')){
                     subNemsisSection.sections.push(subSection);
                 }
@@ -129,13 +133,6 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                 });
             });
         });
-
-        console.log("section");
-        console.log($scope.section);
-
-        console.log("tmpElements");
-        console.log($scope.tmpElements);
-
     },
 
     //Can Add Section
@@ -160,9 +157,14 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
     //Can Delete Section  ***TODO*** add case with other sections
     $scope.canDeleteSection = function(section){
         if(section.get('nemsisSection').get('min') === "0"){
-            return true;
+            $scope.canDelete = true;
         } else {
-            return false;
+            //Check for sibling sections
+            ParseService.hasSiblingSection(section, function(result){
+                $scope.$apply(function(){
+                    $scope.canDelete = result;
+                });
+            });
         }
     },
 
@@ -241,8 +243,6 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                     for(var i = 0; i < tmpElement.elements.length; i++){
                         var element = tmpElement.elements[i];
                         if(element.get('value') == code.value && element.get('title') === code.elementNumber && element.get('header').get('MaxOccurs') === "M"){
-                            console.log("deletingElement");
-                            console.log(element);
                             var deletePromise = element.destroy({
                                 success: function(result){
 
@@ -272,9 +272,6 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                 element.set('value', element.attributes.value);
             });
 
-            console.log("Elements to be saved to the Section");
-            console.log(elements);
-
             Parse.Object.saveAll(elements,{
                 success: function(results){
                     $scope.section.set('elements', results);
@@ -300,6 +297,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
         section.destroy({
             success: function(result){
                 alert("Section successfully deleted");
+                $location.path("/configurations");
             },
             error: function(object, error){
                 alert("Error deleting section: " + error.message);
