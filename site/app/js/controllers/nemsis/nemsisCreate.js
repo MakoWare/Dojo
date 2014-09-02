@@ -17,7 +17,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
         }
     },
 
-    //1a. Create Section
+    //1a. Create a Section
     $scope.createSection = function(sectionName){
         ParseService.createSection(sectionName, function(results){
             $scope.$apply(function(){
@@ -33,7 +33,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
         });
     },
 
-    //1b. Get Section
+    //1b. Update a Section
     $scope.getSection = function(sectionId){
         ParseService.getSection(sectionId, function(results){
             $scope.$apply(function(){
@@ -45,7 +45,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                 if($scope.subNemsisSections){
                     $scope.generateSubSections();
                 }
-
+                console.log($scope.section);
             });
         });
     },
@@ -71,10 +71,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
         var subSections = $scope.section.get('sections');
         $scope.subNemsisSections.forEach(function(subNemsisSection){
             subNemsisSection.sections = [];
-            console.log(subSections);
             subSections.forEach(function(subSection){
-                console.log(subNemsisSection);
-                console.log(subSection);
                 if(subSection.get('name') === subNemsisSection.get('name')){
                     subNemsisSection.sections.push(subSection);
                 }

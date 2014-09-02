@@ -144,7 +144,7 @@ angular.module('parseService', [])
                 query.equalTo('agencyId', section.get('agencyId'));
                 query.count({
                     success: function(number){
-                        if(number > 0){
+                        if(number > 1){
                             callback(true);
                         } else {
                             callback(false);
