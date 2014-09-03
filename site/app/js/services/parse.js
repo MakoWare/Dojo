@@ -291,13 +291,13 @@ angular.module('parseService', [])
 			vehicles.forEach(function(vehicle){
 			    var latitude = parseFloat(vehicle.get('lat'));
 			    var longitude = parseFloat(vehicle.get('lon'));
-			    var icon = createIcon(vehicle.get('status'), vehicle.get('type'));
+			    var icon = ParseService.createIcon(vehicle.get('status'), vehicle.get('type'));
 			    var title = vehicle.get('name');
 			    var status = vehicle.get('status');
-			    var dispatch = "None";
+			    var dispatchId = "None";
 			    var vehicleId = vehicle.id;
 			    if(vehicle.get('currentDispatch') != undefined){
-				dispatch = vehicle.get('currentDispatch').id;
+				dispatchId = vehicle.get('currentDispatch').id;
 			    }
 			    var marker = {
 				latitude: latitude,
@@ -305,8 +305,9 @@ angular.module('parseService', [])
 				icon : icon,
 				title: title,
 				status: status,
-				dispatch: dispatch,
+				dispatchId: dispatchId,
 				vehicleId: vehicleId,
+                                idKey: vehicleId,
 				animation: google.maps.Animation.DROP
 			    };
 			    markers.push(marker);
@@ -317,7 +318,47 @@ angular.module('parseService', [])
 			alert("Error: " + error.message);
 		    }
 		});
-	    }
+	    },
+
+            createIcon: function(status, type){
+                var url;
+                var size;
+                if(type == "wheelchair"){
+	            switch(status){
+	            case "available":
+	                url = 'images/wheelchairGreen.svg';
+	                break;
+	            case "en route":
+	                url = 'images/wheelchairGreen.svg';
+	                break;
+	            case "unavailable":
+	                url = 'images/wheelchairRed.svg';
+	                break;
+	            case "waiting":
+	                url = 'images/wheelchairYellow.svg';
+	                break;
+	            }
+                }else {
+	            switch(status){
+	            case "available":
+	                url = 'images/ambulanceGreen.svg';
+	                break;
+	            case "en route":
+	                url = 'images/ambulanceYellow.svg';
+	                break;
+	            case "unavailable":
+	                url = 'images/ambulanceRed.svg';
+	                break;
+	            case "waiting":
+	                url = 'images/ambulanceYellow.svg';
+	                break;
+	            }
+                }
+                var icon = {
+	            url : url,
+                };
+                return icon;
+            }
         };
         return ParseService;
     });

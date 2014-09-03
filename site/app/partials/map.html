@@ -2,7 +2,7 @@
 <div class="content-widscreen">
   <google-map id="mymap" center="center" zoom="zoom" draggable="true" mark-click="false">
     <markers>
-      <marker ng-repeat="marker in markers" coords="marker" icon="marker.icon">
+      <marker ng-repeat="marker in markers" coords="marker" icon="marker.icon" idKey="marker.idKey">
 	<window>
 	  <div ng-controller="WindowCtrl">
 	    <table class="table table-condensed table-bordered" style="font-size: 18px;">
@@ -12,7 +12,7 @@
 	      </tr>
 	      <tr>
 		<th>Dispatch:</th>
-		<th><button class="btn btn-primary" ng-click="viewDispatch('{{marker}}')">{{marker.dispatch}}</button></th>
+		<th><button class="btn btn-primary" ng-disabled="marker.dispatchId === None" ng-click="viewDispatch('{{marker}}')">{{marker.dispatchId}}</button></th>
 	      </tr>
 	      <tr>
 		<th>Status:</th>
@@ -24,22 +24,17 @@
       </marker>
     </markers>
   </google-map>
-  <div id="toolbar" style="position: absolute; top: 60px; left: 150px;">
-    <div class="row">
-      <div class="form-group">
-	<button id="refreshButton" class="btn btn-primary" ng-click="updateMap()">Update Map</button>
-	<button id="dispatchButton" class="btn btn-primary" ng-click="openDispatches()">Dispatches</button>
-	<button id="patientButton" class="btn btn-primary" ng-click="openPatients()">Patients</button>
-	<button id="vehicleButton" class="btn btn-primary" ng-click="openVehicles()" style="margin-right: 40px;">Vehicles</button>
-	  <input type="text" id="foo" class="span3" value="" style="width: 400px;" data-slider-min="-100" data-slider-max="0" data-slider-step="5" data-slider-value="0" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="hide">
+  <div style="position: absolute; top: 60px; left: 150px;">
+    <div class="row" style="width: 200%;">
+      <div class="col-md-3">
+	<button  class="btn btn-primary" ng-click="updateMap()">Update Map</button>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-4">
-	<input id="searchAddress" class="form-control" ng-model="map.address" placeholder="Address Search">
+      <div class="col-md-8 col-md-offset-0">
+	<input class="form-control" ng-model="map.address" placeholder="Address Search">
       </div>
-    </div>
-
+      <div class="col-md-1 col-md-offset-0">
+	<button  class="btn btn-primary" ng-click="search()">Search</button>
+      </div>
     </div>
   </div>
 </div>

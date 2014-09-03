@@ -7,23 +7,6 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService){
     var width = $(window).width();
     var wh = 'width=' + width + ", height=" + height;
 
-    $scope.openDispatches = function(){
-	window.open("#/dispatches", "",  wh);
-    };
-    $scope.openVehicles = function(){
-	window.open("#/vehicles", "", wh);
-    };
-    $scope.openPatients = function(){
-	window.open("#/patients", "", wh);
-    };
-
-    /*
-    $('#foo').slider()
-        .on('slide', function(ev){
-            $('#bar').val(ev.value);
-        });
-     */
-
     //Map
     $scope.initMap = function(){
 	$scope.center = {
@@ -88,7 +71,6 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService){
 	console.log('viewVehicle');
 	console.log(dispatchId);
     };
-
 
     //Scope init
     $scope.init = function(){

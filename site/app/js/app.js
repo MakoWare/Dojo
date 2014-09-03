@@ -4,6 +4,7 @@ angular.module('dojo', [
     'globalService',
     'parseService',
     'multi-select',
+    'google-maps',
     'ngRoute'
   ])
   .config(function ($routeProvider) {
