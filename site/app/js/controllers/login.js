@@ -5,7 +5,7 @@ var LoginCtrl = function($scope, $location, ParseService){
     $scope.login = function(){
 	ParseService.login($scope.username, $scope.password, function(user){
             if(user != undefined){
-		$location.path('/configurations');
+		$location.path('/map');
 	    }
         });
     };

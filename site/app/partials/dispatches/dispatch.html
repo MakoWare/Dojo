@@ -27,7 +27,7 @@
       <div class="row">
 	<div class="form-group col-md-6">
 	  <label for="patient">Complaint*</label>
-	  <select class="form-control" id="complaint" ng-model="form.eDispatch_01" ng-options="complaint as complaint.get('codeDescription') for complaint in complaints" tooltip-trigger="focus" tooltip-placement="top" tooltip="The complaint dispatch reported to the responding unit." required></select>
+	  <select class="form-control" id="complaint" ng-model="" ng-options="code.get('description) as code.get('value') for code in eDispatch01" tooltip-trigger="focus" tooltip-placement="top" tooltip="The complaint dispatch reported to the responding unit." required></select>
 	  <option class="form-control" value=""></option>
 	</div>
       </div>

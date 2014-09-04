@@ -245,15 +245,20 @@ angular.module('parseService', [])
                 });
             },
 
-            //Update Object
-            updateObject: function(object){
-                //TODO
+            //Get NemsisElementCodes
+            findNemsisElementCodes: function(sectionName, callback){
+                var query = new Parse.Query(NemsisElementCode);
+                query.startsWith("elementNumber", sectionName);
+                query.find({
+                    success: function(results){
+                        callback(results);
+                    },
+                    error: function(error){
+                        alert(ERRORMESSAGE + error.message);
+                    }
+                });
             },
 
-            //Delete Object
-            deleteObject: function(object){
-                //TODO
-            },
 
             //Login
             login: function(username, password, callback) {
@@ -273,7 +278,6 @@ angular.module('parseService', [])
               Parse.User.logOut();
             },
 
-            //Get Current User
             getCurrentUser: function(){
                 return Parse.User.current();
             },
