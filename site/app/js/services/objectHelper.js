@@ -137,7 +137,7 @@ var ObjectHelper = {
         user.set("agencyId", agencyId);
         user.set("createdBy", userId);
 
-        var promise = this.createSection(agencyId, userId, "dPersonnel", true, function(results){
+        var promise = this.createSection(agencyId, userId, "dPersonnel",  function(results){
 
         });
 
@@ -152,9 +152,13 @@ var ObjectHelper = {
         var vehicle = new Vehicle();
         vehicle.set("agencyId", agencyId);
         vehicle.set("createdBy", userId);
+        vehicle.set("status", "");
+        vehicle.set("type", "");
+        vehicle.set("active", "");
+        vehicle.set("currentPersonnel", []);
 
-        var promise = this.createSection(agencyId, userId, "dVehicle", true, function(results){
-
+        var promise = this.createSection(agencyId, userId, "dVehicle", function(results){
+            vehicle.set("dVehicle", results);
         });
 
         promise.then(function(results){

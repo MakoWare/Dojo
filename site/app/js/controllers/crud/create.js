@@ -65,14 +65,22 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         case "Device":
 
             break;
+        case "Facilities":
 
+            break;
+        case "Patients":
+
+            break;
+
+        case "Vehicle":
+
+            break;
 
         }
     },
 
     //Dispatch Specific
     $scope.getDispatchCodes = function(){
-
         ParseService.findNemsisElementCodes("eDispatch", function(results){
             $scope.eDispatch01 = [];
             $scope.eDispatch02 = [];
