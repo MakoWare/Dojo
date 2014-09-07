@@ -28,7 +28,10 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     //1b. Get Object
     $scope.getObject = function(objectType, objectId){
         ParseService.getObject(objectType, objectId, function(results){
-            console.log(results);
+            $scope.$apply(function(){
+                console.log(results);
+                $scope.object = results;
+            });
         });
     };
 
