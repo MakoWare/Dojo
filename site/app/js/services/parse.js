@@ -33,7 +33,19 @@ angular.module('parseService', [])
         acl.setPublicWriteAccess(false);
         acl.setPublicReadAccess(false);
 
+        var parentSection = null;
+
         var ParseService = {
+            getParentSection: function(){
+                console.log(this.parentSection);
+                return this.parentSection;
+            },
+
+            setParentSection: function(section){
+                this.parentSection = section;
+                console.log(this.parentSection);
+            },
+
             //Nemsis Object Helpers
             //NemsisElement
             createNemsisElement: function(elementNumber, callback){

@@ -274,7 +274,27 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                     $scope.section.set('elements', results);
                     $scope.section.save({
                         success: function(result){
-                            alert("Section saved successfully");
+                            var parentSection = ParseService.getParentSection();
+                            var needToSave = true;
+                            parentSection.get('sections').forEach(function(section){
+                                if(section.id == result.id){
+                                    needToSave = false;
+                                }
+                            });
+
+                            if(needToSave){
+                                parentSection.add('sections', result);
+                                parentSection.save({
+                                    success: function(result){
+                                        alert("Section saved successfully");
+                                    },
+                                    error: function(object, error){
+                                        alert("Error, please contact us with this error: " + error.message);
+                                    }
+                                });
+                            } else {
+                                alert("Section saved successfully");
+                            }
                         },
                         error: function(object, error){
                             alert("Error, please contact us with this error: " + error.message);
