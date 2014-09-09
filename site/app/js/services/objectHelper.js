@@ -157,13 +157,35 @@ var ObjectHelper = {
         vehicle.set("active", "");
         vehicle.set("currentPersonnel", []);
 
-        var promise = this.createSection(agencyId, userId, "dVehicle", function(results){
-            vehicle.set("dVehicle", results);
-        });
+        this.createSection(agencyId, userId, "dVehicle.VehicleGroup", function(results){
+            return results;
+        }).then(function(results){
+            var dVehicleGroup = results;
+            vehicle.set("dVehicleGroup", dVehicleGroup);
 
-        promise.then(function(results){
-            vehicle.set("section", results);
-            callback(vehicle);
+            var query = new Parse.Query("Section");
+            query.equalTo("agencyId", agencyId);
+            query.equalTo("name", "dVehicle");
+            query.first({
+                success: function(result){
+                    return result;
+                },
+                error: function(error){
+                    console.log(error);
+                    callback(error);
+                }
+            }).then(function(result){
+                result.add("sections", dVehicleGroup);
+                result.save({
+                    success: function(result){
+                        callback(vehicle);
+                    },
+                    error: function(error){
+                        console.log(error);
+                        callback(error);
+                    }
+                });
+            });
         });
     },
 

@@ -180,26 +180,11 @@ angular.module('parseService', [])
                 });
             },
 
-            //Dispatch
-            createDispatch: function(callback){
-
-            },
-
-            //Device
-            createDevice: function(){
-
-            },
 
             //Create Object
             createObject: function(objectType, callback){
-                var object;
-                switch(objectType) {
-                case "Dispatch":
-                    object = this.createDispatch(function(results){
-                        callback(results);
-                    });
-                    break;
-                }
+                var currentUser = Parse.User.current();
+                ObjectHelper.createObject(objectType, currentUser.get('agencyId'), currentUser.id, callback);
             },
 
             //Get Object
