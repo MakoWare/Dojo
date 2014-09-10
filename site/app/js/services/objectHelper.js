@@ -128,6 +128,13 @@ var ObjectHelper = {
         var patient = new Patient();
         patient.set("agencyId", agencyId);
         patient.set("createdBy", userId);
+        patient.set("firstName", "");
+        patient.set("lastName", "");
+        patient.set("ssn", "");
+        patient.set("city", "");
+        patient.set("address", "");
+        patient.set("state", "");
+        patient.set("county", "");
 
     },
 

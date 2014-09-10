@@ -24,6 +24,14 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
         });
     };
 
+    $scope.createObject = function(objectType){
+        ParseService.createObject(objectType, function(results){
+            var objectTypeLower = objectType.charAt[0].toLowerCase() + objectType.split(1);
+            var newPath = "/" + objectTypeLower + "/" + results.id;
+            $location.path(newPath);
+        });
+    },
+
     //Init
     $scope.init();
 };

@@ -8,7 +8,7 @@ var NemsisReadCtrl = function($scope, $location, GlobalService, ParseService){
         $scope.getSection($scope.sectionName);
     };
 
-    //1. Get Section
+    //Get Section
     $scope.getSection = function(sectionName){
         ParseService.getSectionByName(sectionName, function(results){
             $scope.$apply(function(){
@@ -34,6 +34,30 @@ var NemsisReadCtrl = function($scope, $location, GlobalService, ParseService){
             return false;
         }
     };
+
+    //Add Section
+    $scope.addSection = function(childSectionName){
+        ParseService.createSection(childSectionName, function(results){
+            var childName = results.get('name');
+            var childId = results.id;
+            var newPath = "/configurations/nemsis/" + childName + "/" + childId;
+
+            //Add childSection to current Section
+            $scope.section.add("sections", results);
+            $scope.section.save({
+                success: function(result){
+                    //Change location to the child's update url, and engage
+                    $scope.$apply(function(){
+                        $location.path(newPath);
+                    });
+                },
+                error: function(object, error){
+                    alert("Error, please contact us with this error: " + error.message);
+                }
+            });
+        });
+    },
+
 
 
     //Init

@@ -166,7 +166,6 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
     },
 
     $scope.elementChanged = function(element){
-//        console.log("element");
 //        console.log(element);
     },
 
@@ -177,11 +176,6 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
 
     //Can Delete Section      ***TODO***
     $scope.canDeleteElement = function(parentSection, element){
-
-    },
-
-    //Add Element             ***TODO***
-    $scope.addElement = function(parentSection, element){
 
     },
 
