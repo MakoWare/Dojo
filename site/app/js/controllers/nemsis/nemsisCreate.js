@@ -174,7 +174,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
 
     },
 
-    //Can Delete Section      ***TODO***
+    //Can Delete Element      ***TODO***
     $scope.canDeleteElement = function(parentSection, element){
 
     },
@@ -268,27 +268,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                     $scope.section.set('elements', results);
                     $scope.section.save({
                         success: function(result){
-                            var parentSection = ParseService.getParentSection();
-                            var needToSave = true;
-                            parentSection.get('sections').forEach(function(section){
-                                if(section.id == result.id){
-                                    needToSave = false;
-                                }
-                            });
-
-                            if(needToSave){
-                                parentSection.add('sections', result);
-                                parentSection.save({
-                                    success: function(result){
-                                        alert("Section saved successfully");
-                                    },
-                                    error: function(object, error){
-                                        alert("Error, please contact us with this error: " + error.message);
-                                    }
-                                });
-                            } else {
                                 alert("Section saved successfully");
-                            }
                         },
                         error: function(object, error){
                             alert("Error, please contact us with this error: " + error.message);
@@ -303,7 +283,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
         });
     },
 
-    //Delete Section
+    //Delete Section ***TODO*** need to find parent section and remove object from parent.sections
     $scope.deleteSection = function(section){
         section.destroy({
             success: function(result){

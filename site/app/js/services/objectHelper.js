@@ -120,7 +120,9 @@ var ObjectHelper = {
         var facility = new Facility();
         facility.set("agencyId", agencyId);
         facility.set("createdBy", userId);
+        facility.set("name", "");
 
+        callback(facility);
     },
 
     //Patient
@@ -136,6 +138,7 @@ var ObjectHelper = {
         patient.set("state", "");
         patient.set("county", "");
 
+        callback(patient);
     },
 
     //User
