@@ -42,8 +42,8 @@ var NemsisReadCtrl = function($scope, $location, GlobalService, ParseService){
             var newPath = "/configurations/nemsis/" + childName + "/" + childId;
 
             //Add childSection to current Section
-            $scope.section.add("sections", results);
-            $scope.section.save({
+            $scope.parentSection.add("sections", results);
+            $scope.parentSection.save({
                 success: function(result){
                     //Change location to the child's update url, and engage
                     $scope.$apply(function(){
