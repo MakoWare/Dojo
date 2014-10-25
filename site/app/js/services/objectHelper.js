@@ -66,6 +66,31 @@ var ObjectHelper = {
         }
     },
 
+    //Delete Object
+    deleteObject: function(objectType, object, callback){
+        switch (objectType) {      //This is wrong
+        case "Device":
+            this.deleteDevice(object);
+            break;
+        case "Dispatch":
+            this.deleteDispatch(object);
+            break;
+        case "Facility":
+            this.deleteFacility(object);
+            break;
+        case "Patient":
+            this.deletePatient(object);
+            break;
+        case "User":
+            this.deleteUser(object);
+            break;
+        case "Vehicle":
+            this.deleteVehicle(object);
+            break;
+        }
+    },
+
+
     //Find Objects
     findObjects: function(objectType, query, callback){
         query.find({
@@ -356,29 +381,31 @@ var ObjectHelper = {
         });
     },
 
-    //Save
-    saveDevice: function(device){
+
+    //Delete
+    deleteDevice: function(device, callback){
 
     },
 
-    saveDispatch: function(dispatch){
+    deleteDispatch: function(dispatch, callback){
 
     },
 
-    saveFacility: function(facility){
+    deleteFacility: function(facility, callback){
 
     },
 
-    savePatient: function(user){
+    deletePatient: function(user, callback){
 
     },
 
-    saveUser: function(user){ //This is not like the others
+    deleteUser: function(user, callback){
 
     },
 
-    saveVehicle: function(vehicle){
+    deleteVehicle: function(vehicle, callback){
 
     }
+
 
 };
