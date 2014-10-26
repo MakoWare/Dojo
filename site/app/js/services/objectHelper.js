@@ -70,22 +70,22 @@ var ObjectHelper = {
     deleteObject: function(objectType, object, callback){
         switch (objectType) {      //This is wrong
         case "Device":
-            this.deleteDevice(object);
+            this.deleteDevice(object, callback);
             break;
         case "Dispatch":
-            this.deleteDispatch(object);
+            this.deleteDispatch(object, callback);
             break;
         case "Facility":
-            this.deleteFacility(object);
+            this.deleteFacility(object, callback);
             break;
         case "Patient":
-            this.deletePatient(object);
+            this.deletePatient(object, callback);
             break;
         case "User":
-            this.deleteUser(object);
+            this.deleteUser(object, callback);
             break;
         case "Vehicle":
-            this.deleteVehicle(object);
+            this.deleteVehicle(object, callback);
             break;
         }
     },
@@ -384,6 +384,7 @@ var ObjectHelper = {
 
     //Delete
     deleteDevice: function(device, callback){
+
 
     },
 
