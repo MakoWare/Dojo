@@ -382,30 +382,158 @@ var ObjectHelper = {
     },
 
 
-    //Delete
+    //***Delete****
+    //TODO ***Check for cross matches between things like Vehicle on a deleted Dispatch
+    deleteSection: function(section, callback){
+        //First Remove from Parent Section
+        var query = new Parse.Query("Section");
+        query.containedIn("sections", section); //not sure if this is right
+        query.first({
+            success: function(object){
+                return object;
+            },
+            error: function(error){
+                callback(error.message);
+            }
+        }).then(function(parentSection){
+            parentSection.remove("sections", section); //not sure if this is right
+            parentSection.save({
+                success: function(object){
+                    return;
+                },
+                error: function(object, error){
+                    callback(error.message);
+                }
+            }).then(function(){
+                //Now Delete the Section object
+                section.destroy({
+                    success: function(result){
+                        callback("Successfully deleted the Device");
+                    },
+                    error: function(object, error){
+                        callback(error.message);
+                    }
+                });
+            });
+
+        });
+    },
+
     deleteDevice: function(device, callback){
+        //First Remove the dDevice Section
+        var query = new Parse.Query("Section");
+        query.equalTo("name", "dDevice");
+        query.containedIn("sections", device.get("dDevice")); //not sure if this is right
+        query.first({
+            success: function(object){
+                return object;
+            },
+            error: function(error){
+                callback(error.message);
+            }
+        }).then(function(parentSection){
+            parentSection.remove("sections", device.get("dDevice")); //not sure if this is right
+            parentSection.save({
+                success: function(object){
+                    return;
+                },
+                error: function(object, error){
+                    callback(error.message);
+                }
+            }).then(function(){
+                //Now Delete the Device object
+                device.destroy({
+                    success: function(result){
+                        callback("Successfully deleted the Device");
+                    },
+                    error: function(object, error){
+                        callback(error.message);
+                    }
+                });
+            });
 
-
+        });
     },
 
     deleteDispatch: function(dispatch, callback){
+        dispatch.destroy({
+            success: function(result){
+                callback("Successfully deleted the Disptach");
+            },
+            error: function(object, error){
+                callback(error.message);
+            }
+        });
 
     },
 
     deleteFacility: function(facility, callback){
-
+        facility.destroy({
+            success: function(result){
+                callback("Successfully deleted the Facility");
+            },
+            error: function(object, error){
+                callback(error.message);
+            }
+        });
     },
 
-    deletePatient: function(user, callback){
-
+    deletePatient: function(patient, callback){
+        patient.destroy({
+            success: function(result){
+                callback("Successfully deleted the Patient");
+            },
+            error: function(object, error){
+                callback(error.message);
+            }
+        });
     },
 
     deleteUser: function(user, callback){
-
+        user.destroy({
+            success: function(result){
+                callback("Successfully deleted the User");
+            },
+            error: function(object, error){
+                callback(error.message);
+            }
+        });
     },
 
     deleteVehicle: function(vehicle, callback){
+        //First Remove the dVehicle Section
+        var query = new Parse.Query("Section");
+        query.equalTo("name", "dVehicle");
+        query.containedIn("sections", vehicle.get("dVehicle")); //not sure if this is right
+        query.first({
+            success: function(object){
+                return object;
+            },
+            error: function(error){
+                callback(error.message);
+            }
+        }).then(function(parentSection){
+            parentSection.remove("sections", vehicle.get("dVehicle")); //not sure if this is right
+            parentSection.save({
+                success: function(object){
+                    return;
+                },
+                error: function(object, error){
+                    callback(error.message);
+                }
+            }).then(function(){
+                //Now Delete the Device object
+                vehicle.destroy({
+                    success: function(result){
+                        callback("Successfully deleted the Vehicle");
+                    },
+                    error: function(object, error){
+                        callback(error.message);
+                    }
+                });
+            });
 
+        });
     }
 
 
