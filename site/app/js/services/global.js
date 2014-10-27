@@ -4,6 +4,7 @@ angular.module('globalService', [])
 
         var spinner;
         var GlobalService = {
+            errorMessage: "An Error Occured, please contact us with this message: ",
 
             getObjectType: function(url){
                 switch (url){

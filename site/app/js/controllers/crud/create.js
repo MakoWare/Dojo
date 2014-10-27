@@ -8,30 +8,24 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         $scope.specificFunctions();
         var end = $location.url().split("/")[$location.url().split("/").length - 1];
 
-        if(end == "add"){
-            $scope.type = "Create";
-            $scope.createObject($scope.objectType);
-        } else {
-            $scope.type = "Update";
-            $scope.getObject($scope.objectType, end);
-        }
+        $scope.type = "Update";
+        $scope.getObject($scope.objectType, end);
     },
 
-    //1a. Create Object
-    $scope.createObject = function(objectType){
-        ParseService.createObject(objectType, function(results){
-            console.log(results);
-            $scope.object = results;
-        });
-    },
-
-    //1b. Get Object
+    //1. Get Object
     $scope.getObject = function(objectType, objectId){
         ParseService.getObject(objectType, objectId, function(results){
-            $scope.$apply(function(){
-                console.log(results);
-                $scope.object = results;
-            });
+            if(results.id){
+                $scope.$apply(function(){
+                    console.log(results);
+                    $scope.object = results;
+                });
+            } else {
+                var objectTypeLower = objectType.charAt(0).toLowerCase() + objectType.substr(1) + "s";
+                var newPath = "/" + objectTypeLower;
+                $location.path(newPath);
+                $scope.$apply();
+            }
         });
     };
 
@@ -44,17 +38,33 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     //Save Object
     $scope.saveObject = function(){
-        ParseService.saveObject($scope.object);
+        GlobalService.showSpinner();
+        for(var name in $scope.object.attributes) {
+            $scope.object.set(name, $scope.object.attributes[name]);
+        }
+        $scope.object.save({
+            success: function(result){
+                GlobalService.dismissSpinner();
+                $scope.object = result;
+                console.log(result);
+                alert("Object Updated Successfully");
+            },
+            error: function(object, error){
+                GlobalService.dismissSpinner();
+                alert(GlobalService.errorMessage + error.message);
+            }
+        });
     };
 
     //Delete Object
     $scope.deleteObject = function(object){
-        object.destroy({
-            success: function(results){
-                alert("Delete Successful");
-            },
-            error: function(object, error){
-                alert("Error, please contact us with this message: " + error.message);
+        GlobalService.showSpinner();
+        ParseService.deleteObject($scope.object, $scope.objectType, function(results){
+            GlobalService.dismissSpinner();
+            if(typeof results == "error"){
+                alert(GlobalService.errorMessage + results.errorMessage); //Not Sure if this is right
+            } else {
+                alert("Object deleted Successfully");
             }
         });
     };

@@ -1,5 +1,6 @@
 <div ng-include="'partials/nav.html'"></div>
 
+<div id="spinner"></div>
 <div class="container-widescreen" style="margin-right : 5%; margin-left: 5%">
   <div class="page-header" style="margin-top: 10px; margin-bottom: 15px;">
     <div class="row">
@@ -7,7 +8,7 @@
         <h1>Update {{objectType}}</h1>
       </div>
       <div class="col-sm-2 col-sm-offset-3">
-        <button class="btn btn-lg btn-primary" style="margin-top: 15px;" ng-click="updateObject()">Update</button>
+        <button class="btn btn-lg btn-primary" style="margin-top: 15px;" ng-click="saveObject()">Update</button>
       </div>
       <div class="col-sm-2">
         <button class="btn btn-lg btn-danger" style="margin-top: 15px;" ng-click="deleteObject()">Delete</button>

@@ -42,33 +42,9 @@ var ObjectHelper = {
         }
     },
 
-    //Save Object
-    saveObject: function(object, callback){
-        switch (object.type) {      //This is wrong
-        case "Device":
-            this.saveDevice(object);
-            break;
-        case "Dispatch":
-            this.saveDispatch(object);
-            break;
-        case "Facility":
-            this.saveFacility(object);
-            break;
-        case "Patient":
-            this.savePatient(object);
-            break;
-        case "User":
-            this.saveUser(object);
-            break;
-        case "Vehicle":
-            this.saveVehicle(object);
-            break;
-        }
-    },
-
     //Delete Object
     deleteObject: function(objectType, object, callback){
-        switch (objectType) {      //This is wrong
+        switch (objectType) {
         case "Device":
             this.deleteDevice(object, callback);
             break;
@@ -414,7 +390,7 @@ var ObjectHelper = {
                 return object;
             },
             error: function(error){
-                callback(error.message);
+                callback(error);
             }
         }).then(function(parentSection){
             parentSection.remove("sections", section); //not sure if this is right
@@ -423,7 +399,7 @@ var ObjectHelper = {
                     return;
                 },
                 error: function(object, error){
-                    callback(error.message);
+                    callback(error);
                 }
             }).then(function(){
                 //Now Delete the Section object
@@ -432,7 +408,7 @@ var ObjectHelper = {
                         callback("Successfully deleted the Device");
                     },
                     error: function(object, error){
-                        callback(error.message);
+                        callback(error);
                     }
                 });
             });
@@ -450,7 +426,7 @@ var ObjectHelper = {
                 return object;
             },
             error: function(error){
-                callback(error.message);
+                callback(error);
             }
         }).then(function(parentSection){
             parentSection.remove("sections", device.get("dDevice")); //not sure if this is right
@@ -459,7 +435,7 @@ var ObjectHelper = {
                     return;
                 },
                 error: function(object, error){
-                    callback(error.message);
+                    callback(error);
                 }
             }).then(function(){
                 //Now Delete the Device object
@@ -468,7 +444,7 @@ var ObjectHelper = {
                         callback("Successfully deleted the Device");
                     },
                     error: function(object, error){
-                        callback(error.message);
+                        callback(error);
                     }
                 });
             });
@@ -482,7 +458,7 @@ var ObjectHelper = {
                 callback("Successfully deleted the Disptach");
             },
             error: function(object, error){
-                callback(error.message);
+                callback(error);
             }
         });
 
@@ -494,7 +470,7 @@ var ObjectHelper = {
                 callback("Successfully deleted the Facility");
             },
             error: function(object, error){
-                callback(error.message);
+                callback(error);
             }
         });
     },
@@ -505,7 +481,7 @@ var ObjectHelper = {
                 callback("Successfully deleted the Patient");
             },
             error: function(object, error){
-                callback(error.message);
+                callback(error);
             }
         });
     },
@@ -525,15 +501,18 @@ var ObjectHelper = {
         //First Remove the dVehicle Section
         var query = new Parse.Query("Section");
         query.equalTo("name", "dVehicle");
-        query.containedIn("sections", vehicle.get("dVehicle")); //not sure if this is right
+        query.equalTo("sections", vehicle.get("dVehicleGroup")); //not sure if this is right
         query.first({
-            success: function(object){
-                return object;
+            success: function(results){
+                return results;
+                console.log(results);
             },
             error: function(error){
+                console.log(error);
                 callback(error.message);
             }
         }).then(function(parentSection){
+            console.log(parentSection);
             parentSection.remove("sections", vehicle.get("dVehicle")); //not sure if this is right
             parentSection.save({
                 success: function(object){

@@ -20,10 +20,6 @@ angular.module('dojo', [
         controller: 'ConfigCtrl'
       })
 //Devices
-      .when('/devices/add', {
-        templateUrl: 'partials/create.html',
-        controller: 'CreateCtrl'
-      })
       .when('/devices', {
         templateUrl: 'partials/read.html',
         controller: 'ReadCtrl'
@@ -33,10 +29,6 @@ angular.module('dojo', [
         controller: 'CreateCtrl'
       })
 //Dispatches
-      .when('/dispatches/add', {
-        templateUrl: 'partials/create.html',
-        controller: 'CreateCtrl'
-      })
       .when('/dispatches', {
         templateUrl: 'partials/read.html',
         controller: 'ReadCtrl'
@@ -46,10 +38,6 @@ angular.module('dojo', [
         controller: 'CreateCtrl'
       })
 //Facilities
-      .when('/facilities/add', {
-        templateUrl: 'partials/create.html',
-        controller: 'CreateCtrl'
-      })
       .when('/facilities', {
         templateUrl: 'partials/read.html',
         controller: 'ReadCtrl'
@@ -89,10 +77,6 @@ angular.module('dojo', [
         controller: 'NemsisCreateCtrl'
       })
 //Patients
-      .when('/patients/add', {
-        templateUrl: 'partials/create.html',
-        controller: 'CreateCtrl'
-      })
       .when('/patients', {
         templateUrl: 'partials/read.html',
         controller: 'ReadCtrl'
@@ -111,10 +95,6 @@ angular.module('dojo', [
         controller: 'CreateCtrl'
       })
 //Users
-      .when('/users/add', {
-        templateUrl: 'partials/create.html',
-        controller: 'CreateCtrl'
-      })
       .when('/users', {
         templateUrl: 'partials/read.html',
         controller: 'ReadCtrl'
@@ -124,10 +104,6 @@ angular.module('dojo', [
         controller: 'CreateCtrl'
       })
 //Vehicles
-      .when('/vehicles/add', {
-        templateUrl: 'partials/create.html',
-        controller: 'CreateCtrl'
-      })
       .when('/vehicles', {
         templateUrl: 'partials/read.html',
         controller: 'ReadCtrl'

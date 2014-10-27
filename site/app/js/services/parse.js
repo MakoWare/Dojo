@@ -89,7 +89,7 @@ angular.module('parseService', [])
                     success: function(results){
                         callback(resutlts);
                     },
-                    error: function(error){
+                    error: function(object, error){
                         alert(ERRORMESSAGE + error.message);
                     }
                 });
@@ -194,10 +194,15 @@ angular.module('parseService', [])
                     success: function(results){
                         callback(results);
                     },
-                    error: function(error){
-                        alert("Error: " + error.message);
+                    error: function(object, error){
+                        callback(error);
                     }
                 });
+            },
+
+            //Delete Object
+            deleteObject: function(object, objectType, callback){
+                ObjectHelper.deleteObject(objectType, object, callback);
             },
 
             //Find Objects
