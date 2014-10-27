@@ -85,7 +85,7 @@ var ObjectHelper = {
 
     //Device
     createDevice: function(agencyId, userId, callback){
-        var device = new Device();
+        var device = new ObjectHelper.Device();
         device.set("agencyId", agencyId);
         device.set("createdBy", userId);
 
@@ -101,7 +101,7 @@ var ObjectHelper = {
 
     //Dispatch
     createDispatch: function(agencyId, userId, callback){
-        var dispatch = new Dispatch();
+        var dispatch = new ObjectHelper.Dispatch();
         dispatch.set("agencyId", agencyId);
         dispatch.set("createdBy", userId);
 
@@ -118,7 +118,7 @@ var ObjectHelper = {
 
     //Facility
     createFacility: function(agencyId, userId, callback){
-        var facility = new Facility();
+        var facility = new ObjectHelper.Facility();
         facility.set("agencyId", agencyId);
         facility.set("createdBy", userId);
         facility.set("name", "");
@@ -128,7 +128,7 @@ var ObjectHelper = {
 
     //Patient
     createPatient: function(agencyId, userId, callback){
-        var patient = new Patient();
+        var patient = new ObjectHelper.Patient();
         patient.set("agencyId", agencyId);
         patient.set("createdBy", userId);
         patient.set("firstName", "");
@@ -144,7 +144,7 @@ var ObjectHelper = {
 
     //User
     createUser: function(agencyId, userId, callback){ //This is not like the others
-        var user = new User();
+        var user = new ObjectHelper.User();
         user.set("agencyId", agencyId);
         user.set("createdBy", userId);
 
