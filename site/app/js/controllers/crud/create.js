@@ -65,6 +65,10 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 alert(GlobalService.errorMessage + results.errorMessage); //Not Sure if this is right
             } else {
                 alert("Object deleted Successfully");
+                var objectTypeLower = $scope.objectType.charAt(0).toLowerCase() + $scope.objectType.substr(1) + "s";
+                var newPath = "/" + objectTypeLower;
+                $location.path(newPath);
+                $scope.$apply();
             }
         });
     };

@@ -30,7 +30,7 @@ angular.module('globalService', [])
                 return "Error";
             },
 
-            showSpinner: function(element){
+            showSpinner: function(){
                 var opts = {
                     lines: 13, // The number of lines to draw
                     length: 15, // The length of each line
@@ -45,17 +45,19 @@ angular.module('globalService', [])
                     shadow: false, // Whether to render a shadow
                     hwaccel: false, // Whether to use hardware acceleration
                     className: 'spinner', // The CSS class to assign to the spinner
-                    zIndex: 2e9, // The z-index (defaults to 2000000000)
+                    zIndex: 999, // The z-index (defaults to 2000000000)
                     top: '50%', // Top position relative to parent
                     left: '50%' // Left position relative to parent
                 };
-                var target = document.getElementById('spinner');
+                var target = document.getElementById('overlay');
                 spinner = new Spinner(opts).spin(target);
+                $("#overlay").show();
 
             },
 
-            dismissSpinner: function(element){
+            dismissSpinner: function(){
                 spinner.stop();
+                $("#overlay").hide();
             }
 
         };

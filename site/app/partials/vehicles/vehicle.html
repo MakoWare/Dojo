@@ -33,13 +33,13 @@
       <label for="active">Active</label>
       <select class="form-control" id="active" ng-model="object.attributes.active">
         <option class="form-control" value=""></option>
-        <option class="form-control" value="true">Yes</option>
-        <option class="form-control" value="false">No</option>
+        <option class="form-control" value="{{true}}">Yes</option>
+        <option class="form-control" value="{{false}}">No</option>
       </select>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row" ng-show="false">
     <h4>Current Personnel</h4>
     <div class="form-group col-md-3">
       <label for="personnel1">Name</label>

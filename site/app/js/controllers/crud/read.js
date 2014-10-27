@@ -7,6 +7,7 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
         $scope.objectType = GlobalService.getObjectType($scope.dir);
         $scope.getPartial();
         $scope.findObjects($scope.objectType);
+        $scope.searchParam = "";
     },
 
     $scope.getPartial = function(){
@@ -35,7 +36,6 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
             $location.path(newPath);
             $scope.$apply();
         });
-
     },
 
     //Init
