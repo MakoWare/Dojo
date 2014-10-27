@@ -184,17 +184,19 @@ var ObjectHelper = {
 
     //Vehicle
     createVehicle: function(agencyId, userId, callback){
-        var vehicle = new Vehicle();
+        var vehicle = new ObjectHelper.Vehicle();
         vehicle.set("agencyId", agencyId);
         vehicle.set("createdBy", userId);
         vehicle.set("status", "");
         vehicle.set("type", "");
-        vehicle.set("active", "");
+        vehicle.set("name", "");
+        vehicle.set("active", false);
         vehicle.set("currentPersonnel", []);
 
-        this.createSection(agencyId, userId, "dVehicle.VehicleGroup", function(results){
-            return results;
-        }).then(function(results){
+        ObjectHelper.createSection(agencyId, userId, "dVehicle.VehicleGroup", function(results){
+            console.log("Created Section");
+            console.log(results);
+
             var dVehicleGroup = results;
             vehicle.set("dVehicleGroup", dVehicleGroup);
 
@@ -204,21 +206,35 @@ var ObjectHelper = {
             query.first({
                 success: function(result){
                     return result;
+                    console.log("found parent");
+                    console.log(result);
                 },
                 error: function(error){
                     console.log(error);
                     callback(error);
                 }
             }).then(function(result){
+                console.log("Found Parent Section");
+                console.log(result);
                 result.add("sections", dVehicleGroup);
                 result.save({
                     success: function(result){
-                        callback(vehicle);
+                        return result;
                     },
                     error: function(error){
                         console.log(error);
                         callback(error);
                     }
+                }).then(function(results){
+                    vehicle.save({
+                        success: function(results){
+                            callback(results);
+                        },
+                        error: function(object, error){
+                            console.log(error);
+                            callback(error);
+                        }
+                    });
                 });
             });
         });
@@ -298,22 +314,27 @@ var ObjectHelper = {
         var promise4 = promise3.then(function(){
             Parse.Object.saveAll(subSections, {
                 success: function(results){
-                    section.set('sections', results);
-                    section.save({
-                        success: function(result){
-                            callback(result);
-                        },
-                        error: function(object, error){
-                            callback(error);
-                        }
-                    });
+                    return results;
                 },
                 error: function(object, error){
                     callback(error);
                 }
             });
         });
-        return promise4;
+
+        var promise5 = promise4.then(function(results){
+            section.set('sections', results);
+            section.save({
+                success: function(result){
+                    callback(result);
+                },
+                error: function(object, error){
+                    callback(error);
+                }
+            });
+        });
+
+        return promise5;
     },
 
     //Create NemsisElement
