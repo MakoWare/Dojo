@@ -4,6 +4,7 @@ angular.module('dojo', [
     'globalService',
     'parseService',
     'multi-select',
+    'ui.bootstrap',
     'google-maps',
     'ngRoute'
   ])

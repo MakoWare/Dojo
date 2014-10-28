@@ -5,11 +5,8 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         $scope.object = {};
         $scope.dir = $location.url().slice(1).split("/")[0];
         $scope.objectType = GlobalService.getObjectType($scope.dir);
-        $scope.specificFunctions();
-        var end = $location.url().split("/")[$location.url().split("/").length - 1];
-
-        $scope.type = "Update";
-        $scope.getObject($scope.objectType, end);
+        var id = $location.url().split("/")[$location.url().split("/").length - 1];
+        $scope.getObject($scope.objectType, id);
     },
 
     //1. Get Object
@@ -19,6 +16,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             if(results){
                 $scope.$apply(function(){
                     $scope.object = results;
+                    $scope.setUp();
                 });
             } else {
                 var objectTypeLower = objectType.charAt(0).toLowerCase() + objectType.substr(1) + "s";
@@ -39,6 +37,59 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     //Save Object
     $scope.saveObject = function(){
         GlobalService.showSpinner();
+        switch($scope.objectType){
+        case "Dispatch":
+            $scope.saveDispatch();
+            break;
+        case "Facility":
+            $scope.saveFacility();
+            break;
+        case "Patient":
+            $scope.savePatient();
+            break;
+
+        case "Vehicle":
+            $scope.saveVehicle();
+            break;
+        }
+    };
+
+
+    //Save Dispatch
+    $scope.saveDispatch = function(){
+        $scope.object.save({
+            success: function(result){
+                GlobalService.dismissSpinner();
+                $scope.object = result;
+                console.log(result);
+                alert("Object Updated Successfully");
+            },
+            error: function(object, error){
+                GlobalService.dismissSpinner();
+                alert(GlobalService.errorMessage + error.message);
+            }
+        });
+    },
+
+
+    //Save Facility
+    $scope.saveFacility = function(){
+        $scope.object.save({
+            success: function(result){
+                GlobalService.dismissSpinner();
+                $scope.object = result;
+                console.log(result);
+                alert("Object Updated Successfully");
+            },
+            error: function(object, error){
+                GlobalService.dismissSpinner();
+                alert(GlobalService.errorMessage + error.message);
+            }
+        });
+    },
+
+    //Save Patient
+    $scope.savePatient = function(){
         for(var name in $scope.object.attributes) {
             $scope.object.set(name, $scope.object.attributes[name]);
         }
@@ -54,7 +105,26 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 alert(GlobalService.errorMessage + error.message);
             }
         });
-    };
+    },
+
+    //Save Vehicle
+    $scope.saveVehicle = function(){
+        for(var name in $scope.object.attributes) {
+            $scope.object.set(name, $scope.object.attributes[name]);
+        }
+        $scope.object.save({
+            success: function(result){
+                GlobalService.dismissSpinner();
+                $scope.object = result;
+                console.log(result);
+                alert("Object Updated Successfully");
+            },
+            error: function(object, error){
+                GlobalService.dismissSpinner();
+                alert(GlobalService.errorMessage + error.message);
+            }
+        });
+    },
 
     //Delete Object
     $scope.deleteObject = function(object){
@@ -74,30 +144,26 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     };
 
     /** Begin to destroy nice and clean Controller here  **/
-    $scope.specificFunctions = function(){
+    $scope.setUp = function(){
         switch($scope.objectType){
         case "Dispatch":
-            $scope.getDispatchCodes();
+            $scope.dispatchSetup();
             break;
-        case "Device":
-
+        case "Facility":
+            //$scope.facilitySetup();
             break;
-        case "Facilities":
-
-            break;
-        case "Patients":
-
+        case "Patient":
+            $scope.patientSetup();
             break;
 
         case "Vehicle":
-
+            //$scope.vehicleSetup();
             break;
-
         }
     },
 
-    //Dispatch Specific
-    $scope.getDispatchCodes = function(){
+    //Dispatch Setup
+    $scope.dispatchSetup = function(){
         ParseService.findNemsisElementCodes("eDispatch", function(results){
             $scope.eDispatch01 = [];
             $scope.eDispatch02 = [];
@@ -116,6 +182,23 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         });
     },
 
+
+    //Patient Setup
+    $scope.patientSetup = function(){
+        //Date Picker setup
+        if(!$scope.object.attributes.dob){
+            $scope.object.attributes.dob = new Date();
+        }
+        $scope.format = 'MM/dd/yyyy';
+        $scope.dateOptions = {
+            startingDay: 1
+        };
+        $scope.open = function($event) {
+            $scope.opened = true;
+            $event.preventDefault();
+            $event.stopPropagation();
+        };
+    },
 
     //Init Controller
     $scope.init();

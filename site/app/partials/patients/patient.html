@@ -32,9 +32,9 @@
 	<div class="col-md-2">
           <p class="input-group">
             <label for="dob">Date of Birth*</label>
-            <input id="dob" type="text" class="form-control" datepicker-popup="{{format}}" ng-model="object.attributes.dob" is-open="form.dob.opened" min="'1900-01-01'" max="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" show-weeks="false"/>
+            <input id="dob" type="text" class="form-control" datepicker-popup="{{format}}" ng-model="object.attributes.dob" is-open="opened" min="'1900-01-01'" max="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" show-weeks="false"/>
             <span class="input-group-btn">
-              <button class="btn btn-default" ng-click="form.dob.open($event)" style="margin-top: 25px;"><i class="glyphicon glyphicon-calendar"></i></button>
+              <button class="btn btn-default" ng-focus="opened = true" ng-click="open($event)" style="margin-top: 25px;"><i class="glyphicon glyphicon-calendar"></i></button>
             </span>
           </p>
         </div>
