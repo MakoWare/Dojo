@@ -208,19 +208,31 @@ angular.module('parseService', [])
             //Find Objects
             findObjectsByAgency: function(objectType, callback){
                 switch (objectType){
-                case "Device" :
-                    ParseService.findInstallations(callback);
+                case "Installation" :
+                    ParseService.findInstallationsByAgency(callback);
                     break;
                 case "Vehicle":
-                    ParseService.findVehicles(callback);
+                    ParseService.findVehiclesByAgency(callback);
+                    break;
+                case "Dispatch" :
+                    ParseService.findDispatchesByAgency(callback);
+                    break;
+                case "Patient":
+                    ParseService.findPatientsByAgency(callback);
+                    break;
+                case "Facility":
+                    ParseService.findFacilitiesByAgency(callback);
                     break;
                 }
+
             },
 
             //Find Vehicles by AgencyId
-            findInstallations: function(callback){
-                var query = new Parse.Query(Installation);
+            findVehiclesByAgency: function(callback){
+                var query = new Parse.Query(Vehicle);
                 query.equalTo("agencyId", Parse.User.current().get("agencyId"));
+                query.include("currentDispatch");
+                query.include("installation");
                 query.find({
                     success: function(results){
                         callback(results);
@@ -232,11 +244,13 @@ angular.module('parseService', [])
             },
 
             //Find Vehicles by AgencyId
-            findVehicles: function(callback){
-                var query = new Parse.Query(Vehicle);
+            findPatientsByAgency: function(callback){
+                var query = new Parse.Query(Patient);
                 query.equalTo("agencyId", Parse.User.current().get("agencyId"));
                 query.include("currentDispatch");
-                query.include("installation");
+                query.include("ePatient");
+                query.include("ePatient.sections.elements");
+                query.include("ePatient.nemsisSection.sections");
                 query.find({
                     success: function(results){
                         callback(results);

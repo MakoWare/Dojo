@@ -23,16 +23,12 @@
               <a  class="dropdown-toggle" data-toggle="dropdown">Management<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 <li ng-class="{active: (dir === 'configurations')}" ng-show="(role == 'Manager' || role == 'Admin')"><a href="#/configurations">Configurations</a></li>
-                <li ng-class="{active: (dir === 'devices')}"><a href="#/devices">Devices</a></li>
                 <li ng-class="{active: (dir === 'users')}" ng-show="(role == 'Manager' || role == 'Admin')"><a href="#/users">Users</a></li>
 
                 <li ng-class="{active: (dir === 'pcrs')}" ng-show="(role == 'Manager' || role == 'Admin')"><a href="#/pcrs">PCRs</a></li>
                 <li ng-class="{active: (dir === 'files')}" ng-show="(role == 'Manager' || role == 'Admin')"><a href="#/files">Files</a></li>
               </ul>
             </li>
-
-
-
 
             <li ng-class="{active: (dir === 'documentation')}"><a href="#/documentation">Documentation</a></li>
             <li ng-class="{active: (dir === 'contact')}"><a href="#/contact">Contact</a></li>

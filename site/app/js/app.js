@@ -19,15 +19,6 @@ angular.module('dojo', [
         templateUrl: 'partials/configurations.html',
         controller: 'ConfigCtrl'
       })
-//Devices
-      .when('/devices', {
-        templateUrl: 'partials/read.html',
-        controller: 'ReadCtrl'
-      })
-      .when('/devices/:id', {
-        templateUrl: 'partials/update.html',
-        controller: 'CreateCtrl'
-      })
 //Dispatches
       .when('/dispatches', {
         templateUrl: 'partials/read.html',

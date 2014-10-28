@@ -80,7 +80,6 @@ var ObjectHelper = {
     },
 
 
-    //***Concrete***//
     //**Create**//
 
     //Device
@@ -107,9 +106,7 @@ var ObjectHelper = {
 
         var promise = this.createSection(agencyId, userId, "eDispatch", true, function(results){
 
-        });
-
-        promise.then(function(results){
+        }).then(function(results){
             dispatch.set("section", results);
             callback(dispatch);
         });
@@ -131,15 +128,18 @@ var ObjectHelper = {
         var patient = new ObjectHelper.Patient();
         patient.set("agencyId", agencyId);
         patient.set("createdBy", userId);
-        patient.set("firstName", "");
-        patient.set("lastName", "");
-        patient.set("ssn", "");
-        patient.set("city", "");
-        patient.set("address", "");
-        patient.set("state", "");
-        patient.set("county", "");
-
-        callback(patient);
+        patient.set("comments", "");
+        ObjectHelper.createSection(agencyId, userId, "ePatient", function(results){
+            patient.set("ePatient", results);
+            patient.save({
+                success: function(patient){
+                    callback(patient);
+                },
+                error: function(object, error){
+                    callback(error);
+                }
+            });
+        });
     },
 
     //User
@@ -228,6 +228,7 @@ var ObjectHelper = {
         section.set("sections", []);
 
         var subSections = [];
+        var subSectionPromises = [];
 
         //Get NemsisSection
         var query = new Parse.Query("NemsisSection");
@@ -274,43 +275,42 @@ var ObjectHelper = {
             }
             //Create required sub Sections Recursively
             //Why can NemsisElement be serialized and not Section? fuck Parse
-            var subSectionPromises = [];
             requiredSubSectionNames.forEach(function(sectionName){
                 var promise = ObjectHelper.createSection(agencyId, userId, sectionName, function(result){
+                    console.log("adding subsection to subSections");
                     subSections.push(result);
+                    return result;
                 });
                 subSectionPromises.push(promise);
             });
 
+        });
+        return promise3.then(function(){
             //After all subsections have been created, save them, Parse - can't serialize
-            Parse.Promise.when(subSectionPromises).then(function(){
-                return;
+            console.log(subSectionPromises);
+            Parse.Promise.when(subSectionPromises).then(function(results){
+                console.log(results);
+                console.log("all subsection promises done");
+                Parse.Object.saveAll(subSections, {
+                    success: function(results){
+                        return results;
+                    },
+                    error: function(object, error){
+                        callback(error);
+                    }
+                });
+            }).then(function(results){
+                section.set('sections', results);
+                section.save({
+                    success: function(result){
+                        callback(result);
+                    },
+                    error: function(object, error){
+                        callback(error);
+                    }
+                });
             });
         });
-        var promise4 = promise3.then(function(){
-            Parse.Object.saveAll(subSections, {
-                success: function(results){
-                    return results;
-                },
-                error: function(object, error){
-                    callback(error);
-                }
-            });
-        });
-
-        var promise5 = promise4.then(function(results){
-            section.set('sections', results);
-            section.save({
-                success: function(result){
-                    callback(result);
-                },
-                error: function(object, error){
-                    callback(error);
-                }
-            });
-        });
-
-        return promise5;
     },
 
     //Create NemsisElement
@@ -405,7 +405,7 @@ var ObjectHelper = {
                 //Now Delete the Section object
                 section.destroy({
                     success: function(result){
-                        callback("Successfully deleted the Device");
+                        callback("Successfully deleted the Section");
                     },
                     error: function(object, error){
                         callback(error);
@@ -416,11 +416,11 @@ var ObjectHelper = {
         });
     },
 
-    deleteDevice: function(device, callback){
+    deleteInstallation: function(installation, callback){
         //First Remove the dDevice Section
         var query = new Parse.Query("Section");
         query.equalTo("name", "dDevice");
-        query.containedIn("sections", device.get("dDevice")); //not sure if this is right
+        query.containedIn("sections", installation.get("dDevice")); //not sure if this is right
         query.first({
             success: function(object){
                 return object;
@@ -429,7 +429,7 @@ var ObjectHelper = {
                 callback(error);
             }
         }).then(function(parentSection){
-            parentSection.remove("sections", device.get("dDevice")); //not sure if this is right
+            parentSection.remove("sections", installation.get("dDeviceGroup")); //not sure if this is right
             parentSection.save({
                 success: function(object){
                     return;
@@ -438,10 +438,10 @@ var ObjectHelper = {
                     callback(error);
                 }
             }).then(function(){
-                //Now Delete the Device object
-                device.destroy({
+                //Now Delete the Installation object
+                installation.destroy({
                     success: function(result){
-                        callback("Successfully deleted the Device");
+                        callback("Successfully deleted the Installation");
                     },
                     error: function(object, error){
                         callback(error);

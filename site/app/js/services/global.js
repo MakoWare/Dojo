@@ -17,6 +17,9 @@ angular.module('globalService', [])
                 case "facilities":
                     return "Facility";
                     break;
+                case "installations":
+                    return "Installation";
+                    break;
                 case "patients":
                     return "Patient";
                     break;
