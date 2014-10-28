@@ -14,10 +14,10 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     //1. Get Object
     $scope.getObject = function(objectType, objectId){
-        ParseService.getObject(objectType, objectId, function(results){
-            if(results.id){
+        ParseService.getObjectById(objectType, objectId, function(results){
+            console.log(results);
+            if(results){
                 $scope.$apply(function(){
-                    console.log(results);
                     $scope.object = results;
                 });
             } else {

@@ -14,6 +14,7 @@ angular.module('parseService', [])
 	var Section = Parse.Object.extend("Section");
 	var NemsisSection = Parse.Object.extend("NemsisSection");
 	var Dispatch = Parse.Object.extend("Dispatch");
+	var Facility = Parse.Object.extend("Facility");
 	var Patient = Parse.Object.extend("Patient");
 	var Personnel = Parse.Object.extend("Personnel");
 	var Vehicle = Parse.Object.extend("Vehicle");
@@ -187,18 +188,74 @@ angular.module('parseService', [])
                 ObjectHelper.createObject(objectType, currentUser.get('agencyId'), currentUser.id, callback);
             },
 
-            //Get Object
-            getObject: function(objectType, objectId, callback){
-                var query = new Parse.Query(objectType);
-                query.get(objectId, {
-                    success: function(results){
-                        callback(results);
+            //Get Object By Id
+            getObjectById: function(objectType, objectId, callback){
+                switch (objectType){
+                case "Vehicle":
+                    ParseService.getVehicleById(objectId, callback);
+                    break;
+                case "Dispatch" :
+                    ParseService.getDispatchById(objectId, callback);
+                    break;
+                case "Patient":
+                    ParseService.getPatientById(objectId, callback);
+                    break;
+                case "Facility":
+                    ParseService.getFacilityById(objectId, callback);
+                    break;
+                }
+            },
+
+            getVehicleById: function(objectId, callback){
+                var query = new Parse.Query(Vehicle);
+                query.include("dVehicleGroup.sections.elements");
+                query.get(objectId,{
+                    success: function(result){
+                        callback(result);
                     },
                     error: function(object, error){
                         callback(error);
                     }
                 });
             },
+
+            getPatientById: function(objectId, callback){
+                var query = new Parse.Query(Patient);
+                query.include("ePatient.sections.elements");
+                query.get(objectId,{
+                    success: function(result){
+                        callback(result);
+                    },
+                    error: function(error){
+                        callback(error);
+                    }
+                });
+            },
+
+            getDispatchById: function(objectId, callback){
+                var query = new Parse.Query(Dispatch);
+                query.get(objectId,{
+                    success: function(result){
+                        callback(result);
+                    },
+                    error: function(object, error){
+                        callback(error);
+                    }
+                });
+            },
+
+            getFacilityById: function(objectId, callback){
+                var query = new Parse.Query(Facility);
+                query.get(objectId,{
+                    success: function(result){
+                        callback(result);
+                    },
+                    error: function(object, error){
+                        callback(error);
+                    }
+                });
+            },
+
 
             //Delete Object
             deleteObject: function(object, objectType, callback){
@@ -208,9 +265,6 @@ angular.module('parseService', [])
             //Find Objects
             findObjectsByAgency: function(objectType, callback){
                 switch (objectType){
-                case "Installation" :
-                    ParseService.findInstallationsByAgency(callback);
-                    break;
                 case "Vehicle":
                     ParseService.findVehiclesByAgency(callback);
                     break;
@@ -224,7 +278,6 @@ angular.module('parseService', [])
                     ParseService.findFacilitiesByAgency(callback);
                     break;
                 }
-
             },
 
             //Find Vehicles by AgencyId

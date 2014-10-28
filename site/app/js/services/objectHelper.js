@@ -126,18 +126,23 @@ var ObjectHelper = {
     //Patient
     createPatient: function(agencyId, userId, callback){
         var patient = new ObjectHelper.Patient();
+        var ePatient;
         patient.set("agencyId", agencyId);
         patient.set("createdBy", userId);
         patient.set("comments", "");
         ObjectHelper.createSection(agencyId, userId, "ePatient", function(results){
-            patient.set("ePatient", results);
-            patient.save({
-                success: function(patient){
-                    callback(patient);
-                },
-                error: function(object, error){
-                    callback(error);
-                }
+            ePatient = results;
+            ObjectHelper.createSection(agencyId, userId, "ePatient.PatientNameGroup", function(results){
+                ePatient.add("sections", results);
+                patient.set("ePatient", ePatient);
+                patient.save({
+                    success: function(patient){
+                        callback(patient);
+                    },
+                    error: function(object, error){
+                        callback(error);
+                    }
+                });
             });
         });
     },
@@ -170,9 +175,6 @@ var ObjectHelper = {
         vehicle.set("currentPersonnel", []);
 
         ObjectHelper.createSection(agencyId, userId, "dVehicle.VehicleGroup", function(results){
-            console.log("Created Section");
-            console.log(results);
-
             var dVehicleGroup = results;
             vehicle.set("dVehicleGroup", dVehicleGroup);
 
@@ -182,16 +184,12 @@ var ObjectHelper = {
             query.first({
                 success: function(result){
                     return result;
-                    console.log("found parent");
-                    console.log(result);
                 },
                 error: function(error){
                     console.log(error);
                     callback(error);
                 }
             }).then(function(result){
-                console.log("Found Parent Section");
-                console.log(result);
                 result.add("sections", dVehicleGroup);
                 result.save({
                     success: function(result){
@@ -276,31 +274,13 @@ var ObjectHelper = {
             //Create required sub Sections Recursively
             //Why can NemsisElement be serialized and not Section? fuck Parse
             requiredSubSectionNames.forEach(function(sectionName){
-                var promise = ObjectHelper.createSection(agencyId, userId, sectionName, function(result){
-                    console.log("adding subsection to subSections");
+                subSectionPromises.push(ObjectHelper.createSection(agencyId, userId, sectionName, function(result){
                     subSections.push(result);
                     return result;
-                });
-                subSectionPromises.push(promise);
+                }));
             });
-
-        });
-        return promise3.then(function(){
-            //After all subsections have been created, save them, Parse - can't serialize
-            console.log(subSectionPromises);
-            Parse.Promise.when(subSectionPromises).then(function(results){
-                console.log(results);
-                console.log("all subsection promises done");
-                Parse.Object.saveAll(subSections, {
-                    success: function(results){
-                        return results;
-                    },
-                    error: function(object, error){
-                        callback(error);
-                    }
-                });
-            }).then(function(results){
-                section.set('sections', results);
+            Parse.Promise.when(subSectionPromises).then(function(){
+                section.set('sections', subSections);
                 section.save({
                     success: function(result){
                         callback(result);
@@ -311,6 +291,34 @@ var ObjectHelper = {
                 });
             });
         });
+
+        return promise3;
+
+        /*
+        var promise4 = promise3.then(function(){
+            console.log("in promise 4");
+            Parse.Object.saveAll(subSections, {
+                success: function(results){
+                    return results;
+                },
+                error: function(object, error){
+                    callback(error);
+                }
+            });
+        });
+
+         return promise4.then(function(results){
+            section.set('sections', results);
+            section.save({
+                success: function(result){
+                    callback(result);
+                },
+                error: function(object, error){
+                    callback(error);
+                }
+            });
+        });
+         */
     },
 
     //Create NemsisElement
