@@ -5,34 +5,34 @@
       <div class="row">
         <div class="form-group col-md-3">
           <label for="firstName">First Name*</label>
-          <input ng-model="object.attributes.ePatient.sectionfirstName" type="text" class="form-control" id="firstName" placeholder="First Name" required/>
+          <input ng-model="object.attributes.firstName" type="text" class="form-control" id="firstName" placeholder="First Name" required/>
         </div>
         <div class="form-group col-md-1" style="margin-left: 2px">
           <label for="middleInitial">M.I</label>
-          <input ng-model="form.middleInitial" type="text" class="form-control" id="middleInitial" placeholder="M.I"/>
+          <input ng-model="object.attributes.middleInitial" type="text" class="form-control" id="middleInitial" placeholder="M.I"/>
         </div>
         <div class="form-group col-md-3" style="margin-left: 2px">
           <label for="lastName">Last Name*</label>
-          <input ng-model="form.lastName" type="text" class="form-control" id="lastName" placeholder="Last Name" required/>
+          <input ng-model="object.attributes.lastName" type="text" class="form-control" id="lastName" placeholder="Last Name" required/>
         </div>
         <div class="form-group col-md-2" style="margin-left: 2px;">
           <label for="phone">Phone Number</label>
-          <input ng-model="form.phone" type="text" class="form-control" id="phone" placeholder="Phone"/>
+          <input ng-model="object.attributes.phone" type="text" class="form-control" id="phone" placeholder="Phone"/>
         </div>
         <div class="form-group col-md-2" style="margin-left: 2px;">
           <label for="phone">Email</label>
-          <input ng-model="form.email" type="text" class="form-control" id="email" placeholder="Email"/>
+          <input ng-model="object.attributes.email" type="text" class="form-control" id="email" placeholder="Email"/>
         </div>
       </div>
       <div class="row">
         <div class="form-group col-md-2">
           <label for="ssn">Social Security Number*</label>
-          <input ng-model="form.ssn" type="text" class="form-control" id="ssn" placeholder="SSN"/>
+          <input ng-model="object.attributes.ssn" type="text" class="form-control" id="ssn" placeholder="SSN"/>
         </div>
 	<div class="col-md-2">
           <p class="input-group">
             <label for="dob">Date of Birth*</label>
-            <input id="dob" type="text" class="form-control" datepicker-popup="{{format}}" ng-model="form.dob" is-open="form.dob.opened" min="'1900-01-01'" max="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" show-weeks="false"/>
+            <input id="dob" type="text" class="form-control" datepicker-popup="{{format}}" ng-model="object.attributes.dob" is-open="form.dob.opened" min="'1900-01-01'" max="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" show-weeks="false"/>
             <span class="input-group-btn">
               <button class="btn btn-default" ng-click="form.dob.open($event)" style="margin-top: 25px;"><i class="glyphicon glyphicon-calendar"></i></button>
             </span>
@@ -40,7 +40,7 @@
         </div>
 	<div class="form-group col-md-3" >
           <label for="gender">Gender*</label>
-          <select class="form-control" id="gender" ng-model="form.gender" required>
+          <select class="form-control" id="gender" ng-model="object.attributes.gender" required>
 	    <option class="form-control" value=""></option>
 	    <option class="form-control" value="9906001 Female">Female</option>
 	    <option class="form-control" value="9906003 Male">Male</option>
@@ -49,7 +49,7 @@
         </div>
 	<div class="form-group col-md-3" style="margin-left: 2px;">
           <label for="race">Race*</label>
-          <select class="form-control" id="race" ng-model="form.race" required>
+          <select class="form-control" id="race" ng-model="object.attributes.race" required>
 	    <option class="form-control" value="2514001 American Indian or Alaska Native">American Indian or Alaska Native</option>
 	    <option class="form-control" value="2514003 Asian">Asian</option>
 	    <option class="form-control" value="2514005 Black or African American">Black or African American</option>
@@ -62,29 +62,29 @@
       <div class="row">
 	<div class="form-group col-md-4">
           <label for="address">Address*</label>
-          <input ng-model="form.address" type="text" class="form-control" id="address" placeholder="Address" required/>
+          <input ng-model="object.attributes.address" type="text" class="form-control" id="address" placeholder="Address" required/>
         </div>
 	<div class="form-group col-md-2" style="margin-left: 2px">
           <label for="city">City*</label>
-          <input ng-model="form.city" type="text" class="form-control" id="city" placeholder="City" required/>
+          <input ng-model="object.attributes.city" type="text" class="form-control" id="city" placeholder="City" required/>
         </div>
 	<div class="form-group col-md-1" style="margin-left: 2px">
           <label for="state">State*</label>
-          <input ng-model="form.state" type="text" class="form-control" id="state" placeholder="State" required/>
+          <input ng-model="object.attributes.state" type="text" class="form-control" id="state" placeholder="State" required/>
         </div>
 	<div class="form-group col-md-2" style="margin-left: 2px">
           <label for="county">County*</label>
-          <input ng-model="form.county" type="text" class="form-control" id="county" placeholder="County" required/>
+          <input ng-model="object.attributes.county" type="text" class="form-control" id="county" placeholder="County" required/>
         </div>
 	<div class="form-group col-md-2" style="margin-left: 2px">
           <label for="zip">Zip Code*</label>
-          <input ng-model="form.zip" type="text" class="form-control" id="zip" placeholder="Zip" required/>
+          <input ng-model="object.attributes.zip" type="text" class="form-control" id="zip" placeholder="Zip" required/>
         </div>
       </div>
       <div class="row">
 	<div class="form-group col-md-6">
           <label for="comments">Additional Information</label>
-	  <textarea ng-model="form.comments" id="comments" class="form-control" rows="3" placeholder="Additional Info"></textarea>
+	  <textarea ng-model="object.attributes.comments" id="comments" class="form-control" rows="3" placeholder="Additional Info"></textarea>
 	</div>
       </div>
     </div>

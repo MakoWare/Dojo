@@ -129,7 +129,23 @@ var ObjectHelper = {
         var ePatient;
         patient.set("agencyId", agencyId);
         patient.set("createdBy", userId);
+        patient.set("address", "");
+        patient.set("age", "");
+        patient.set("city", "");
         patient.set("comments", "");
+        patient.set("country", "");
+        patient.set("county", "");
+        patient.set("email", "");
+        patient.set("firstName", "");
+        patient.set("lastName", "");
+        patient.set("gender", "");
+        patient.set("middleInitial", "");
+        patient.set("phone", "");
+        patient.set("race", "");
+        patient.set("ssn", "");
+        patient.set("state", "");
+        patient.set("zip", "");
+
         ObjectHelper.createSection(agencyId, userId, "ePatient", function(results){
             ePatient = results;
             ObjectHelper.createSection(agencyId, userId, "ePatient.PatientNameGroup", function(results){

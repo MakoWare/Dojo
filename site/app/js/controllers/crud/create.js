@@ -113,12 +113,8 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 }
             });
             console.log($scope);
-
         });
     },
-
-
-
 
 
     //Init Controller
