@@ -222,6 +222,7 @@ angular.module('parseService', [])
             getPatientById: function(objectId, callback){
                 var query = new Parse.Query(Patient);
                 query.include("ePatient.sections.elements");
+                query.include("ePatient.elements");
                 query.get(objectId,{
                     success: function(result){
                         callback(result);
@@ -234,6 +235,10 @@ angular.module('parseService', [])
 
             getDispatchById: function(objectId, callback){
                 var query = new Parse.Query(Dispatch);
+                query.include("patient");
+                query.include("vehicle");
+                query.include("eDispatch.elements");
+                query.include("eTimes.elements");
                 query.get(objectId,{
                     success: function(result){
                         callback(result);

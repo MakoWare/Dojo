@@ -22,9 +22,6 @@ var ObjectHelper = {
     //Create Object
     createObject: function(objectType, agencyId, userId, callback){
         switch (objectType) {
-        case "Device":
-            this.createDevice(agencyId, userId, callback);
-            break;
         case "Dispatch":
             this.createDispatch(agencyId, userId, callback);
             break;
@@ -83,20 +80,43 @@ var ObjectHelper = {
 
     //**Create**//
 
-
     //Dispatch
     createDispatch: function(agencyId, userId, callback){
         var dispatch = new ObjectHelper.Dispatch();
         dispatch.set("agencyId", agencyId);
         dispatch.set("createdBy", userId);
+        dispatch.set("comments", "");
+        dispatch.set("dropOffAddress", "");
+        dispatch.set("dropOffCity", "");
+        dispatch.set("dropOffCountry", "");
+        dispatch.set("dropOffCounty", "");
+        //dispatch.set("dropOffDate", "");
+        dispatch.set("dropOffState", "");
+        dispatch.set("dropOffZip", "");
+        dispatch.set("pickUpAddress", "");
+        dispatch.set("pickUpCity", "");
+        dispatch.set("pickUpCountry", "");
+        dispatch.set("pickUpCounty", "");
+        //dispatch.set("pickUpDate", "");
+        dispatch.set("pickUpState", "");
+        dispatch.set("pickUpZip", "");
+        dispatch.set("priority", "");
+        dispatch.set("status", "");
 
-        var promise = this.createSection(agencyId, userId, "eDispatch", true, function(results){
-
-        }).then(function(results){
-            dispatch.set("section", results);
-            callback(dispatch);
+        ObjectHelper.createSection(agencyId, userId, "eDispatch", function(results){
+            dispatch.set("eDispatch", results);
+            ObjectHelper.createSection(agencyId, userId, "eTimes", function(results){
+                dispatch.set('eTimes', results);
+                dispatch.save({
+                    success: function(dispatch){
+                        callback(dispatch);
+                    },
+                    error: function(object, error){
+                        callback(error);
+                    }
+                });
+            });
         });
-
     },
 
     //Facility

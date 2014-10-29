@@ -11,7 +11,9 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     //1. Get Object
     $scope.getObject = function(objectType, objectId){
+        GlobalService.showSpinner();
         ParseService.getObjectById(objectType, objectId, function(results){
+            GlobalService.dismissSpinner();
             console.log(results);
             if(results){
                 $scope.$apply(function(){
@@ -54,7 +56,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         }
     };
 
-
     //Save Dispatch
     $scope.saveDispatch = function(){
         $scope.object.save({
@@ -90,9 +91,99 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     //Save Patient
     $scope.savePatient = function(){
+        //Nemsis
+        var ePatient = $scope.object.attributes.ePatient;
+        var attributes = $scope.object.attributes;
+        ePatient.attributes.elements.forEach(function(element){
+            switch (element.attributes.title){
+            case "ePatient.01":
+                element.set("value", $scope.object.id);
+                break;
+            case "ePatient.05":
+                element.set("value", attributes.address);
+                break;
+            case "ePatient.06":
+                element.set("value", attributes.city);
+                break;
+            case "ePatient.07":
+                element.set("value", attributes.county);
+                break;
+            case "ePatient.08":
+                element.set("value", attributes.state);
+                break;
+            case "ePatient.09":
+                element.set("value", attributes.zip);
+                break;
+            case "ePatient.10":
+                element.set("value", "US"); //Hard Code for now
+                break;
+            case "ePatient.11":
+                //element.set("value", $scope.object.id); Not Sure
+                break;
+            case "ePatient.12":
+                element.set("value", attributes.ssn);
+                break;
+            case "ePatient.13":
+                element.set("value", attributes.gender);
+                break;
+            case "ePatient.14":
+                element.set("value", attributes.race);
+                break;
+            case "ePatient.17":
+                var dob = (attributes.dob.getMonth() + 1) + "/" + attributes.dob.getDate() + "/" + attributes.dob.getFullYear();
+                element.set("value", dob);
+                break;
+            case "ePatient.18":
+                element.set("value", attributes.phone);
+                break;
+            case "ePatient.19":
+                element.set("value", attributes.email);
+                break;
+            case "ePatient.20":
+                //element.set("value", $scope.object.id); Not Sure
+                break;
+            case "ePatient.21":
+                //element.set("value", $scope.object.id); Not Sure
+                break;
+            }
+        });
+
+        ePatient.attributes.sections.forEach(function(section){
+            if(section.attributes.name == "ePatient.AgeGroup"){
+                section.attributes.elements.forEach(function(element){
+                    if(element.attributes.title == "ePatient.15"){
+                        var ageDifMs = Date.now() - attributes.dob.getTime();
+                        var ageDate = new Date(ageDifMs);
+                        var age = Math.abs(ageDate.getUTCFullYear() - 1970) + "";
+                        element.set("value", age);
+                    }
+                    if(element.attributes.title == "ePatient.16"){
+                        element.set("value", "2516009");
+                    }
+                });
+            }
+            if(section.attributes.name == "ePatient.PatientNameGroup"){
+                section.attributes.elements.forEach(function(element){
+                    if(element.attributes.title == "ePatient.02"){
+                        element.set("value", attributes.lastName);
+                    }
+                    if(element.attributes.title == "ePatient.03"){
+                        element.set("value", attributes.firstName);
+                    }
+                    if(element.attributes.title == "ePatient.04"){
+                        element.set("value", attributes.middleInitial);
+                    }
+                });
+            }
+        });
+
+
+        $scope.object.set("ePatient", ePatient);
+
         for(var name in $scope.object.attributes) {
             $scope.object.set(name, $scope.object.attributes[name]);
         }
+
         $scope.object.save({
             success: function(result){
                 GlobalService.dismissSpinner();
