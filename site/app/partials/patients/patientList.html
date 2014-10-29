@@ -13,7 +13,7 @@
 	  </tr>
         </thead>
         <tbody>
-	  <tr ng-repeat="object in objects | filter:searchParam | orderBy:predicate:reverse">
+	  <tr ng-repeat="object in objects | filter:searchParam:strict | orderBy:predicate:reverse">
             <td>{{object.attributes.firstName + " " + object.attributes.lastName}}</td>
 	    <td>{{object.attributes.address}}</td>
             <td>{{(object.attributes.dob.getMonth() + 1) + "/" + object.attributes.dob.getDate() + "/" + object.attributes.dob.getFullYear();}}</td>
