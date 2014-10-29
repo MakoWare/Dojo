@@ -30,8 +30,7 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
         ParseService.createObject(objectType, function(results){
             GlobalService.dismissSpinner();
             console.log(results);
-            var objectTypeLower = objectType.charAt(0).toLowerCase() + objectType.substr(1) + "s";
-            var newPath = "/" + objectTypeLower + "/" + results.id;
+            var newPath = "/" + $scope.dir + "/" + results.id;
             console.log(newPath);
             $location.path(newPath);
             $scope.$apply();

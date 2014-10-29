@@ -296,7 +296,7 @@ angular.module('parseService', [])
                 });
             },
 
-            //Find Vehicles by AgencyId
+            //Find Patients by AgencyId
             findPatientsByAgency: function(callback){
                 var query = new Parse.Query(Patient);
                 query.equalTo("agencyId", Parse.User.current().get("agencyId"));
@@ -304,6 +304,36 @@ angular.module('parseService', [])
                 query.include("ePatient");
                 query.include("ePatient.sections.elements");
                 query.include("ePatient.nemsisSection.sections");
+                query.find({
+                    success: function(results){
+                        callback(results);
+                    },
+                    error: function(error){
+                        alert(ERRORMESSAGE + error.message);
+                    }
+                });
+            },
+
+            //Find Facilities by AgencyId
+            findFacilitiesByAgency: function(callback){
+                var query = new Parse.Query(Facility);
+                query.equalTo("agencyId", Parse.User.current().get("agencyId"));
+                query.find({
+                    success: function(results){
+                        callback(results);
+                    },
+                    error: function(error){
+                        alert(ERRORMESSAGE + error.message);
+                    }
+                });
+            },
+
+            //Find Dispatches by AgencyId
+            findDispatchesByAgency: function(callback){
+                var query = new Parse.Query(Dispatch);
+                query.equalTo("agencyId", Parse.User.current().get("agencyId"));
+                query.include("vehicle");
+                query.include("patient");
                 query.find({
                     success: function(results){
                         callback(results);

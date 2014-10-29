@@ -12,6 +12,7 @@ var ObjectHelper = {
     Patient: Parse.Object.extend("Patient"),
     Personnel: Parse.Object.extend("Personnel"),
     Vehicle: Parse.Object.extend("Vehicle"),
+    Facility: Parse.Object.extend("Facility"),
     Section: Parse.Object.extend("Section"),
     NemsisElement: Parse.Object.extend("NemsisElement"),
     NemsisElementCode: Parse.Object.extend("NemsisElementCode"),
@@ -82,21 +83,6 @@ var ObjectHelper = {
 
     //**Create**//
 
-    //Device
-    createDevice: function(agencyId, userId, callback){
-        var device = new ObjectHelper.Device();
-        device.set("agencyId", agencyId);
-        device.set("createdBy", userId);
-
-        var promise = this.createSection(agencyId, userId, "dDevice", true, function(results){
-
-        });
-
-        promise.then(function(results){
-            device.set("section", results);
-            callback(device);
-        });
-    },
 
     //Dispatch
     createDispatch: function(agencyId, userId, callback){
@@ -116,11 +102,31 @@ var ObjectHelper = {
     //Facility
     createFacility: function(agencyId, userId, callback){
         var facility = new ObjectHelper.Facility();
+        var dFacilityGroup;
         facility.set("agencyId", agencyId);
         facility.set("createdBy", userId);
         facility.set("name", "");
+        facility.set("address", "");
+        facility.set("city", "");
+        facility.set("county", "");
+        facility.set("state", "");
+        facility.set("zip", "");
 
-        callback(facility);
+        ObjectHelper.createSection(agencyId, userId, "dFacilityGroup", function(results){
+            dFacilityGroup = results;
+            ObjectHelper.createSection(agencyId, userId, "dFacility.FacilityGroup", function(results){
+                dFacilityGroup.add("sections", results);
+                facility.set("ePatient", dFacilityGroup);
+                facility.save({
+                    success: function(facility){
+                        callback(facility);
+                    },
+                    error: function(object, error){
+                        callback(error);
+                    }
+                });
+            });
+        });
     },
 
     //Patient
