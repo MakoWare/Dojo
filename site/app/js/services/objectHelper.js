@@ -535,13 +535,36 @@ var ObjectHelper = {
     },
 
     deleteFacility: function(facility, callback){
-        facility.destroy({
-            success: function(result){
-                callback("Successfully deleted the Facility");
+        var query = new Parse.Query("Section");
+        query.equalTo("name", "dFacility");
+        query.containedIn("sections", facility.get("dFacility"));
+        query.first({
+            success: function(object){
+                return object;
             },
-            error: function(object, error){
+            error: function(error){
                 callback(error);
             }
+        }).then(function(parentSection){
+            parentSection.remove("sections", facility.get("dFacility")); //not sure if this is right
+            parentSection.save({
+                success: function(object){
+                    return;
+                },
+                error: function(object, error){
+                    callback(error);
+                }
+            }).then(function(){
+                //Now Delete the Facility object
+                facility.destroy({
+                    success: function(result){
+                        callback("Successfully deleted the Facility");
+                    },
+                    error: function(object, error){
+                        callback(error);
+                    }
+                });
+            });
         });
     },
 

@@ -319,6 +319,24 @@ angular.module('parseService', [])
                 });
             },
 
+            //Find Patients by Name
+            findPatientsByAgency: function(callback){
+                var query = new Parse.Query(Patient);
+                query.equalTo("agencyId", Parse.User.current().get("agencyId"));
+                query.include("currentDispatch");
+                query.include("ePatient");
+                query.include("ePatient.sections.elements");
+                query.include("ePatient.nemsisSection.sections");
+                query.find({
+                    success: function(results){
+                        callback(results);
+                    },
+                    error: function(error){
+                        alert(ERRORMESSAGE + error.message);
+                    }
+                });
+            },
+
             //Find Facilities by AgencyId
             findFacilitiesByAgency: function(callback){
                 var query = new Parse.Query(Facility);

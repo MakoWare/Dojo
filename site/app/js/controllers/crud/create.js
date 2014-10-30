@@ -273,6 +273,14 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 }
             });
         });
+
+        //Type Aheads
+        $scope.getPatients = function(name){
+            ParseService.getPatinetsByAgency(function(results){
+                return results;
+            });
+        };
+
     },
 
     //Facility Setup
