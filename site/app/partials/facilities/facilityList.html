@@ -4,16 +4,21 @@
       <table class="table table-bordered">
         <thead>
 	  <tr>
-            <th><a href="" ng-click="predicate = 'name'; reverse=!reverse">Name</a></th>
-            <th><a href="" ng-click="predicate = 'createdAt'; reverse=!reverse">Id</a></th>
+            <th><a href="" ng-click="predicate = 'attributes.name'; reverse=!reverse">Name</a></th>
+            <th><a href="" ng-click="predicate = 'attributes.address'; reverse=!reverse">Address</a></th>
+            <th><a href="" ng-click="predicate = 'attributes.type'; reverse=!reverse">Type</a></th>
+            <th><a href="" ng-click="predicate = 'id'; reverse=!reverse">Id</a></th>
+
             <th>Edit</th>
 	  </tr>
         </thead>
         <tbody>
-	  <tr ng-repeat="object in objects | filter:searchParam.$ | orderBy:predicate:reverse">
-	    <td>{{object.attributes.id}}</td>
+	  <tr ng-repeat="object in objects | filter:searchParam:strict | orderBy:predicate:reverse">
 	    <td>{{object.attributes.name}}</td>
-            <td><a href="#/devices/{{object.id}}"> <button class="btn btn-primary">Edit</button></a></td>
+	    <td>{{object.attributes.address + ", " + object.attributes.city + ", " + object.attributes.state + ", " + object.attributes.zip}}</td>
+	    <td>{{object.attributes.type.split(" ")[1]}}</td>
+	    <td>{{object.id}}</td>
+            <td><a ng-href="#/facilities/{{object.id}}"> <button class="btn btn-primary">Edit</button></a></td>
 	  </tr>
         </tbody>
       </table>

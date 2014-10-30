@@ -16,4 +16,7 @@
   </div>
 
   <div ng-include="getPartial()"></div>
+  <div ng-show="hasNemsis">
+    <a ng-href="#/configurations/nemsis/{{nemsisLocation}}"><button class="btn btn-lg btn-default">Go To Nemsis Information</button></a>
+  </div>
 </div>

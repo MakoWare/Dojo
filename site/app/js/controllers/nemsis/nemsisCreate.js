@@ -19,7 +19,9 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
 
     //1a. Create a Section
     $scope.createSection = function(sectionName){
+        GlobalService.showSpinner();
         ParseService.createSection(sectionName, function(results){
+            GlobalService.dismissSpinner();
             $scope.$apply(function(){
                 $scope.section = results;
                 $scope.nemsisSection = results.get('nemsisSection');
@@ -35,7 +37,9 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
 
     //1b. Update a Section
     $scope.getSection = function(sectionId){
+        GlobalService.showSpinner();
         ParseService.getSection(sectionId, function(results){
+            GlobalService.dismissSpinner();
             $scope.$apply(function(){
                 $scope.section = results;
                 $scope.nemsisSection = results.get('nemsisSection');
@@ -71,11 +75,13 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
         var subSections = $scope.section.get('sections');
         $scope.subNemsisSections.forEach(function(subNemsisSection){
             subNemsisSection.sections = [];
-            subSections.forEach(function(subSection){
-                if(subSection.get('name') === subNemsisSection.get('name')){
-                    subNemsisSection.sections.push(subSection);
-                }
-            });
+            if(subSections){
+                subSections.forEach(function(subSection){
+                    if(subSection.get('name') === subNemsisSection.get('name')){
+                        subNemsisSection.sections.push(subSection);
+                    }
+                });
+            }
         });
     },
 
@@ -181,6 +187,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
 
     //Add Section             ***TODO***  Add Dirty Check
     $scope.addSection = function(childSection){
+        GlobalService.showSpinner();
         //First check if current Section is dirty
         //alert("Current Section isn't Saved, please save before adding another section");
 
@@ -193,6 +200,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
             $scope.section.add("sections", results);
             $scope.section.save({
                 success: function(result){
+                    GlobalService.dismissSpinner();
                     //now Change location to the child's update url
                     $scope.$apply(function(){
                         $location.path(newPath);
@@ -207,6 +215,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
 
     //Save Section
     $scope.saveSection = function(){
+        GlobalService.showSpinner();
         //Replace section.elements with tmpElements.elements
         var elements = [];
         var promises = [];
@@ -268,7 +277,8 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
                     $scope.section.set('elements', results);
                     $scope.section.save({
                         success: function(result){
-                                alert("Section saved successfully");
+                            GlobalService.dismissSpinner();
+                            alert("Section saved successfully");
                         },
                         error: function(object, error){
                             alert("Error, please contact us with this error: " + error.message);
@@ -285,10 +295,11 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
 
     //Delete Section ***TODO*** need to find parent section and remove object from parent.sections
     $scope.deleteSection = function(section){
+        GlobalService.showSpinner();
         section.destroy({
             success: function(result){
+                GlobalService.dismissSpinner();
                 alert("Section successfully deleted");
-                $location.path("/configurations");
             },
             error: function(object, error){
                 alert("Error deleting section: " + error.message);

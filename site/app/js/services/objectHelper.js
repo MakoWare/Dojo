@@ -125,23 +125,43 @@ var ObjectHelper = {
         var dFacilityGroup;
         facility.set("agencyId", agencyId);
         facility.set("createdBy", userId);
+        facility.set("comments", "");
         facility.set("name", "");
         facility.set("address", "");
         facility.set("city", "");
         facility.set("county", "");
         facility.set("state", "");
         facility.set("zip", "");
+        facility.set("type", "");
 
         ObjectHelper.createSection(agencyId, userId, "dFacilityGroup", function(results){
             dFacilityGroup = results;
             ObjectHelper.createSection(agencyId, userId, "dFacility.FacilityGroup", function(results){
                 dFacilityGroup.add("sections", results);
-                facility.set("ePatient", dFacilityGroup);
-                facility.save({
-                    success: function(facility){
-                        callback(facility);
+
+                var query = new Parse.Query("Section");
+                query.equalTo("name", "dFacility");
+                query.first({
+                    success: function(result){
+                        result.add("sections", dFacilityGroup);
+                        result.save({
+                            success: function(result){
+                                facility.set("dFacility", dFacilityGroup);
+                                facility.save({
+                                    success: function(facility){
+                                        callback(facility);
+                                    },
+                                    error: function(object, error){
+                                        callback(error);
+                                    }
+                                });
+                            },
+                            error: function(object, error){
+                                callback(error);
+                            }
+                        });
                     },
-                    error: function(object, error){
+                    error: function(error){
                         callback(error);
                     }
                 });

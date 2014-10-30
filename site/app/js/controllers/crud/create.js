@@ -3,6 +3,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     $scope.init = function(){
         $scope.object = {};
+        $scope.hasNemsis = false;
         $scope.dir = $location.url().slice(1).split("/")[0];
         $scope.objectType = GlobalService.getObjectType($scope.dir);
         var id = $location.url().split("/")[$location.url().split("/").length - 1];
@@ -15,7 +16,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         ParseService.getObjectById(objectType, objectId, function(results){
             GlobalService.dismissSpinner();
             console.log(results);
-            if(results){
+            if(results.id){
                 $scope.$apply(function(){
                     $scope.object = results;
                     $scope.setUp();
@@ -75,6 +76,9 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     //Save Facility
     $scope.saveFacility = function(){
+        for(var name in $scope.object.attributes) {
+            $scope.object.set(name, $scope.object.attributes[name]);
+        }
         $scope.object.save({
             success: function(result){
                 GlobalService.dismissSpinner();
@@ -226,8 +230,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 alert(GlobalService.errorMessage + results.errorMessage); //Not Sure if this is right
             } else {
                 alert("Object deleted Successfully");
-                var objectTypeLower = $scope.objectType.charAt(0).toLowerCase() + $scope.objectType.substr(1) + "s";
-                var newPath = "/" + objectTypeLower;
+                var newPath = "/" + $scope.dir;
                 $location.path(newPath);
                 $scope.$apply();
             }
@@ -241,14 +244,14 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             $scope.dispatchSetup();
             break;
         case "Facility":
-            //$scope.facilitySetup();
+            $scope.facilitySetup();
             break;
         case "Patient":
             $scope.patientSetup();
             break;
 
         case "Vehicle":
-            //$scope.vehicleSetup();
+            $scope.vehicleSetup();
             break;
         }
     },
@@ -269,10 +272,20 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                     $scope.eDispatch05.push(code);
                 }
             });
-            console.log($scope);
         });
     },
 
+    //Facility Setup
+    $scope.facilitySetup = function(){
+        $scope.hasNemsis = true;
+        $scope.nemsisLocation = "dFacility/" + $scope.object.attributes.dFacility.id;
+    },
+
+    //Vehicle Setup
+    $scope.vehicleSetup = function(){
+        $scope.hasNemsis = true;
+        $scope.nemsisLocation = "dVehicle/" + $scope.object.attributes.dVehicleGroup.id;
+    },
 
     //Patient Setup
     $scope.patientSetup = function(){

@@ -1,17 +1,49 @@
 <div class="content-widscreen" style="margin: 20px;">
-  <form name="patientForm" novalidate role="form" class="form-horizontal">
+  <form name="form" role="form" class="form" novalidate>
     <div class="row">
-      <div class="form-group col-sm-4">
+      <div class="form-group col-md-4">
         <label for="firstName">Name*</label>
-        <input ng-model="object.attributes.firstName" type="text" class="form-control" id="firstName" placeholder="First Name" required/>
+        <input ng-model="object.attributes.name" type="text" class="form-control" placeholder="Facility Name" required/>
       </div>
-      <div class="form-group col-sm-1" style="margin-left: 2px; margin-right: 2px;">
-        <label for="middleInitial">M.I</label>
-        <input ng-model="object.attributes.middleInitial" type="text" class="form-control" id="middleInitial" placeholder="M.I"/>
+      <div class="form-group col-md-offset-1 col-md-4">
+        <label for="type">Type*</label>
+        <select class="form-control" id="type" ng-model="object.attributes.type" required>
+	  <option class="form-control" value=""></option>
+	  <option class="form-control" value="1701001 Assisted Living Facility">Assisted Living Facility</option>
+	  <option class="form-control" value="1701003 Clinic">Clinic</option>
+	  <option class="form-control" value="1701005 Hospital">Hospital</option>
+	  <option class="form-control" value="1701007 Nursing Home">Nursing Home</option>
+	  <option class="form-control" value="1701009 Other (Not Listed)">Other (Not Listed)</option>
+	  <option class="form-control" value="1701011 Urgent Care">Urgent Care</option>
+	</select>
       </div>
-      <div class="form-group col-sm-4">
-        <label for="lastName">Last Name*</label>
-        <input ng-model="object.attributes.lastName" type="text" class="form-control" id="lastName" placeholder="Last Name" required/>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-4">
+        <label for="address">Address*</label>
+        <input ng-model="object.attributes.address" type="text" class="form-control" id="address" placeholder="Address" required/>
+      </div>
+      <div class="form-group col-md-2" style="margin-left: 2px">
+        <label for="city">City*</label>
+        <input ng-model="object.attributes.city" type="text" class="form-control" id="city" placeholder="City" required/>
+      </div>
+      <div class="form-group col-md-1" style="margin-left: 2px">
+        <label for="state">State*</label>
+        <input ng-model="object.attributes.state" type="text" class="form-control" id="state" placeholder="State" required/>
+      </div>
+      <div class="form-group col-md-2" style="margin-left: 2px">
+        <label for="county">County*</label>
+        <input ng-model="object.attributes.county" type="text" class="form-control" id="county" placeholder="County" required/>
+      </div>
+      <div class="form-group col-md-2" style="margin-left: 2px">
+        <label for="zip">Zip Code*</label>
+        <input ng-model="object.attributes.zip" type="text" class="form-control" id="zip" placeholder="Zip" required/>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label for="comments">Additional Information</label>
+	<textarea ng-model="object.attributes.comments" id="comments" class="form-control" rows="3" placeholder="Additional Information"></textarea>
       </div>
     </div>
   </form>
