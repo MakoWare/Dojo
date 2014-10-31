@@ -72,7 +72,9 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 element.set("value", $scope.object.attributes.emd.attributes.code);
                 break;
             case "eDispatch.05":
-                element.set("value", $scope.object.attributes.priority.attributes.code);
+                if($scope.object.attributes.priority){
+                    element.set("value", $scope.object.attributes.priority.attributes.code);
+                }
                 break;
             }
         });
@@ -107,6 +109,8 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 $scope.object = result;
                 console.log(result);
                 alert("Object Updated Successfully");
+                $location.url("/dispatches");
+                $scope.$apply();
             },
             error: function(object, error){
                 GlobalService.dismissSpinner();
@@ -127,6 +131,8 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 $scope.object = result;
                 console.log(result);
                 alert("Object Updated Successfully");
+                $location.url("/facilites");
+                $scope.$apply();
             },
             error: function(object, error){
                 GlobalService.dismissSpinner();
@@ -237,6 +243,8 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 $scope.object = result;
                 console.log(result);
                 alert("Object Updated Successfully");
+                $location.url("/patients");
+                $scope.$apply();
             },
             error: function(object, error){
                 GlobalService.dismissSpinner();
@@ -256,6 +264,8 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 $scope.object = result;
                 console.log(result);
                 alert("Object Updated Successfully");
+                $location.url("/vehicles");
+                $scope.$apply();
             },
             error: function(object, error){
                 GlobalService.dismissSpinner();
