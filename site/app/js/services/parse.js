@@ -309,7 +309,7 @@ angular.module('parseService', [])
                 query.include("ePatient");
                 query.include("ePatient.sections.elements");
                 query.include("ePatient.nemsisSection.sections");
-                query.find({
+                return query.find({
                     success: function(results){
                         callback(results);
                     },
@@ -319,15 +319,36 @@ angular.module('parseService', [])
                 });
             },
 
-            //Find Patients by Name
-            findPatientsByAgency: function(callback){
-                var query = new Parse.Query(Patient);
-                query.equalTo("agencyId", Parse.User.current().get("agencyId"));
+            //Patients TypeAhead
+            patientsTypeAhead: function(searchParam, callback){
+                var firstName = searchParam.split(" ")[0];
+                var lastName  = searchParam.split(" ")[1];
+                var ssn  = searchParam.split(" ")[2];
+
+                var upperQuery = new Parse.Query(Patient);
+	        var lowerQuery = new Parse.Query(Patient);
+	        lowerQuery.startsWith('firstName', firstName);
+	        upperQuery.startsWith('firstName', (firstName.charAt(0).toUpperCase() + firstName.slice(1)));
+
+                if(lastName){
+	            lowerQuery.startsWith('lastName', lastName);
+	            upperQuery.startsWith('lastName', (lastName.charAt(0).toUpperCase() + lastName.slice(1)));
+                }
+
+	        var query = Parse.Query.or(lowerQuery, upperQuery);
+
+                if(ssn){
+                    query.startsWith('ssn', ssn);
+                }
+
+
+	        query.equalTo("agencyId", Parse.User.current().get("agencyId"));
                 query.include("currentDispatch");
                 query.include("ePatient");
                 query.include("ePatient.sections.elements");
                 query.include("ePatient.nemsisSection.sections");
-                query.find({
+                query.limit(1000);
+                return query.find({
                     success: function(results){
                         callback(results);
                     },

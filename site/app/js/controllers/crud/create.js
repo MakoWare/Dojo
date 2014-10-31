@@ -14,7 +14,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     $scope.getObject = function(objectType, objectId){
         GlobalService.showSpinner();
         ParseService.getObjectById(objectType, objectId, function(results){
-            GlobalService.dismissSpinner();
+
             console.log(results);
             if(results.id){
                 $scope.$apply(function(){
@@ -160,6 +160,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                         var ageDate = new Date(ageDifMs);
                         var age = Math.abs(ageDate.getUTCFullYear() - 1970) + "";
                         element.set("value", age);
+                        $scope.object.attributes.age = age;
                     }
                     if(element.attributes.title == "ePatient.16"){
                         element.set("value", "2516009");
@@ -242,6 +243,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         switch($scope.objectType){
         case "Dispatch":
             $scope.dispatchSetup();
+
             break;
         case "Facility":
             $scope.facilitySetup();
@@ -254,10 +256,13 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             $scope.vehicleSetup();
             break;
         }
+
+        GlobalService.dismissSpinner();
     },
 
     //Dispatch Setup
     $scope.dispatchSetup = function(){
+        $scope.patient = {};
         ParseService.findNemsisElementCodes("eDispatch", function(results){
             $scope.eDispatch01 = [];
             $scope.eDispatch02 = [];
@@ -271,16 +276,25 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 } else if(code.get('elementNumber') === "eDispatch.05"){
                     $scope.eDispatch05.push(code);
                 }
+                $scope.$apply();
             });
         });
 
         //Type Aheads
         $scope.getPatients = function(name){
-            ParseService.getPatinetsByAgency(function(results){
+            return ParseService.patientsTypeAhead(name, function(results){
+                console.log(results);
                 return results;
             });
         };
 
+        $scope.setPatientInfo = function(patient){
+            $scope.object.set("patient", patient);
+            $scope.patient.dob =  patient.attributes.dob.getMonth() + 1 + "/" + patient.attributes.dob.getDate() + "/" + patient.attributes.dob.getFullYear();
+            $scope.patient.phone = patient.attributes.phone;
+            $scope.patient.email = patient.attributes.email;
+            $scope.patient.age = patient.attributes.age;
+        };
     },
 
     //Facility Setup
