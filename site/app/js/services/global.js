@@ -29,6 +29,12 @@ angular.module('globalService', [])
                 case "vehicles":
                     return "Vehicle";
                     break;
+                case "pcrs":
+                    return "PCR";
+                    break;
+                case "files":
+                    return "File";
+                    break;
                 };
                 return "Error";
             },

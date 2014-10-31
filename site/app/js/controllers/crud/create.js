@@ -95,10 +95,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         });
          */
 
-        $scope.object.attributes.complaint = attributes.complaint.codeDescription;
-        $scope.object.attributes.emd = attributes.emd.codeDescription;
-        $scope.object.attributes.priority = attributes.priority.codeDescription;
-
         for(var name in $scope.object.attributes) {
             $scope.object.set(name, $scope.object.attributes[name]);
         }
@@ -315,6 +311,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     //Dispatch Setup
     $scope.dispatchSetup = function(){
         $scope.dispatch = {};
+        $scope.patient = {};
         //Get Codes
         ParseService.findNemsisElementCodes("eDispatch", function(results){
             $scope.eDispatch01 = [];
@@ -386,6 +383,10 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             $scope.patient.email = patient.attributes.email;
             $scope.patient.age = patient.attributes.age;
         };
+
+        if($scope.object.attributes.patient){
+            $scope.setPatientInfo($scope.object.attributes.patient);
+        }
     },
 
     //Facility Setup

@@ -37,14 +37,25 @@ angular.module('parseService', [])
         var parentSection = null;
 
         var ParseService = {
-            getParentSection: function(){
-                console.log(this.parentSection);
-                return this.parentSection;
+            //Login
+            login: function(username, password, callback) {
+		Parse.User.logIn(username, password, {
+		    success: function(user) {
+			callback(user);
+		    },
+		    error: function(user, error) {
+                        callback(error);
+		    }
+		});
+	    },
+
+            //Logout
+            logout: function(callback){
+                Parse.User.logOut();
             },
 
-            setParentSection: function(section){
-                this.parentSection = section;
-                console.log(this.parentSection);
+            getCurrentUser: function(){
+                return Parse.User.current();
             },
 
             //Nemsis Object Helpers
@@ -282,6 +293,9 @@ angular.module('parseService', [])
                 case "Facility":
                     ParseService.findFacilitiesByAgency(callback);
                     break;
+                case "User":
+                    ParseService.findUsersByAgency(callback);
+                    break;
                 }
             },
 
@@ -378,6 +392,9 @@ angular.module('parseService', [])
                 query.equalTo("agencyId", Parse.User.current().get("agencyId"));
                 query.include("vehicle");
                 query.include("patient");
+                query.include("priority");
+                query.include("emd");
+                query.include("complaint");
                 query.find({
                     success: function(results){
                         callback(results);
@@ -387,6 +404,23 @@ angular.module('parseService', [])
                     }
                 });
             },
+
+            //Find Users by AgencyId
+            findUsersByAgency: function(callback){
+                var query = new Parse.Query(User);
+                query.equalTo("agencyId", Parse.User.current().get("agencyId"));
+                query.include("dPersonnel.elements");
+                query.include("dPersonnel.sections.elements");
+                query.find({
+                    success: function(results){
+                        callback(results);
+                    },
+                    error: function(error){
+                        alert(ERRORMESSAGE + error.message);
+                    }
+                });
+            },
+
 
             //Get NemsisElementCodes
             findNemsisElementCodes: function(sectionName, callback){
@@ -400,28 +434,6 @@ angular.module('parseService', [])
                         alert(ERRORMESSAGE + error.message);
                     }
                 });
-            },
-
-
-            //Login
-            login: function(username, password, callback) {
-		Parse.User.logIn(username, password, {
-		    success: function(user) {
-			callback(user);
-		    },
-		    error: function(user, error) {
-                        callback(error);
-		    }
-		});
-	    },
-
-            //Logout
-            logout: function(callback){
-                Parse.User.logOut();
-            },
-
-            getCurrentUser: function(){
-                return Parse.User.current();
             },
 
             //MAP

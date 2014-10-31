@@ -33,21 +33,21 @@
     <div class="row">
       <div class="form-group col-md-5">
 	<label for="patient">Complaint*</label>
-	<select class="form-control" id="complaint" ng-model="object.attributes.complaint" ng-options="code as code.attributes.codeDescription for code in eDispatch01" tooltip-trigger="focus" tooltip-placement="top" tooltip="The complaint dispatch reported to the responding unit." required>
+	<select class="form-control" ng-model="object.attributes.complaint" ng-options="code as code.attributes.codeDescription for code in eDispatch01 track by code.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="The complaint dispatch reported to the responding unit." required>
 	<option class="form-control" value=""></option>
         </select>
       </div>
 
       <div class="form-group col-md-3">
 	<label for="emd">EMD Performed</label>
-	<select class="form-control" id="emd" ng-model="object.attributes.emd" ng-options="code as code.attributes.codeDescription for code in eDispatch02" tooltip-trigger="focus" tooltip-placement="top" tooltip="Indication of whether Emergency Medical Dispatch was performed for this EMS event.">
+	<select class="form-control" id="emd" ng-model="object.attributes.emd" ng-options="code as code.attributes.codeDescription for code in eDispatch02 track by code.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="Indication of whether Emergency Medical Dispatch was performed for this EMS event.">
 	  <option class="form-control" value=""></option>
         </select>
       </div>
 
       <div class="form-group col-md-3">
 	<label for="priority">Dispatch Priority</label>
-	<select class="form-control" id="priority" ng-model="object.attributes.priority" ng-options="code as code.get('codeDescription') for code in eDispatch05" tooltip-trigger="focus" tooltip-placement="top" tooltip="The actual, apparent, or potential acuity of the patient's condition as determined through information obtained during the EMD process.">
+	<select class="form-control" id="priority" ng-model="object.attributes.priority" ng-options="code as code.get('codeDescription') for code in eDispatch05 track by code.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="The actual, apparent, or potential acuity of the patient's condition as determined through information obtained during the EMD process.">
 	  <option class="form-control" value=""></option>
         </select>
       </div>
@@ -84,7 +84,7 @@
     <div class="row">
       <div class="form-group col-md-2" style="margin-top: 10px">
 	<label for="vehicle">Vehicle</label>
-	<select class="form-control" ng-model="object.attributes.vehicle" ng-options="vehicle as vehicle.get('name') for vehicle in vehicles">
+	<select class="form-control" ng-model="object.attributes.vehicle" ng-options="vehicle as vehicle.get('name') for vehicle in vehicles track by vehicle.id">
 	  <option class="form-control" value=""></option>
 	</select>
       </div>
