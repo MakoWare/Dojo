@@ -59,6 +59,44 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     //Save Dispatch
     $scope.saveDispatch = function(){
+        var eDispatch = $scope.object.attributes.eDispatch;
+        var eTimes = $scope.object.attributes.eTimes;
+        var attributes = $scope.object.attributes;
+
+        eDispatch.attributes.elements.forEach(function(element){
+            switch (element.attributes.title){
+            case "eDispatch.01":
+                element.set("value", $scope.object.attributes.complaint.attributes.code);
+                break;
+            case "eDispatch.02":
+                element.set("value", $scope.object.attributes.emd.attributes.code);
+                break;
+            case "eDispatch.05":
+                element.set("value", $scope.object.attributes.priority.attributes.code);
+                break;
+            }
+        });
+
+        /*
+        eTimes.attributes.elements.forEach(function(element){
+            switch (element.attributes.title){
+            case "eTimes.01":
+                element.set("value", $scope.object.attributes.complaint.attributes.code);
+                break;
+            case "eTimes.02":
+                element.set("value", $scope.object.attributes.emb.attributes.code);
+                break;
+            case "eTimes.05":
+                element.set("value", $scope.object.attributes.priority.attributes.code);
+                break;
+            }
+        });
+         */
+
+        $scope.object.attributes.complaint = attributes.complaint.codeDescription;
+        $scope.object.attributes.emd = attributes.emd.codeDescription;
+        $scope.object.attributes.priority = attributes.priority.codeDescription;
+
         for(var name in $scope.object.attributes) {
             $scope.object.set(name, $scope.object.attributes[name]);
         }
@@ -266,7 +304,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     //Dispatch Setup
     $scope.dispatchSetup = function(){
-        $scope.patient = {};
+        $scope.dispatch = {};
         //Get Codes
         ParseService.findNemsisElementCodes("eDispatch", function(results){
             $scope.eDispatch01 = [];
@@ -349,7 +387,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     //Vehicle Setup
     $scope.vehicleSetup = function(){
         $scope.hasNemsis = true;
-        $scope.nemsisLocation = "dVehicle/" + $scope.object.attributes.dVehicleGroup.id;
+        $scope.nemsisLocation = "dVehicle/" + $scope.object.attributes.dVehicle.id;
     },
 
     //Patient Setup

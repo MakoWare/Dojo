@@ -238,7 +238,7 @@ var ObjectHelper = {
 
         ObjectHelper.createSection(agencyId, userId, "dVehicle.VehicleGroup", function(results){
             var dVehicleGroup = results;
-            vehicle.set("dVehicleGroup", dVehicleGroup);
+            vehicle.set("dVehicle", dVehicleGroup);
 
             var query = new Parse.Query("Section");
             query.equalTo("agencyId", agencyId);
