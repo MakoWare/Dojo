@@ -55,16 +55,98 @@
 
     <div class="row">
       <h3 style="margin-top: 0px;">Pick-Up Information</h3>
-      <div class="form-group col-md-2">
+      <div class="form-group col-md-4">
 	<label for="pickUpFacility">Pick Up Facility</label>
-	<input ng-model="form.pickUpFacility" type="text" class="form-control" id="pickUpFacility" placeholder="Facility" tooltip-trigger="focus" tooltip-placement="bottom" tooltip="Facility the patient will be picked up at"/>
+	<input ng-model="object.attributes.facility" type="text" class="form-control" placeholder="Facility" tooltip-trigger="focus" tooltip-placement="bottom" tooltip="Facility the patient will be picked up at"/>
       </div>
 
+      <div class="form-group col-md-3">
+	<label for="pickUpAddress">Pick Up Address*</label>
+	<input ng-model="object.attributes.pickUpAddress" type="text" class="form-control" placeholder="Address" tooltip-trigger="focus" tooltip-placement="bottom" tooltip="Address the Patient will be picked up at" required/>
+      </div>
 
+      <div class="form-group col-md-2">
+	<label for="pickUpCity">City*</label>
+	<input ng-model="object.attributes.pickUpCity" type="text" class="form-control" placeholder="City" tooltip-trigger="focus" tooltip-placement="bottom" tooltip="City the Patient will be picked up at" required/>
+      </div>
 
+      <div class="form-group col-md-2">
+	<label for="pickUpZip">Zip</label>
+	<input ng-model="object.attributes.pickUpZip" type="text" class="form-control" placeholder="Zip" tooltip-trigger="focus" tooltip-placement="bottom" tooltip="Zip code the Patient will be picked up at"/>
+      </div>
 
+      <div class="form-group col-md-1">
+	<label for="pickUpState">State</label>
+	<input ng-model="object.attributes.pickUpState" type="text" class="form-control" placeholder="State" tooltip-trigger="focus" tooltip-placement="bottom" tooltip="State the Patient will be picked up at"/>
+      </div>
+    </div>
 
+    <div class="row">
+      <div class="form-group col-md-2" style="margin-top: 10px">
+	<label for="vehicle">Vehicle</label>
+	<select class="form-control" ng-model="object.attributes.vehicle" ng-options="vehicle as vehicle.get('name') for vehicle in vehicles">
+	  <option class="form-control" value=""></option>
+	</select>
+      </div>
 
+      <div class="col-md-3" style="margin-top: 10px">
+        <p class="input-group">
+	  <label for="pickUpDate">Pick Up Date</label>
+            <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="object.attributes.pickUpDate" is-open="pickUpDateOpened" min="'1900-01-01'" datepicker-options="dateOptions"  show-weeks="false"/>
+            <span class="input-group-btn">
+              <button class="btn btn-default" ng-focus="pickUpDateOpened = true" ng-click="pickUpDateOpen($event)" style="margin-top: 25px;"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+        </p>
+      </div>
+
+      <div class="col-md-2">
+        <div ng-model="object.attributes.pickUpTime" style="display:inline-block; margin-left: 5px;">
+          <timepicker hour-step="hstep" minute-step="mstep" show-meridian="false"></timepicker>
+        </div>
+      </div>
+      <div class="col-md-5" style="margin-top: 10px">
+	<textarea ng-model="object.attributes.comments" class="form-control" rows="3" placeholder="Additional Information"></textarea>
+      </div>
+    </div>
+
+    <div class="row">
+      <h3 style="margin-top: 0px;">Drop-Off Information</h3>
+      <div class="row">
+        <div class="form-group col-md-4">
+	  <label for="dropOffFacility">Drop Off Facility</label>
+	  <input ng-model="object.attributes.dropOffFacility" type="text" class="form-control" id="dropOffFacility" placeholder="Facility" tooltip-trigger="focus" tooltip-placement="bottom" tooltip="Facility the  Patient will be dropped off at"/>
+        </div>
+        <div class="form-group col-md-3">
+	  <label for="dropOffAddress">Drop Off Address</label>
+	  <input ng-model="object.attributes.dropOffAddress" type="text" class="form-control" id="dropOffAddress" placeholder="Address" tooltip-trigger="focus" tooltip-placement="bottom" tooltip="Address the Patient will be dropped off at"/>
+        </div>
+        <div class="form-group col-md-2">
+	  <label for="dropOffCity">City</label>
+	  <input ng-model="object.attributes.dropOffCity" type="text" class="form-control" id="dropOffCity" placeholder="City" tooltip-trigger="focus" tooltip-placement="bottom" tooltip="City the Patient will be dropped off at"/>
+        </div>
+        <div class="form-group col-md-2">
+	  <label for="dropOffZip">Zip</label>
+	  <input ng-model="object.attributes.dropOffZip" type="text" class="form-control" id="dropOffZip" placeholder="Zip" tooltip-trigger="focus" tooltip-placement="bottom" tooltip="Zip code the Patient will be dropped off at"/>
+        </div>
+        <div class="form-group col-md-1">
+	  <label for="dropOffState">State</label>
+	  <input ng-model="object.attributes.dropOffState" type="text" class="form-control" id="dropOffState" placeholder="State" tooltip-trigger="focus" tooltip-placement="bottom" tooltip="State the Patient will be dropped off at"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3" style="margin-top: 8px">
+          <p class="input-group">
+	    <label for="dropOffDate">Drop Off Date</label>
+            <input  type="text" class="form-control" datepicker-popup="{{format}}" ng-model="object.attributes.dropOffDate" is-open="dropOffDateOpened" min="'1900-01-01'" datepicker-options="dateOptions"  show-weeks="false"/>
+            <span class="input-group-btn">
+              <button class="btn btn-default" ng-focus="dropOffDateOpened = true" ng-click="dropOffDateOpen($event)" style="margin-top: 25px;"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </p>
+        </div>
+        <div ng-model="object.attributes.dropOffTime">
+          <timepicker hour-step="hstep" minute-step="mstep" show-meridian="false"></timepicker>
+        </div>
+      </div>
     </div>
   </form>
 </div>

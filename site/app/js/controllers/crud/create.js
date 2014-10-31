@@ -59,6 +59,10 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     //Save Dispatch
     $scope.saveDispatch = function(){
+        for(var name in $scope.object.attributes) {
+            $scope.object.set(name, $scope.object.attributes[name]);
+        }
+
         $scope.object.save({
             success: function(result){
                 GlobalService.dismissSpinner();
@@ -263,6 +267,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     //Dispatch Setup
     $scope.dispatchSetup = function(){
         $scope.patient = {};
+        //Get Codes
         ParseService.findNemsisElementCodes("eDispatch", function(results){
             $scope.eDispatch01 = [];
             $scope.eDispatch02 = [];
@@ -279,6 +284,44 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 $scope.$apply();
             });
         });
+
+        //Get Vehicles
+        ParseService.findVehiclesByAgency(function(results){
+            console.log(results);
+            $scope.vehicles = results;
+            $scope.$apply();
+
+        });
+
+
+        //Date Pickers
+        if(!$scope.object.attributes.pickUpDate){
+            $scope.object.attributes.pickUpDate = new Date();
+        }
+        if(!$scope.object.attributes.dropOffDate){
+            $scope.object.attributes.dropOffDate = new Date();
+        }
+
+        $scope.format = 'MM/dd/yyyy';
+        $scope.dateOptions = {
+            startingDay: 1
+        };
+
+        $scope.pickUpDateOpen = function($event) {
+            $scope.pickUpDateOpened = true;
+            $event.preventDefault();
+            $event.stopPropagation();
+        };
+
+        $scope.dropOffDateOpen = function($event) {
+            $scope.dropOffDateOpened = true;
+            $event.preventDefault();
+            $event.stopPropagation();
+        };
+
+        //Time Pickers
+        $scope.hstep = 1;
+        $scope.mstep = 1;
 
         //Type Aheads
         $scope.getPatients = function(name){
