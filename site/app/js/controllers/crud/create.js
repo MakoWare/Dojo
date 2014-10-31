@@ -312,6 +312,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     $scope.dispatchSetup = function(){
         $scope.dispatch = {};
         $scope.patient = {};
+        $scope.facility = {};
         //Get Codes
         ParseService.findNemsisElementCodes("eDispatch", function(results){
             $scope.eDispatch01 = [];
@@ -332,12 +333,9 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
         //Get Vehicles
         ParseService.findVehiclesByAgency(function(results){
-            console.log(results);
             $scope.vehicles = results;
             $scope.$apply();
-
         });
-
 
         //Date Pickers
         if(!$scope.object.attributes.pickUpDate){
@@ -376,6 +374,14 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             });
         };
 
+        $scope.getFacilities = function(name){
+            return ParseService.facilitiesTypeAhead(name, function(results){
+                console.log(results);
+                return results;
+            });
+        };
+
+
         $scope.setPatientInfo = function(patient){
             $scope.object.set("patient", patient);
             $scope.patient.dob =  patient.attributes.dob.getMonth() + 1 + "/" + patient.attributes.dob.getDate() + "/" + patient.attributes.dob.getFullYear();
@@ -384,9 +390,35 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             $scope.patient.age = patient.attributes.age;
         };
 
+        $scope.setPickUpFacilityInfo = function(facility){
+            $scope.object.attributes.pickUpAddress = facility.attributes.address;
+            $scope.object.attributes.pickUpCity = facility.attributes.city;
+            $scope.object.attributes.pickUpZip = facility.attributes.zip;
+            $scope.object.attributes.pickUpState = facility.attributes.state;
+        };
+
+        $scope.setDropOffFacilityInfo = function(facility){
+            console.log(facility);
+            $scope.object.attributes.dropOffAddress = facility.attributes.address;
+            $scope.object.attributes.dropOffCity = facility.attributes.city;
+            $scope.object.attributes.dropOffZip = facility.attributes.zip;
+            $scope.object.attributes.dropOffState = facility.attributes.state;
+        };
+
+
         if($scope.object.attributes.patient){
             $scope.setPatientInfo($scope.object.attributes.patient);
         }
+
+        if($scope.object.attributes.pickUpFacility){
+            $scope.setPickUpFacilityInfo($scope.object.attributes.pickUpFacility);
+        }
+
+        if($scope.object.attributes.dropOffFacility){
+            $scope.setDropOffFacilityInfo($scope.object.attributes.dropOffFacility);
+        }
+
+
     },
 
     //Facility Setup

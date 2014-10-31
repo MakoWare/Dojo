@@ -57,7 +57,8 @@
       <h3 style="margin-top: 0px;">Pick-Up Information</h3>
       <div class="form-group col-md-4">
 	<label for="pickUpFacility">Pick Up Facility</label>
-	<input ng-model="object.attributes.facility" type="text" class="form-control" placeholder="Facility" tooltip-trigger="focus" tooltip-placement="bottom" tooltip="Facility the patient will be picked up at"/>
+        <input ng-model="object.attributes.pickUpFacility" type="text" class="form-control" id="patient" placeholder="Pick Up Facility" tooltip-trigger="focus" tooltip-placement="top" tooltip="The Facility the Patient will be picked up from, if the Facility is not found create a facility file for it first" typeahead="facility as facility.attributes.name for facility in getFacilities($viewValue) | filter:$viewValue | orderBy:$viewValue" typeahead-on-select="setPickUpFacilityInfo($item)" typeahead-loading="loadingLocations"/>
+        <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
       </div>
 
       <div class="form-group col-md-3">
@@ -114,7 +115,8 @@
       <div class="row">
         <div class="form-group col-md-4">
 	  <label for="dropOffFacility">Drop Off Facility</label>
-	  <input ng-model="object.attributes.dropOffFacility" type="text" class="form-control" id="dropOffFacility" placeholder="Facility" tooltip-trigger="focus" tooltip-placement="bottom" tooltip="Facility the  Patient will be dropped off at"/>
+          <input ng-model="object.attributes.dropOffFacility" type="text" class="form-control" id="patient" placeholder="Drop Off Facility" tooltip-trigger="focus" tooltip-placement="top" tooltip="The Facility the Patient will be dropped off at, if the Facility is not found create a facility file for it first" typeahead="facility as facility.attributes.name for facility in getFacilities($viewValue) | filter:$viewValue | orderBy:$viewValue" typeahead-on-select="setDropOffFacilityInfo($item)" typeahead-loading="loadingLocations"/>
+          <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
         </div>
         <div class="form-group col-md-3">
 	  <label for="dropOffAddress">Drop Off Address</label>

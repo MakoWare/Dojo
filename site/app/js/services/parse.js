@@ -248,8 +248,14 @@ angular.module('parseService', [])
                 var query = new Parse.Query(Dispatch);
                 query.include("patient");
                 query.include("vehicle");
+                query.include("priority");
+                query.include("emd");
+                query.include("complaint");
                 query.include("eDispatch.elements");
                 query.include("eTimes.elements");
+                query.include("pickUpFacility");
+                query.include("dropOffFacility");
+
                 query.get(objectId,{
                     success: function(result){
                         callback(result);
@@ -372,6 +378,28 @@ angular.module('parseService', [])
                 });
             },
 
+            //Facilites TypeAhead
+            facilitiesTypeAhead: function(searchParam, callback){
+                var upperQuery = new Parse.Query(Facility);
+	        var lowerQuery = new Parse.Query(Facility);
+	        lowerQuery.startsWith('name', searchParam);
+	        upperQuery.startsWith('name', (searchParam.charAt(0).toUpperCase() + searchParam.slice(1)));
+
+	        var query = Parse.Query.or(lowerQuery, upperQuery);
+	        query.equalTo("agencyId", Parse.User.current().get("agencyId"));
+                query.include("dFacility");
+                query.limit(1000);
+                return query.find({
+                    success: function(results){
+                        callback(results);
+                    },
+                    error: function(error){
+                        alert(ERRORMESSAGE + error.message);
+                    }
+                });
+            },
+
+
             //Find Facilities by AgencyId
             findFacilitiesByAgency: function(callback){
                 var query = new Parse.Query(Facility);
@@ -395,6 +423,8 @@ angular.module('parseService', [])
                 query.include("priority");
                 query.include("emd");
                 query.include("complaint");
+                query.include("pickUpFacility");
+                query.include("dropOffFacility");
                 query.find({
                     success: function(results){
                         callback(results);
