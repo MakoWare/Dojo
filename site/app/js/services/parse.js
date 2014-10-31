@@ -407,11 +407,10 @@ angular.module('parseService', [])
             login: function(username, password, callback) {
 		Parse.User.logIn(username, password, {
 		    success: function(user) {
-			currentUser = user;
 			callback(user);
 		    },
 		    error: function(user, error) {
-			alert("Error: " + error.message);
+                        callback(error);
 		    }
 		});
 	    },

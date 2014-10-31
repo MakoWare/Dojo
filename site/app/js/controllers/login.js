@@ -1,5 +1,5 @@
 //Login Controller
-var LoginCtrl = function($scope, $location, ParseService){
+var LoginCtrl = function($scope, $location, ParseService, GlobalService){
     $scope.init = function(){
         if(Parse.User.current()){
 	    $location.path('/map');
@@ -8,9 +8,14 @@ var LoginCtrl = function($scope, $location, ParseService){
 
     //Login
     $scope.login = function(){
-        ParseService.login($scope.username, $scope.password, function(user){
-            if(user != undefined){
+        GlobalService.showSpinner();
+        ParseService.login($scope.username, $scope.password, function(results){
+            GlobalService.dismissSpinner();
+            if(results.id){
 		$location.path('/map');
+                $scope.$apply();
+            } else {
+                alert(results.message);
             }
         });
     };
