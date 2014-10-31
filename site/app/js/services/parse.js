@@ -417,8 +417,8 @@ angular.module('parseService', [])
 	    },
 
             //Logout
-            logout: function(){
-              Parse.User.logOut();
+            logout: function(callback){
+                Parse.User.logOut();
             },
 
             getCurrentUser: function(){

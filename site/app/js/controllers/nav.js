@@ -20,6 +20,12 @@ var NavCtrl = function($scope, $location, $route, ParseService){
         }
     };
 
+    $scope.logout = function(){
+        ParseService.logout();
+        $location.url("/");
+    };
+
+
     //Init
     $scope.init();
 };
