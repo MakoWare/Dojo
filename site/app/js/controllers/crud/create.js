@@ -381,7 +381,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             });
         };
 
-
         $scope.setPatientInfo = function(patient){
             $scope.object.set("patient", patient);
             $scope.patient.dob =  patient.attributes.dob.getMonth() + 1 + "/" + patient.attributes.dob.getDate() + "/" + patient.attributes.dob.getFullYear();
@@ -398,7 +397,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         };
 
         $scope.setDropOffFacilityInfo = function(facility){
-            console.log(facility);
             $scope.object.attributes.dropOffAddress = facility.attributes.address;
             $scope.object.attributes.dropOffCity = facility.attributes.city;
             $scope.object.attributes.dropOffZip = facility.attributes.zip;
@@ -417,8 +415,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         if($scope.object.attributes.dropOffFacility){
             $scope.setDropOffFacilityInfo($scope.object.attributes.dropOffFacility);
         }
-
-
     },
 
     //Facility Setup

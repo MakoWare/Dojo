@@ -31,26 +31,37 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-md-5">
+      <div class="form-group col-md-4">
 	<label for="patient">Complaint*</label>
 	<select class="form-control" ng-model="object.attributes.complaint" ng-options="code as code.attributes.codeDescription for code in eDispatch01 track by code.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="The complaint dispatch reported to the responding unit." required>
 	<option class="form-control" value=""></option>
         </select>
       </div>
 
-      <div class="form-group col-md-3">
+      <div class="form-group col-md-2">
 	<label for="emd">EMD Performed</label>
 	<select class="form-control" id="emd" ng-model="object.attributes.emd" ng-options="code as code.attributes.codeDescription for code in eDispatch02 track by code.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="Indication of whether Emergency Medical Dispatch was performed for this EMS event.">
 	  <option class="form-control" value=""></option>
         </select>
       </div>
 
-      <div class="form-group col-md-3">
+      <div class="form-group col-md-2">
 	<label for="priority">Dispatch Priority</label>
 	<select class="form-control" id="priority" ng-model="object.attributes.priority" ng-options="code as code.get('codeDescription') for code in eDispatch05 track by code.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="The actual, apparent, or potential acuity of the patient's condition as determined through information obtained during the EMD process.">
 	  <option class="form-control" value=""></option>
         </select>
       </div>
+
+      <div class="form-group col-md-2">
+	<label for="status">Current Status</label>
+	<select class="form-control"  ng-model="object.attributes.status" tooltip-trigger="focus" tooltip-placement="top" tooltip="The current status of the dispatch">
+	  <option class="form-control" value=""></option>
+	  <option class="form-control" value="Waiting">Waiting</option>
+	  <option class="form-control" value="Assigned">Assigned</option>
+	  <option class="form-control" value="In Progress">In Progress</option>
+        </select>
+      </div>
+
     </div>
 
     <div class="row">
@@ -101,7 +112,7 @@
       </div>
 
       <div class="col-md-2">
-        <div ng-model="object.attributes.pickUpTime" style="display:inline-block; margin-left: 5px;">
+        <div ng-model="object.attributes.pickUpDate" style="display:inline-block; margin-left: 5px;">
           <timepicker hour-step="hstep" minute-step="mstep" show-meridian="false"></timepicker>
         </div>
       </div>
@@ -145,7 +156,7 @@
             </span>
           </p>
         </div>
-        <div ng-model="object.attributes.dropOffTime">
+        <div ng-model="object.attributes.dropOffDate">
           <timepicker hour-step="hstep" minute-step="mstep" show-meridian="false"></timepicker>
         </div>
       </div>

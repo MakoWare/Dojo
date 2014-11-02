@@ -90,18 +90,14 @@ var ObjectHelper = {
         dispatch.set("dropOffCity", "");
         dispatch.set("dropOffCountry", "");
         dispatch.set("dropOffCounty", "");
-        //dispatch.set("dropOffDate", "");
         dispatch.set("dropOffState", "");
         dispatch.set("dropOffZip", "");
         dispatch.set("pickUpAddress", "");
         dispatch.set("pickUpCity", "");
         dispatch.set("pickUpCountry", "");
         dispatch.set("pickUpCounty", "");
-        //dispatch.set("pickUpDate", "");
         dispatch.set("pickUpState", "");
         dispatch.set("pickUpZip", "");
-        dispatch.set("priority", "");
-        dispatch.set("status", "");
 
         ObjectHelper.createSection(agencyId, userId, "eDispatch", function(results){
             dispatch.set("eDispatch", results);
