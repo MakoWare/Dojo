@@ -20,6 +20,11 @@ angular.module('dojo', [
         templateUrl: 'partials/configurations.html',
         controller: 'ConfigCtrl'
       })
+//Contact
+      .when('/contact', {
+        templateUrl: 'partials/contact.html',
+        controller: 'ContactCtrl'
+      })
 //Dispatches
       .when('/dispatches', {
         templateUrl: 'partials/read.html',
@@ -28,6 +33,11 @@ angular.module('dojo', [
       .when('/dispatches/:id', {
         templateUrl: 'partials/update.html',
         controller: 'CreateCtrl'
+      })
+//Documentation
+      .when('/documentation', {
+        templateUrl: 'partials/documentation.html',
+        controller: 'DocumentationCtrl'
       })
 //Facilities
       .when('/facilities', {
@@ -41,6 +51,10 @@ angular.module('dojo', [
 //Files  *** TODO ***
       .when('/files', {
         templateUrl: 'partials/read.html',
+        controller: 'ReadCtrl'
+      })
+      .when('/files/:id', {
+        templateUrl: 'partials/file.html',
         controller: 'ReadCtrl'
       })
 //Login
