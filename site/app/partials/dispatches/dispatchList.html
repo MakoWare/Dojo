@@ -17,7 +17,7 @@
 	  </tr>
         </thead>
         <tbody>
-	  <tr ng-repeat="object in objects | filter:searchParam | orderBy:predicate:reverse">
+	  <tr ng-style="{'background-color': '#' + object.attributes.color}" ng-repeat="object in objects | filter:searchParam | orderBy:predicate:reverse">
 	    <td class="col-sm-1">{{object.attributes.priority.attributes.codeDescription}}</td>
 	    <td class="col-sm-1">{{object.attributes.status}}</td>
             <td class="col-xs-2">{{object.attributes.pickUpAddress + " " + object.attributes.pickUpCity + " " + object.attributes.pickUpState}}</td>

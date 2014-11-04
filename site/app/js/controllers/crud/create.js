@@ -95,6 +95,16 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         });
          */
 
+        //Color Picker
+        var hex = $("#colorPicker").val();
+        var bigint = parseInt(hex, 16);
+        var r = (bigint >> 16) & 255;
+        var g = (bigint >> 8) & 255;
+        var b = bigint & 255;
+
+        $scope.object.attributes.color = "rgba(" + r + "," + g + "," + b + ", .8)";
+
+
         for(var name in $scope.object.attributes) {
             $scope.object.set(name, $scope.object.attributes[name]);
         }
@@ -310,6 +320,17 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     //Dispatch Setup
     $scope.dispatchSetup = function(){
+        $(".pick-a-color").pickAColor({
+            showSpectrum            : false,
+            showSavedColors         : false,
+            saveColorsPerElement    : false,
+            fadeMenuToggle          : true,
+            showHexInput            : false,
+            showAdvanced            : false,
+            showBasicColors         : true,
+            allowBlank              : false,
+            inlineDropdown          : true
+        });
         $scope.dispatch = {};
         $scope.patient = {};
         $scope.facility = {};
