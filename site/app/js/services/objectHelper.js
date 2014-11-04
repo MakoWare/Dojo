@@ -14,6 +14,7 @@ var ObjectHelper = {
     Vehicle: Parse.Object.extend("Vehicle"),
     Facility: Parse.Object.extend("Facility"),
     Section: Parse.Object.extend("Section"),
+    File: Parse.Object.extend("File"),
     NemsisElement: Parse.Object.extend("NemsisElement"),
     NemsisElementCode: Parse.Object.extend("NemsisElementCode"),
     NemsisHeader: Parse.Object.extend("NemsisHeader"),
@@ -27,6 +28,9 @@ var ObjectHelper = {
             break;
         case "Facility":
             this.createFacility(agencyId, userId, callback);
+            break;
+        case "File":
+            this.createFile(agencyId, userId, callback);
             break;
         case "Patient":
             this.createPatient(agencyId, userId, callback);
@@ -269,6 +273,23 @@ var ObjectHelper = {
                     });
                 });
             });
+        });
+    },
+
+    //Create File
+    createFile: function(agencyId, userId, callback){
+        var file = new ObjectHelper.File();
+        file.set("agencyId", agencyId);
+        file.set("createdBy", userId);
+        file.set("name", "");
+        file.set("comments", "");
+        file.save({
+            success: function(result){
+                callback(result);
+            },
+            error: function(object, error){
+                callback(error);
+            }
         });
     },
 

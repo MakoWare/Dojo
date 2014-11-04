@@ -47,10 +47,12 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         case "Facility":
             $scope.saveFacility();
             break;
+        case "File":
+            $scope.saveFile();
+            break;
         case "Patient":
             $scope.savePatient();
             break;
-
         case "Vehicle":
             $scope.saveVehicle();
             break;
@@ -114,7 +116,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 GlobalService.dismissSpinner();
                 $scope.object = result;
                 console.log(result);
-                alert("Object Updated Successfully");
+                alert("Dispatch Updated Successfully");
                 $location.url("/dispatches");
                 $scope.$apply();
             },
@@ -136,7 +138,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 GlobalService.dismissSpinner();
                 $scope.object = result;
                 console.log(result);
-                alert("Object Updated Successfully");
+                alert("Facility Updated Successfully");
                 $location.url("/facilites");
                 $scope.$apply();
             },
@@ -248,7 +250,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 GlobalService.dismissSpinner();
                 $scope.object = result;
                 console.log(result);
-                alert("Object Updated Successfully");
+                alert("Patient Updated Successfully");
                 $location.url("/patients");
                 $scope.$apply();
             },
@@ -269,7 +271,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 GlobalService.dismissSpinner();
                 $scope.object = result;
                 console.log(result);
-                alert("Object Updated Successfully");
+                alert("Vehicle Updated Successfully");
                 $location.url("/vehicles");
                 $scope.$apply();
             },
@@ -279,6 +281,29 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             }
         });
     },
+
+    //Save File
+    $scope.saveFile = function(){
+        for(var name in $scope.object.attributes) {
+            $scope.object.set(name, $scope.object.attributes[name]);
+        }
+        $scope.object.save({
+            success: function(result){
+                GlobalService.dismissSpinner();
+                $scope.object = result;
+                console.log(result);
+                alert("File Updated Successfully");
+                $location.url("/files");
+                $scope.$apply();
+            },
+            error: function(object, error){
+                GlobalService.dismissSpinner();
+                alert(GlobalService.errorMessage + error.message);
+            }
+        });
+    },
+
+
 
     //Delete Object
     $scope.deleteObject = function(object){

@@ -48,14 +48,14 @@ angular.module('dojo', [
         templateUrl: 'partials/update.html',
         controller: 'CreateCtrl'
       })
-//Files  *** TODO ***
+//Files
       .when('/files', {
         templateUrl: 'partials/read.html',
         controller: 'ReadCtrl'
       })
       .when('/files/:id', {
-        templateUrl: 'partials/file.html',
-        controller: 'ReadCtrl'
+        templateUrl: 'partials/update.html',
+        controller: 'CreateCtrl'
       })
 //Login
       .when('/', {

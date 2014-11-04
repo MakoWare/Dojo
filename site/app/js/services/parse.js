@@ -15,6 +15,7 @@ angular.module('parseService', [])
 	var NemsisSection = Parse.Object.extend("NemsisSection");
 	var Dispatch = Parse.Object.extend("Dispatch");
 	var Facility = Parse.Object.extend("Facility");
+	var File = Parse.Object.extend("File");
 	var Patient = Parse.Object.extend("Patient");
 	var Personnel = Parse.Object.extend("Personnel");
 	var Vehicle = Parse.Object.extend("Vehicle");
@@ -214,6 +215,9 @@ angular.module('parseService', [])
                 case "Facility":
                     ParseService.getFacilityById(objectId, callback);
                     break;
+                case "File":
+                    ParseService.getFileById(objectId, callback);
+                    break;
                 }
             },
 
@@ -278,6 +282,17 @@ angular.module('parseService', [])
                 });
             },
 
+            getFileById: function(objectId, callback){
+                var query = new Parse.Query(File);
+                query.get(objectId,{
+                    success: function(result){
+                        callback(result);
+                    },
+                    error: function(object, error){
+                        callback(error);
+                    }
+                });
+            },
 
             //Delete Object
             deleteObject: function(object, objectType, callback){
