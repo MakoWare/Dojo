@@ -18,7 +18,7 @@
 	  <tr ng-repeat="object in objects | filter:searchParam:strict | orderBy:predicate:reverse">
             <td>{{object.attributes.name}}</td>
 	    <td>{{object.attributes.status}}</td>
-            <td>{{object.attributes.currentLocation}}</td>
+            <td>{{object.attributes.currentAddress}}</td>
             <td>{{object.attributes.currentDispatch.attributes.pickUpAddress}}</td>
             <td>{{object.attributes.currentDispatch.attributes.dropOffAddress}}</td>
             <td><a ng-href="#/patients/{{object.attributes.patient.id}}" ng-show="object.attributes.patient"> <button class="btn btn-primary">Patient</button></a></td>

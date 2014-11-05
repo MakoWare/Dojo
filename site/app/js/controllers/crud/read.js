@@ -2,6 +2,7 @@
 var ReadCtrl = function($scope, $location, GlobalService, ParseService){
 
     $scope.init = function(){
+        GlobalService.showSpinner();
         $scope.objects = [];
         $scope.dir = $location.url().slice(1);
         $scope.objectType = GlobalService.getObjectType($scope.dir);
@@ -18,8 +19,10 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
 
     $scope.findObjects = function(objectType){
         ParseService.findObjectsByAgency(objectType, function(results){
+            GlobalService.dismissSpinner();
             $scope.$apply(function(){
                 $scope.objects = results;
+                $scope.setUp();
                 console.log(results);
             });
         });
@@ -39,30 +42,28 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
     $scope.setUp = function(){
         switch($scope.objectType){
         case "Vehicle":
-            $scope.setupVehicle();
+            $scope.setUpVehicle();
             break;
         }
     },
 
     $scope.setUpVehicle = function(){
         var geocoder = new google.maps.Geocoder();
-        var latlng = new google.maps.LatLng(40.730885,-73.997383);
-        geocoder.geocode({'latLng': latlng}, function(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                if (results[1]) {
-                    map.setZoom(11);
-                    marker = new google.maps.Marker({
-                        position: latlng,
-                        map: map
-                    });
-                    infowindow.setContent(results[1].formatted_address);
-                    infowindow.open(map, marker);
+        $scope.objects.forEach(function(vehicle){
+            var latlng = new google.maps.LatLng(vehicle.attributes.lat, vehicle.attributes.lon);
+            geocoder.geocode({'latLng': latlng}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[0]) {
+                        console.log(results);
+                        vehicle.attributes.currentAddress = results[0].formatted_address;
+                        $scope.$apply();
+                    } else {
+                        alert('No results found');
+                    }
                 } else {
-                    alert('No results found');
+                    alert('Geocoder failed due to: ' + status);
                 }
-            } else {
-                alert('Geocoder failed due to: ' + status);
-            }
+            });
         });
     };
 
