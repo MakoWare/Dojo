@@ -31,11 +31,40 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
             GlobalService.dismissSpinner();
             console.log(results);
             var newPath = "/" + $scope.dir + "/" + results.id;
-            console.log(newPath);
             $location.path(newPath);
             $scope.$apply();
         });
     },
+
+    $scope.setUp = function(){
+        switch($scope.objectType){
+        case "Vehicle":
+            $scope.setupVehicle();
+            break;
+        }
+    },
+
+    $scope.setUpVehicle = function(){
+        var geocoder = new google.maps.Geocoder();
+        var latlng = new google.maps.LatLng(40.730885,-73.997383);
+        geocoder.geocode({'latLng': latlng}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[1]) {
+                    map.setZoom(11);
+                    marker = new google.maps.Marker({
+                        position: latlng,
+                        map: map
+                    });
+                    infowindow.setContent(results[1].formatted_address);
+                    infowindow.open(map, marker);
+                } else {
+                    alert('No results found');
+                }
+            } else {
+                alert('Geocoder failed due to: ' + status);
+            }
+        });
+    };
 
     //Init
     $scope.init();

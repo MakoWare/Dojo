@@ -287,6 +287,14 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         for(var name in $scope.object.attributes) {
             $scope.object.set(name, $scope.object.attributes[name]);
         }
+
+        var fileUploadControl = $("#upload")[0];
+        if (fileUploadControl.files.length > 0) {
+            var file = fileUploadControl.files[0];
+            var parseFile = new Parse.File("file", file);
+            $scope.object.set("file", parseFile);
+        }
+
         $scope.object.save({
             success: function(result){
                 GlobalService.dismissSpinner();
@@ -302,8 +310,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             }
         });
     },
-
-
 
     //Delete Object
     $scope.deleteObject = function(object){

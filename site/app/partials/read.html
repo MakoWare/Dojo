@@ -1,12 +1,12 @@
 <div ng-include="'partials/nav.html'"></div>
 
 <div class="container-widescreen" style="margin-right : 5%; margin-left: 5%">
-  <div class="page-header" style="margin-top: 10px; margin-bottom: 15px;">
+  <div class="page-header" style="margin-top: 0px; margin-bottom: 15px;">
     <div class="row">
       <div class="col-sm-6">
-        <h1>Search {{dir.charAt(0).toUpperCase() + dir.slice(1)}}</h1>
+        <h1 style="margin-top: 10px">Search {{dir.charAt(0).toUpperCase() + dir.slice(1)}}</h1>
       </div>
-      <div class="col-sm-4" style="margin-top: 28px;">
+      <div class="col-sm-4" style="margin-top: 18px;">
         <form class="form-horizontal" role="form">
           <div class="form-group" style="margin-bottom: 5px;">
             <label for="searchParam" class="col-sm-2 control-label">Search:</label>
@@ -16,7 +16,7 @@
           </div>
         </form>
       </div>
-      <div class="col-sm-2" style="margin-top: 20px;">
+      <div class="col-sm-2" style="margin-top: 10px;">
         <button class="btn btn-lg btn-success" ng-click="createObject(objectType)" ng-show="{{objectType != 'Installation'}}">Add {{objectType}}</button>
       </div>
 

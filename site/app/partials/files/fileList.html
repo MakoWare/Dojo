@@ -6,16 +6,16 @@
 	  <tr>
             <th><a href="" ng-click="predicate = 'attributes.name'; reverse=!reverse">Name</a></th>
 
-            <th><a href="" ng-click="predicate = 'attributes.createdBy; reverse=!reverse">Added By</a></th>
-            <th><a href="" ng-click="predicate = 'attributes.file; reverse=!reverse">Download</a></th>
+            <th><a href="" ng-click="predicate = 'attributes.createdBy'; reverse=!reverse">Added By</a></th>
+            <th><a href="" ng-click="predicate = 'attributes.file'; reverse=!reverse">Download</a></th>
             <th>View File</th>
 	  </tr>
         </thead>
         <tbody>
 	  <tr ng-repeat="object in objects | filter:searchParam:strict | orderBy:predicate:reverse">
             <td>{{object.attributes.name}}</td>
-	    <td>{{object.attributes.createdBy}}</td>
-            <td>{{( }}</td>
+	    <td><a ng-href="{{'#/users/' + object.attributes.createdBy}}"><button class="btn btn-primary">{{object.attributes.createdBy}}</button></a></td>
+            <td><a ng-href="{{object.attributes.file.url()}}" download><button class="btn btn-primary">download</button></a></td>
             <td><a ng-href="{{'#/files/' + object.id}}"><button class="btn btn-primary">{{object.id}}</button></a></td>
 	  </tr>
         </tbody>

@@ -65,6 +65,12 @@ var ObjectHelper = {
         case "Vehicle":
             this.deleteVehicle(object, callback);
             break;
+        case "File":
+            this.deleteFile(object, callback);
+            break;
+        case "PCR":
+            this.deletePCR(object, callback);
+            break;
         }
     },
 
@@ -539,6 +545,7 @@ var ObjectHelper = {
         });
     },
 
+    //Delete Dispatch
     deleteDispatch: function(dispatch, callback){
         dispatch.destroy({
             success: function(result){
@@ -551,6 +558,31 @@ var ObjectHelper = {
 
     },
 
+    //Delete File
+    deleteFile: function(file, callback){
+        file.destroy({
+            success: function(result){
+                callback("Successfully deleted the File");
+            },
+            error: function(object, error){
+                callback(error);
+            }
+        });
+    },
+
+    //Delete PCR
+    deleteFile: function(pcr, callback){
+        pcr.destroy({
+            success: function(result){
+                callback("Successfully deleted the PCR");
+            },
+            error: function(object, error){
+                callback(error);
+            }
+        });
+    },
+
+    //Delete Facility
     deleteFacility: function(facility, callback){
         var query = new Parse.Query("Section");
         query.equalTo("name", "dFacility");
