@@ -5,21 +5,17 @@
         <thead>
 	  <tr>
             <th><a href="" ng-click="predicate = 'attributes.name'; reverse=!reverse">Name</a></th>
-            <th><a href="" ng-click="predicate = 'attributes.address'; reverse=!reverse">Address</a></th>
-            <th><a href="" ng-click="predicate = 'attributes.dob'; reverse=!reverse">D.O.B</a></th>
-            <th><a href="" ng-click="predicate = 'attributes.ssn'; reverse=!reverse">SSN</a></th>
-            <th><a href="" ng-click="predicate = 'attributes.phone'; reverse=!reverse">Phone</a></th>
-            <th>View Patient</th>
+            <th><a href="" ng-click="predicate = 'attributes.submitted; reverse=!reverse">Submitted</a></th>
+            <th><a href="" ng-click="predicate = 'attributes.status; reverse=!reverse">Status</a></th>
+            <th>View PCR</th>
 	  </tr>
         </thead>
         <tbody>
 	  <tr ng-repeat="object in objects | filter:searchParam:strict | orderBy:predicate:reverse">
-            <td>{{object.attributes.firstName + " " + object.attributes.lastName}}</td>
-	    <td>{{object.attributes.address}}</td>
-            <td>{{(object.attributes.dob.getMonth() + 1) + "/" + object.attributes.dob.getDate() + "/" + object.attributes.dob.getFullYear();}}</td>
-            <td>{{"xxx-xx-" + object.attributes.ssn.substr(object.attributes.ssn.length - 4);}}</td>
-            <td>{{object.attributes.phone}}</td>
-            <td><a ng-href="{{'#/patients/' + object.id}}"><button class="btn btn-primary">{{object.id}}</button></a></td>
+            <td>{{object.attributes.name}}</td>
+	    <td>{{object.attributes.submitted}}</td>
+            <td>{{(object.attributes.status}}</td>
+            <td><a ng-href="{{'#/pcrs/' + object.id}}"><button class="btn btn-primary">{{object.id}}</button></a></td>
 	  </tr>
         </tbody>
       </table>
