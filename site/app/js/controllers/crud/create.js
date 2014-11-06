@@ -14,7 +14,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     $scope.getObject = function(objectType, objectId){
         GlobalService.showSpinner();
         ParseService.getObjectById(objectType, objectId, function(results){
-
             console.log(results);
             if(results.id){
                 $scope.$apply(function(){
@@ -343,6 +342,9 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
         case "Vehicle":
             $scope.vehicleSetup();
+            break;
+        case "User":
+            //$scope.vehicleSetup();
             break;
         }
 

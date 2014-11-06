@@ -19,6 +19,40 @@ var ObjectHelper = {
     NemsisElementCode: Parse.Object.extend("NemsisElementCode"),
     NemsisHeader: Parse.Object.extend("NemsisHeader"),
 
+    //Declare ACLs for all Objects Here
+    init: function(){
+        ObjectHelper.DispatchACL = new Parse.ACL();
+        ObjectHelper.DispatchACL.setRoleWriteAccess("EMT", true);
+        ObjectHelper.DispatchACL.setRoleReadAccess("EMT", true);
+
+        ObjectHelper.FacilityACL = new Parse.ACL();
+        ObjectHelper.FacilityACL.setRoleWriteAccess("EMT", true);
+        ObjectHelper.FacilityACL.setRoleReadAccess("EMT", true);
+
+        ObjectHelper.FileACL = new Parse.ACL();
+        ObjectHelper.FileACL.setRoleWriteAccess("Manager", true);
+        ObjectHelper.FileACL.setRoleReadAccess("Manager", true);
+
+        ObjectHelper.PatientACL = new Parse.ACL();
+        ObjectHelper.PatientACL.setRoleWriteAccess("EMT", true);
+        ObjectHelper.PatientACL.setRoleReadAccess("EMT", true);
+
+        ObjectHelper.UserACL = new Parse.ACL();
+        ObjectHelper.UserACL.setRoleWriteAccess("Manager", true);
+        ObjectHelper.UserACL.setRoleReadAccess("Manager", true);
+
+        ObjectHelper.VehicleACL = new Parse.ACL();
+        ObjectHelper.VehicleACL.setRoleWriteAccess("EMT", true);
+        ObjectHelper.VehicleACL.setRoleReadAccess("EMT", true);
+
+        ObjectHelper.PCRACL = new Parse.ACL();
+        ObjectHelper.PCRACL.setRoleWriteAccess("Manager", true);
+        ObjectHelper.PCRACL.setRoleReadAccess("Manager", true);
+
+        ObjectHelper.AgencyACL = new Parse.ACL();
+        ObjectHelper.AgencyACL.setRoleReadAccess("Manager", true);
+    },
+
     //***Generics***//
     //Create Object
     createObject: function(objectType, agencyId, userId, callback){
@@ -75,24 +109,12 @@ var ObjectHelper = {
     },
 
 
-    //Find Objects
-    findObjects: function(objectType, query, callback){
-        query.find({
-            success: function(results){
-                callback(results);
-            },
-            error: function(error){
-                callback(error);
-            }
-        });
-    },
-
-
     //**Create**//
 
     //Dispatch
     createDispatch: function(agencyId, userId, callback){
         var dispatch = new ObjectHelper.Dispatch();
+        dispatch.setACL(ObjectHelper.DispatchACL);
         dispatch.set("agencyId", agencyId);
         dispatch.set("createdBy", userId);
         dispatch.set("comments", "");
@@ -131,6 +153,7 @@ var ObjectHelper = {
         var dFacilityGroup;
         facility.set("agencyId", agencyId);
         facility.set("createdBy", userId);
+        facility.setACL(ObjectHelper.FacilityACL);
         facility.set("comments", "");
         facility.set("name", "");
         facility.set("address", "");
@@ -216,18 +239,27 @@ var ObjectHelper = {
     },
 
     //User
-    createUser: function(agencyId, userId, callback){ //This is not like the others
-        var user = new ObjectHelper.User();
+    createUser: function(agencyId, userId, callback){
+        var user = new Parse.User();
+        var rando = ObjectHelper.getRandomInt(0, 100000000);
+
         user.set("agencyId", agencyId);
         user.set("createdBy", userId);
+        user.set("username", "user" + rando);
+        user.set("password", "password");
+        user.set("active", false);
 
-        var promise = this.createSection(agencyId, userId, "dPersonnel",  function(results){
-
-        });
-
-        promise.then(function(results){
-            user.set("section", results);
-            callback(user);
+        var promise = ObjectHelper.createSection(agencyId, userId, "dPersonnel.PersonnelGroup",  function(results){
+            user.set("dPersonnel", results);
+            user.signUp(null, {
+                success: function(user) {
+                    console.log(user);
+                    callback(user);
+                },
+                error: function(user, error) {
+                    callback(error);
+                }
+            });
         });
     },
 
@@ -236,6 +268,7 @@ var ObjectHelper = {
         var vehicle = new ObjectHelper.Vehicle();
         vehicle.set("agencyId", agencyId);
         vehicle.set("createdBy", userId);
+        vehicle.setACL(ObjectHelper.VehicleACL);
         vehicle.set("status", "");
         vehicle.set("type", "");
         vehicle.set("name", "");
@@ -287,6 +320,7 @@ var ObjectHelper = {
         var file = new ObjectHelper.File();
         file.set("agencyId", agencyId);
         file.set("createdBy", userId);
+        file.setACL(ObjectHelper.FileACL);
         file.set("name", "");
         file.set("comments", "");
         file.save({
@@ -441,6 +475,7 @@ var ObjectHelper = {
         var agency = new this.Agency();
         agency.set("createdBy", userId);
         agency.set("name", name);
+        agency.setACL(ObjectHelper.AgencyACL);
 
         //Save the new agency to give it an id
         agency.save({
@@ -676,7 +711,10 @@ var ObjectHelper = {
             });
 
         });
-    }
+    },
 
+    getRandomInt: function(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
 };

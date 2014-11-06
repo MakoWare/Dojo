@@ -31,11 +31,16 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
     $scope.createObject = function(objectType){
         GlobalService.showSpinner();
         ParseService.createObject(objectType, function(results){
-            GlobalService.dismissSpinner();
-            console.log(results);
-            var newPath = "/" + $scope.dir + "/" + results.id;
-            $location.path(newPath);
-            $scope.$apply();
+            if(results.id){
+                GlobalService.dismissSpinner();
+                console.log(results);
+                var newPath = "/" + $scope.dir + "/" + results.id;
+                $location.path(newPath);
+                $scope.$apply();
+            } else {
+                GlobalService.dismissSpinner();
+                alert(GlobalService.errorMessage + results.message);
+            }
         });
     },
 

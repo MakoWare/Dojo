@@ -4,6 +4,8 @@ angular.module('parseService', [])
 
         //Init Parse
 	Parse.initialize("8vNcAs6Z0c4jyHvuW5zezUXij8DquZLeYP4pFicD", "Ipw8skfNMGvX9uGc8LHn0qCbAIhWjrZP5LEHm9vI");
+        //Init ObjectHelper
+        ObjectHelper.init();
 
 	//Define Parse Objects
 	var Agency = Parse.Object.extend("Agency");
@@ -218,6 +220,9 @@ angular.module('parseService', [])
                 case "File":
                     ParseService.getFileById(objectId, callback);
                     break;
+                case "User":
+                    ParseService.getUserById(objectId, callback);
+                    break;
                 }
             },
 
@@ -290,6 +295,33 @@ angular.module('parseService', [])
                     },
                     error: function(object, error){
                         callback(error);
+                    }
+                });
+            },
+
+            getUserById: function(objectId, callback){
+                var query = new Parse.Query(User);
+                query.include("dPersonnel.elements");
+                query.include("dPersonnel.sections.elements");
+                query.get(objectId,{
+                    success: function(result){
+                        callback(result);
+                    },
+                    error: function(object, error){
+                        callback(error);
+                    }
+                });
+            },
+
+            hasPermision: function(roleName, callback){
+                var query = new Parse.Role();
+                query.equalTo("name", roleName);
+                query.first({
+                    success: function(result){
+                        console.log(result.getUsers());
+                    },
+                    error: function(object, error){
+                        callback(false);
                     }
                 });
             },

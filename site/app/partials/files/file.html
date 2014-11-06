@@ -22,6 +22,14 @@
 	</div>
       </div>
 
+      <div class="row" style="margin-left: 38px; margin-top: 14px;" ng-if="object.attibutes.file">
+	<div class="form-group">
+	  <label for="upload">Download</label>
+          <a ng-href="{{object.attributes.file.url()}}" download><button class="btn btn-primary">download</button></a>
+	</div>
+      </div>
+
+
     </div>
   </form>
 </div>
