@@ -55,6 +55,9 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
         case "Vehicle":
             $scope.setUpVehicle();
             break;
+        case "User":
+            $scope.setUpUser();
+            break;
         }
     },
 
@@ -74,6 +77,15 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
                 } else {
                     alert('Geocoder failed due to: ' + status);
                 }
+            });
+        });
+    };
+
+    $scope.setUpUser = function(){
+        $scope.objects.forEach(function(user){
+            ParseService.getRole(user, function(result){
+                user.attributes.role = result.attributes.name;
+                $scope.$apply();
             });
         });
     };

@@ -313,12 +313,12 @@ angular.module('parseService', [])
                 });
             },
 
-            hasPermision: function(roleName, callback){
-                var query = new Parse.Role();
-                query.equalTo("name", roleName);
+            getRole: function(user, callback){
+                var query = new Parse.Query(Parse.Role);
+                query.equalTo("users", user);
                 query.first({
                     success: function(result){
-                        console.log(result.getUsers());
+                        callback(result);
                     },
                     error: function(object, error){
                         callback(false);

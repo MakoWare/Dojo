@@ -15,7 +15,9 @@ var NavCtrl = function($scope, $location, ParseService, GlobalService){
             $location.url("/");
 	} else {
             $scope.loggedIn = true;
-            $scope.role = ParseService.getCurrentUser().get('type');
+            ParseService.getRole(ParseService.getCurrentUser(), function(result){
+                $scope.role = result.get('name');
+            });
         }
     };
 
