@@ -2,10 +2,14 @@
 var ConfigCtrl = function($scope, $location, ParseService, GlobalService){
 
     $scope.init = function(){
+        if(ParseService.getCurrentUser()){
         $scope.dAgencyId = "";
         $scope.dStateId = "";
         $scope.getSectionByName("dAgency");
         $scope.getSectionByName("dState");
+        } else {
+            $location.url("/");
+        }
     },
 
     //Get Odd Ball Sections, Thanks Nemsis for making sense!!!

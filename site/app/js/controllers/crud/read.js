@@ -2,19 +2,25 @@
 var ReadCtrl = function($scope, $location, GlobalService, ParseService){
 
     $scope.init = function(){
-        GlobalService.showSpinner();
-        $scope.objects = [];
-        $scope.dir = $location.url().slice(1);
-        $scope.objectType = GlobalService.getObjectType($scope.dir);
-        $scope.getPartial();
-        $scope.findObjects($scope.objectType);
-        $scope.searchParam = "";
+        if(ParseService.getCurrentUser()){
+            GlobalService.showSpinner();
+            $scope.objects = [];
+            $scope.dir = $location.url().slice(1);
+            $scope.objectType = GlobalService.getObjectType($scope.dir);
+            $scope.getPartial();
+            $scope.findObjects($scope.objectType);
+            $scope.searchParam = "";
+        } else {
+            $location.url("/");
+        }
     },
 
     $scope.getPartial = function(){
-        var object = $scope.objectType.charAt(0).toLowerCase() + $scope.objectType.slice(1);
-        var partialLocation = $scope.dir + "/" + object + "List.html";
-        return "partials/" + partialLocation;
+        if(ParseService.getCurrentUser()){
+            var object = $scope.objectType.charAt(0).toLowerCase() + $scope.objectType.slice(1);
+            var partialLocation = $scope.dir + "/" + object + "List.html";
+            return "partials/" + partialLocation;
+        }
     };
 
     $scope.findObjects = function(objectType){

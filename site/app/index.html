@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="en" class="no-js" data-ng-app="dojo">
   <head data-template-set="html5-reset">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
@@ -14,12 +14,6 @@
     <link rel="stylesheet" href="css/main.css"/>
     <link rel="stylesheet" href="libs/colorPicker/colorPicker.min.css"/>
 
-
-  </head>
-  <body ng-app="dojo" style="padding: 0px;">
-
-    <div id="overlay"></div>
-    <div ng-view=""></div>
 
     <!--Libs-->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -54,5 +48,13 @@
     <script src="js/controllers/nemsis/nemsisCreate.js"></script>
     <script src="js/controllers/nemsis/nemsisRead.js"></script>
 
-</body>
+    <script src="js/tools/initRoles.js"></script>
+  </head>
+  <body  style="padding: 0px;">
+    <div id="overlay"></div>
+
+    <div class="navigation" data-navigation=""></div>
+    <div ng-view=""></div>
+
+  </body>
 </html>

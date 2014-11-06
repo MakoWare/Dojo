@@ -242,7 +242,6 @@ var ObjectHelper = {
     createUser: function(agencyId, userId, callback){
         var user = new Parse.User();
         var rando = ObjectHelper.getRandomInt(0, 100000000);
-
         user.set("agencyId", agencyId);
         user.set("createdBy", userId);
         user.set("username", "user" + rando);
@@ -251,9 +250,8 @@ var ObjectHelper = {
 
         var promise = ObjectHelper.createSection(agencyId, userId, "dPersonnel.PersonnelGroup",  function(results){
             user.set("dPersonnel", results);
-            user.signUp(null, {
+            user.save(null, {
                 success: function(user) {
-                    console.log(user);
                     callback(user);
                 },
                 error: function(user, error) {

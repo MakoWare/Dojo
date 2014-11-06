@@ -13,9 +13,9 @@
         <tbody>
 	  <tr ng-repeat="object in objects | filter:searchParam.$ | orderBy:predicate:reverse">
 	    <td>{{object.attributes.username}}</td>
-	    <td>{{object.attributes.createdAt}}</td>
+	    <td>{{(object.createdAt.getMonth() + 1) + "/" + object.createdAt.getDate() + "/" + object.createdAt.getFullYear()}}</td>
 	    <td>{{object.attributes.role}}</td>
-            <td><a href="#/users/{{object.attributes.id}}"> <button class="btn btn-primary">Edit</button></a></td>
+            <td><a href="#/users/{{object.id}}"> <button class="btn btn-primary">Edit</button></a></td>
 	  </tr>
         </tbody>
       </table>

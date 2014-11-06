@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module('dojo', [
+    'navigation',
     'globalService',
     'parseService',
     'multi-select',

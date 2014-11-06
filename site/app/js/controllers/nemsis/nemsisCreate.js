@@ -2,18 +2,22 @@
 var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService){
 
     $scope.init = function(){
-        $scope.section = {};
-        $scope.tmpElements = [];
-        $scope.canDelete = false;
-        $scope.dir = $location.url().slice(1).split("/")[0];
-        $scope.nemsisSectionName = $location.url().split("nemsis/")[1].split("/")[0];
-        $scope.sectionId = $location.url().split("/")[$location.url().split("/").length - 1];
-        if($scope.sectionId == "add"){
-            $scope.type = "Create";
-            $scope.createSection($scope.nemsisSectionName);
+        if(ParseService.getCurrentUser()){
+            $scope.section = {};
+            $scope.tmpElements = [];
+            $scope.canDelete = false;
+            $scope.dir = $location.url().slice(1).split("/")[0];
+            $scope.nemsisSectionName = $location.url().split("nemsis/")[1].split("/")[0];
+            $scope.sectionId = $location.url().split("/")[$location.url().split("/").length - 1];
+            if($scope.sectionId == "add"){
+                $scope.type = "Create";
+                $scope.createSection($scope.nemsisSectionName);
+            } else {
+                $scope.type = "Update";
+                $scope.getSection($scope.sectionId);
+            }
         } else {
-            $scope.type = "Update";
-            $scope.getSection($scope.sectionId);
+            $location.url("/");
         }
     },
 

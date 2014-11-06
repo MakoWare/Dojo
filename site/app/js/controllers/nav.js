@@ -1,7 +1,7 @@
 'use strict';
 
 //Nav Controller
-var NavCtrl = function($scope, $location, $route, ParseService){
+var NavCtrl = function($scope, $location, ParseService, GlobalService){
 
     $scope.init = function(){
         $scope.dir = $location.url().slice(1).split("/")[0];
@@ -11,9 +11,8 @@ var NavCtrl = function($scope, $location, $route, ParseService){
         $scope.loggedIn = false;
         $scope.role = "";
 
-	if($scope.currentUser == undefined){
-
-
+	if(!$scope.currentUser){
+            $location.url("/");
 	} else {
             $scope.loggedIn = true;
             $scope.role = ParseService.getCurrentUser().get('type');
@@ -29,3 +28,16 @@ var NavCtrl = function($scope, $location, $route, ParseService){
     //Init
     $scope.init();
 };
+
+angular.module('navigation',[])
+    .directive('navigation',['$location', 'ParseService', 'GlobalService', function($location, ParseService, GlobalService){
+	return {
+	    restrict:'A',
+	    isolate:true,
+	    link: function($scope,$elm,$attrs){
+		new NavCtrl($scope, $location, ParseService, GlobalService);
+	    },
+	    scope:true,
+            templateUrl: "partials/nav.html"
+	};
+    }]);

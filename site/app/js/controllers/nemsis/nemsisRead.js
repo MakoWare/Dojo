@@ -2,10 +2,14 @@
 var NemsisReadCtrl = function($scope, $location, GlobalService, ParseService){
 
     $scope.init = function(){
-        $scope.parentSection = {};
-        $scope.childSections = [];
-        $scope.sectionName = $location.url().split("nemsis/")[1];
-        $scope.getSection($scope.sectionName);
+        if(ParseService.getCurrentUser){
+            $scope.parentSection = {};
+            $scope.childSections = [];
+            $scope.sectionName = $location.url().split("nemsis/")[1];
+            $scope.getSection($scope.sectionName);
+        } else {
+            $location.url("/");
+        }
     };
 
     //Get Section
