@@ -4,6 +4,7 @@
 var NavCtrl = function($scope, $location, ParseService, GlobalService){
 
     $scope.init = function(){
+        console.log("init()");
         $scope.dir = $location.url().slice(1).split("/")[0];
 	$scope.currentUser = ParseService.getCurrentUser();
         $scope.path = {};
@@ -16,6 +17,7 @@ var NavCtrl = function($scope, $location, ParseService, GlobalService){
             $scope.loggedIn = true;
             ParseService.getRole(ParseService.getCurrentUser(), function(result){
                 $scope.role = result.get('name');
+                $scope.$apply();
             });
         }
     };
@@ -23,11 +25,13 @@ var NavCtrl = function($scope, $location, ParseService, GlobalService){
     $scope.logout = function(){
         ParseService.logout();
         $location.url("/");
+
     };
 
+    $scope.$on('$routeChangeSuccess', function(next, current) {
+        $scope.init();
+    });
 
-    //Init
-    $scope.init();
 };
 
 angular.module('navigation',[])
