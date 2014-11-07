@@ -159,10 +159,10 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         var attributes = $scope.object.attributes;
 
         //First Update the Role
-        console.log($scope.role);
-        if($scope.role != ""){
-            ParseService.addRole($scope.role, $scope.object, function(result){
-                ParseService.saveUser($scope.object.id, attributes.username, attributes.firstName, attributes.lastName, attributes.phone, attributes.email, function(result){
+        var roleName = $scope.object.attributes.role;
+        if(roleName){
+            ParseService.addRole(roleName, $scope.object, function(result){
+                ParseService.saveUser($scope.object.id, attributes.username, attributes.firstName, attributes.lastName, attributes.phone, attributes.email, attributes.active, function(result){
                     if(result == "Success"){
                         GlobalService.dismissSpinner();
                         alert("User Updated Successfully");
@@ -170,8 +170,9 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                         $scope.$apply();
                     }
                     else {
+                        console.log(result);
                         GlobalService.dismissSpinner();
-                        alert(GlobalService.errorMessage + result);
+                        alert(GlobalService.errorMessage + result.message);
                     }
                 });
             });
@@ -568,13 +569,12 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     },
 
     $scope.userSetup = function(){
-        $scope.role = "";
         $scope.hasNemsis = true;
         $scope.nemsisLocation = "dPersonnel/" + $scope.object.attributes.dPersonnel.id;
 
         ParseService.getRole($scope.object, function(result){
             if(result){
-                $scope.role = result.attributes.name;
+                $scope.object.attributes.role = result.attributes.name;
                 $scope.$apply();
             }
         });

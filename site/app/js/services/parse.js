@@ -330,7 +330,6 @@ angular.module('parseService', [])
             //Add a User to a Role
             addRole: function(roleName, user, callback){
                 var query = new Parse.Query(Parse.Role);
-                console.log(roleName);
                 query.equalTo("name", roleName);
                 query.first({
                     success: function(result){
@@ -351,8 +350,8 @@ angular.module('parseService', [])
             },
 
             //Update User
-            saveUser: function(userId, username, firstName, lastName, phone, email, callback){
-                Parse.Cloud.run('modifyUser', { id: userId, username: username, firstName: firstName, lastName: lastName, phone: phone, email: email}, {
+            saveUser: function(userId, username, firstName, lastName, phone, email, active, callback){
+                Parse.Cloud.run('modifyUser', { id: userId, username: username, firstName: firstName, lastName: lastName, phone: phone, email: email, active: active}, {
                     success: function(result) {
                         callback(result);
                     },

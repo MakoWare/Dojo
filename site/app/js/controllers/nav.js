@@ -5,7 +5,6 @@ var NavCtrl = function($scope, $location, ParseService, GlobalService){
 
     $scope.init = function(){
         $scope.dir = $location.url().slice(1).split("/")[0];
-
 	$scope.currentUser = ParseService.getCurrentUser();
         $scope.path = {};
         $scope.loggedIn = false;

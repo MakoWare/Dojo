@@ -51,6 +51,14 @@ var ObjectHelper = {
 
         ObjectHelper.AgencyACL = new Parse.ACL();
         ObjectHelper.AgencyACL.setRoleReadAccess("Manager", true);
+
+        ObjectHelper.SectionACL = new Parse.ACL();
+        ObjectHelper.SectionACL.setRoleReadAccess("EMT", true);
+        ObjectHelper.SectionACL.setRoleWriteAccess("EMT", true);
+
+        ObjectHelper.NemsisElementACL = new Parse.ACL();
+        ObjectHelper.NemsisElementACL.setRoleReadAccess("EMT", true);
+        ObjectHelper.NemsisElementACL.setRoleWriteAccess("EMT", true);
     },
 
     //***Generics***//
@@ -337,6 +345,7 @@ var ObjectHelper = {
         var section = new this.Section();
         section.set("agencyId", agencyId);
         section.set("createdBy", userId);
+        section.setACL(ObjectHelper.SectionACL);
         section.set("name", sectionName);
         section.set("pcrId", "");
         section.set("elements", []);
@@ -443,6 +452,7 @@ var ObjectHelper = {
         var element = new this.NemsisElement();
         element.set("agencyId", agencyId);
         element.set("createdBy", userId);
+        element.setACL(ObjectHelper.NemsisElementACL);
         element.set("title", elementNumber);
         element.set("pcrId", "");
         element.set("value", "");
