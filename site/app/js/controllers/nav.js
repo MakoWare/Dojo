@@ -4,7 +4,6 @@
 var NavCtrl = function($scope, $location, ParseService, GlobalService){
 
     $scope.init = function(){
-        console.log("init()");
         $scope.dir = $location.url().slice(1).split("/")[0];
 	$scope.currentUser = ParseService.getCurrentUser();
         $scope.path = {};
@@ -12,7 +11,11 @@ var NavCtrl = function($scope, $location, ParseService, GlobalService){
         $scope.role = "";
 
 	if(!$scope.currentUser){
-            $location.url("/");
+            if($scope.dir == "documentation" || $scope.dir == "contact"){
+
+            } else {
+                $location.url("/");
+            }
 	} else {
             $scope.loggedIn = true;
             ParseService.getRole(ParseService.getCurrentUser(), function(result){
@@ -25,7 +28,6 @@ var NavCtrl = function($scope, $location, ParseService, GlobalService){
     $scope.logout = function(){
         ParseService.logout();
         $location.url("/");
-
     };
 
     $scope.$on('$routeChangeSuccess', function(next, current) {
