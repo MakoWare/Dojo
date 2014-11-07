@@ -313,6 +313,7 @@ angular.module('parseService', [])
                 });
             },
 
+            //Get a User's Role
             getRole: function(user, callback){
                 var query = new Parse.Query(Parse.Role);
                 query.equalTo("users", user);
@@ -322,6 +323,41 @@ angular.module('parseService', [])
                     },
                     error: function(object, error){
                         callback(false);
+                    }
+                });
+            },
+
+            //Add a User to a Role
+            addRole: function(roleName, user, callback){
+                var query = new Parse.Query(Parse.Role);
+                console.log(roleName);
+                query.equalTo("name", roleName);
+                query.first({
+                    success: function(result){
+                        result.getUsers().add(user);
+                        result.save({
+                            success: function(result){
+                                callback(result);
+                            },
+                            error: function(object, error){
+                                callback(error);
+                            }
+                        });
+                    },
+                    error: function(object, error){
+                        callback(false);
+                    }
+                });
+            },
+
+            //Update User
+            saveUser: function(userId, username, firstName, lastName, phone, email, callback){
+                Parse.Cloud.run('modifyUser', { id: userId, username: username, firstName: firstName, lastName: lastName, phone: phone, email: email}, {
+                    success: function(result) {
+                        callback(result);
+                    },
+                    error: function(error) {
+                        callback(error);
                     }
                 });
             },

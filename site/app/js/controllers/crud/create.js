@@ -55,6 +55,12 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         case "Vehicle":
             $scope.saveVehicle();
             break;
+        case "User":
+            $scope.saveUser();
+            break;
+        case "PCR":
+            $scope.savePCR();
+            break;
         }
     };
 
@@ -147,6 +153,67 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             }
         });
     },
+
+    //Save User
+    $scope.saveUser = function(){
+        var attributes = $scope.object.attributes;
+
+        //First Update the Role
+        console.log($scope.role);
+        if($scope.role != ""){
+            ParseService.addRole($scope.role, $scope.object, function(result){
+                ParseService.saveUser($scope.object.id, attributes.username, attributes.firstName, attributes.lastName, attributes.phone, attributes.email, function(result){
+                    if(result == "Success"){
+                        GlobalService.dismissSpinner();
+                        alert("User Updated Successfully");
+                        $location.url("/users");
+                        $scope.$apply();
+                    }
+                    else {
+                        GlobalService.dismissSpinner();
+                        alert(GlobalService.errorMessage + result);
+                    }
+                });
+            });
+        }
+        else {
+            ParseService.saveUser($scope.object.id, attributes.username, attributes.firstName, attributes.lastName, attributes.phone, attributes.email, function(result){
+                if(result == "Success"){
+                    GlobalService.dismissSpinner();
+                    alert("User Updated Successfully");
+                    $location.url("/users");
+                    $scope.$apply();
+                }
+                else {
+                    GlobalService.dismissSpinner();
+                    alert(GlobalService.errorMessage + result);
+                }
+            });
+        }
+    },
+
+    //Save PCR
+    $scope.savePCR = function(){
+        for(var name in $scope.object.attributes) {
+            $scope.object.set(name, $scope.object.attributes[name]);
+        }
+        $scope.object.save({
+            success: function(result){
+                GlobalService.dismissSpinner();
+                $scope.object = result;
+                console.log(result);
+                alert("PCR Updated Successfully");
+                $location.url("/pcrs");
+                $scope.$apply();
+            },
+            error: function(object, error){
+                GlobalService.dismissSpinner();
+                alert(GlobalService.errorMessage + error.message);
+            }
+        });
+    },
+
+
 
     //Save Patient
     $scope.savePatient = function(){
@@ -344,7 +411,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             $scope.vehicleSetup();
             break;
         case "User":
-            //$scope.vehicleSetup();
+            $scope.userSetup();
             break;
         }
 
@@ -498,6 +565,19 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             $event.preventDefault();
             $event.stopPropagation();
         };
+    },
+
+    $scope.userSetup = function(){
+        $scope.role = "";
+        $scope.hasNemsis = true;
+        $scope.nemsisLocation = "dPersonnel/" + $scope.object.attributes.dPersonnel.id;
+
+        ParseService.getRole($scope.object, function(result){
+            if(result){
+                $scope.role = result.attributes.name;
+                $scope.$apply();
+            }
+        });
     },
 
     //Init Controller

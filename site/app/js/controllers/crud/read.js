@@ -84,8 +84,10 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
     $scope.setUpUser = function(){
         $scope.objects.forEach(function(user){
             ParseService.getRole(user, function(result){
-                user.attributes.role = result.attributes.name;
-                $scope.$apply();
+                if(result){
+                    user.attributes.role = result.attributes.name;
+                    $scope.$apply();
+                }
             });
         });
     };
