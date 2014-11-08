@@ -1,5 +1,5 @@
 <div class="content-widscreen">
-  <google-map id="mymap" center="center" zoom="zoom" draggable="true" mark-click="false">
+  <google-map id="mymap" center="center" zoom="zoom" draggable="true" options="options" mark-click="false">
     <markers>
       <marker ng-repeat="marker in markers" coords="marker" icon="marker.icon" idKey="marker.idKey">
 	<window>
@@ -25,15 +25,19 @@
   </google-map>
   <div style="position: absolute; top: 60px; left: 150px;">
     <div class="row" style="width: 200%;">
+
       <div class="col-md-3">
-	<button  class="btn btn-primary" ng-click="updateMap()">Update Map</button>
+	<button  class="btn btn-primary" ng-click="centerHome()">Home</button>
       </div>
-      <div class="col-md-8 col-md-offset-0">
-	<input class="form-control" ng-model="map.address" placeholder="Address Search">
-      </div>
-      <div class="col-md-1 col-md-offset-0">
-	<button  class="btn btn-primary" ng-click="search()">Search</button>
-      </div>
+
+      <form name="form" role="form">
+        <div class="col-md-8 col-md-offset-0">
+	  <input class="form-control" ng-model="searchAddress" placeholder="Address Search">
+        </div>
+        <div class="col-md-1 col-md-offset-0">
+	  <button  type="submit" class="btn btn-primary" ng-click="searchMap()">Search</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

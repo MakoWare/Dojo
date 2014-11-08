@@ -10,10 +10,25 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService){
     //Map
     $scope.initMap = function(){
 	$scope.center = {
-	    latitude: 42.8,
-	    longitude: -73.7
+	    latitude: $scope.initialLat,
+	    longitude: $scope.initialLon
 	};
-	$scope.zoom = 11;
+
+        $scope.options = {
+            zoomControlOptions: {
+                style: google.maps.ZoomControlStyle.SMALL,
+                position: google.maps.ControlPosition.RIGHT_CENTER
+            },
+            panControlOptions: {
+                position: google.maps.ControlPosition.TOP_RIGHT
+            },
+            streetViewControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_TOP
+            }
+
+        };
+
+	$scope.zoom = 10;
 	$scope.markers = [];
 	$scope.fit = true;
     	$scope.resizeMap();
@@ -39,38 +54,36 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService){
         $scope.resizeMap();
     });
 
-    //update map
-    $scope.updateMap = function(){
-	$scope.geocoder.geocode( { 'address': $scope.map.address}, function(results, status) {
-	    if (status == google.maps.GeocoderStatus.OK) {
-		var lat = results[0].geometry.location.d;
-		var lon = results[0].geometry.location.e;
-
-		$scope.$apply(function(){
-		    $scope.center = {
-			latitude: lat,
-			longitude: lon
-		    };
-		});
-	    } else {
-		alert('Geocode was not successful for the following reason: ' + status);
-	    }
-	});
+    //Update map
+    $scope.centerHome = function(){
+        $scope.centerMap($scope.initialLat, $scope.initialLon);
     };
 
-    //view Vehicle
-    $scope.viewVehicle = function(){
-	console.log('hi');
-	console.log('viewVehicle');
-	console.log(vehicleId);
+    //Search Map
+    $scope.searchMap = function(){
+        $scope.geocoder.geocode({address: $scope.searchAddress}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
+                    $scope.$apply(function(){
+                        $scope.centerMap(results[0].geometry.location.k, results[0].geometry.location.B);
+                    });
+                } else {
+                    alert('No results found');
+                }
+            } else {
+                alert('Geocoder failed due to: ' + status);
+            }
+        });
     };
 
-    //view Dispatch
-    $scope.viewDispatch = function(){
-	console.log('hi');
-	console.log('viewVehicle');
-	console.log(dispatchId);
-    };
+    //Center Map
+    $scope.centerMap = function(lat, lon){
+        $scope.center = {
+            latitude: lat,
+	    longitude: lon
+	};
+
+    },
 
     //Scope init
     $scope.init = function(){
@@ -79,6 +92,8 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService){
 	    $location.path('/');
 	}
 
+        $scope.initialLat = 42.8;
+        $scope.initialLon = -73.7;
 	$scope.geocoder = new google.maps.Geocoder();
 	$scope.initMap();
     };
