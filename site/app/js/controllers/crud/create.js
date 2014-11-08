@@ -144,7 +144,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 $scope.object = result;
                 console.log(result);
                 alert("Facility Updated Successfully");
-                $location.url("/facilites");
+                $location.url("/facilities");
                 $scope.$apply();
             },
             error: function(object, error){
