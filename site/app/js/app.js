@@ -21,6 +21,11 @@ angular.module('dojo', [
         templateUrl: 'partials/configurations.html',
         controller: 'ConfigCtrl'
       })
+//Ipad Configurations
+      .when('/configurations/ipad', {
+        templateUrl: 'partials/ipadConfigurations.html',
+        controller: 'IpadConfigCtrl'
+      })
 //Contact
       .when('/contact', {
         templateUrl: 'partials/contact.html',
