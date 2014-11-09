@@ -1,6 +1,6 @@
 //Global Service
 angular.module('globalService', [])
-    .factory('GlobalService', function(){
+    .factory('GlobalService', function($http){
 
         var spinner;
         var GlobalService = {
@@ -67,9 +67,23 @@ angular.module('globalService', [])
             dismissSpinner: function(){
                 spinner.stop();
                 $("#overlay").hide();
+            },
+
+
+            addressTypeAhead: function(val) {
+                return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
+                    params: {
+                        address: val,
+                        sensor: false
+                    }
+                }).then(function(response){
+                    return response.data.results.map(function(item){
+                        return item;
+                    });
+                });
             }
 
-        };
 
+        };
         return GlobalService;
     });
