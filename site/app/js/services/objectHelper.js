@@ -18,6 +18,7 @@ var ObjectHelper = {
     NemsisElement: Parse.Object.extend("NemsisElement"),
     NemsisElementCode: Parse.Object.extend("NemsisElementCode"),
     NemsisHeader: Parse.Object.extend("NemsisHeader"),
+    IpadConfiguration: Parse.Object.extend("IpadConfiguration"),
 
     //Declare ACLs for all Objects Here
     init: function(){
@@ -723,6 +724,135 @@ var ObjectHelper = {
 
     getRandomInt: function(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+    },
 
+
+    //Init Ipad Configuration
+    initIpadConfiguration: function(agencyId, callback){
+        //Get EMS Data Set
+        var ipad = new ObjectHelper.IpadConfiguration();
+        ipad.set("agencyId", agencyId);
+
+        var acl = new Parse.ACL();
+        acl.setRoleWriteAccess("EMT", true);
+        acl.setRoleReadAccess("EMT", true);
+
+        var elements = {};
+        var sectionNames = ["eAirway", "eArrest", "eCrew", "eCustomConfiguration", "eCustomResults", "eDevice", "eDispatch", "eDisposition", "eExam", "eHistory", "eInjury", "eLabs", "eMedications", "eNarrative",  "eOther", "eOutcome", "ePatient", "ePayment", "eProcedures", "eProtocols", "eRecord", "eResponse", "eScene", "eSituation", "eState", "eTimes", "eVitals"];
+        var query = new Parse.Query(ObjectHelper.NemsisSection);
+        query.containedIn("name", sectionNames);
+        query.include("headers");
+        query.include("sections.headers");
+        query.include("sections.sections.headers");
+
+        query.find({
+	    success: function(results){
+	        //1st
+	        results.forEach(function(section){
+		    if(section.get('headers') != undefined){
+		        section.get('headers').forEach(function(header){
+			    elements = ObjectHelper.createIpadElement(header, elements);
+		        });
+		    }
+		    //2nd
+		    if(section.get('sections') != undefined){
+		        section.get('sections').forEach(function(section){
+			    if(section.get('headers') != undefined){
+			        section.get('headers').forEach(function(header){
+				    elements = ObjectHelper.createIpadElement(header, elements);
+			        });
+			    }
+			    //3rd
+			    if(section.get('sections') != undefined){
+			        section.get('sections').forEach(function(section){
+				    if(section.get('headers') != undefined){
+				        section.get('headers').forEach(function(header){
+					    elements = ObjectHelper.createIpadElement(header, elements);
+				        });
+				    }
+				    elements = ObjectHelper.createIpadElement(section, elements);
+			        });
+			    }
+			    elements = ObjectHelper.createIpadElement(section, elements);
+		        });
+		    }
+	        });
+	        console.log(elements);
+	        ipad.set('elements', elements);
+	        callback(ipad);
+	    },
+	    error: function(error){
+	        console.log(error);
+	    }
+        });
+    },
+
+    createIpadElement: function(object, elements){
+        if(object.get('ElementNumber') != undefined){
+	    var name = object.get('ElementNumber');
+	    var min = object.get('MinOccurs');
+        } else {
+	    var name = object.get('name');
+	    var min = object.get('min');
+        }
+        var captured = false;
+        if(min == 1){
+	    captured = true;
+        }
+        elements[name.replace('.', '_')] = captured;
+
+        return elements;
+    },
+
+
+    //Initialize Roles for an Agency
+    initAgencyRoles: function(agencyId, callback){
+        var roleACL = new Parse.ACL();
+        roleACL.setPublicReadAccess(true);
+
+
+        var emt = new Parse.Role("EMT" + agencyId, roleACL);
+        var dispatcher = new Parse.Role("Dispatcher" + agencyId, roleACL);
+        var manager = new Parse.Role("Manager" + agencyId, roleACL);
+        var admin = new Parse.Role("Administrator" + agencyId, roleACL);
+
+        admin.save({
+            success: function(admin){
+                manager.getRoles().add(admin);
+                manager.save({
+                    success: function(manager){
+                        dispatcher.getRoles().add(manager);
+                        dispatcher.getRoles().add(admin);
+                        dispatcher.save({
+                            success: function(dispatcher){
+                                emt.getRoles().add(admin);
+                                emt.getRoles().add(dispatcher);
+                                emt.getRoles().add(manager);
+                                emt.save({
+                                    success: function(emt){
+                                        console.log("initRoles() success");
+                                        callback();
+                                    },
+                                    error: function(admin, error){
+                                        console.log(error);
+                                    }
+                                });
+                            },
+                            error: function(manager, error){
+                                console.log(error);
+                            }
+                        });
+                    },
+                    error: function(dispatcher, error){
+                        console.log(error);
+                    }
+                });
+            },
+            error: function(emt, error){
+                console.log(error);
+            }
+        });
+
+
+    }
 };
