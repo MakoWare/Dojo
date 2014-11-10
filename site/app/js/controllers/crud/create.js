@@ -111,6 +111,14 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
         $scope.object.attributes.color = "rgba(" + r + "," + g + "," + b + ", .8)";
 
+        if($scope.object.attributes.pickUpFacility == ""){
+            $scope.object.attributes.pickUpFacility = null;
+        }
+
+        if($scope.object.attributes.dropOffFacility == ""){
+            $scope.object.attributes.dropOffFacility = null;
+        }
+
 
         for(var name in $scope.object.attributes) {
             $scope.object.set(name, $scope.object.attributes[name]);
@@ -432,9 +440,22 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             allowBlank              : false,
             inlineDropdown          : true
         });
-        $scope.dispatch = {};
+
+        if(!$scope.object.attributes.color){
+            $scope.object.attributes.color = "FFFFFF";
+        } else {
+            var currentColor =  $scope.object.attributes.color;
+            var rgb = currentColor.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+            $scope.object.attributes.color = (rgb && rgb.length === 4) ?
+                    ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+                    ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+                    ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+            console.log($scope.object.attributes.color);
+        }
+
         $scope.patient = {};
         $scope.facility = {};
+
         //Get Codes
         ParseService.findNemsisElementCodes("eDispatch", function(results){
             $scope.eDispatch01 = [];
@@ -503,6 +524,100 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             });
         };
 
+        $scope.addressTypeAhead = function(val){
+            return GlobalService.addressTypeAhead(val);
+        };
+
+        $scope.setPickUpAddress = function(item){
+            console.log(item);
+            //First clear everything
+            $scope.object.attributes.pickUpAddress = "";
+            $scope.object.attributes.pickUpCity = "";
+            $scope.object.attributes.pickUpCounty = "";
+            $scope.object.attributes.pickUpState = "";
+            $scope.object.attributes.pickUpCountry = "";
+            $scope.object.attributes.pickUpZip = "";
+
+            item.address_components.forEach(function(component){
+                switch (component.types[0]) {
+                case "street_number":
+                    $scope.object.attributes.pickUpAddress = component.long_name + " ";
+                    break;
+                case "route":
+                    $scope.object.attributes.pickUpAddress += component.long_name;
+                    break;
+                case "administrative_area_level_3":
+                    if($scope.object.attributes.pickUpCity == ""){
+                        $scope.object.attributes.pickUpCity = component.long_name;
+                    }
+                    break;
+                case "locality":
+                    if($scope.object.attributes.pickUpCity == ""){
+                        $scope.object.attributes.pickUpCity = component.long_name;
+                    }
+                    break;
+                case "administrative_area_level_2":
+                    $scope.object.attributes.pickUpCounty = component.long_name;
+                    break;
+                case "administrative_area_level_1":
+                    $scope.object.attributes.pickUpState = component.short_name;
+                    break;
+                case "country":
+                    $scope.object.attributes.pickUpCountry = component.short_name;
+                    break;
+                case "postal_code":
+                    $scope.object.attributes.pickUpZip = component.long_name;
+                    break;
+                }
+
+            });
+        };
+
+        $scope.setDropOffAddress = function(item){
+            console.log(item);
+            //First clear everything
+            $scope.object.attributes.dropOffAddress = "";
+            $scope.object.attributes.dropOffCity = "";
+            $scope.object.attributes.dropOffCounty = "";
+            $scope.object.attributes.dropOffState = "";
+            $scope.object.attributes.dropOffCountry = "";
+            $scope.object.attributes.dropOffZip = "";
+
+            item.address_components.forEach(function(component){
+                switch (component.types[0]) {
+                case "street_number":
+                    $scope.object.attributes.dropOffAddress = component.long_name + " ";
+                    break;
+                case "route":
+                    $scope.object.attributes.dropOffAddress += component.long_name;
+                    break;
+                case "administrative_area_level_3":
+                    if($scope.object.attributes.dropOffCity == ""){
+                        $scope.object.attributes.dropOffCity = component.long_name;
+                    }
+                    break;
+                case "locality":
+                    if($scope.object.attributes.dropOffCity == ""){
+                        $scope.object.attributes.dropOffCity = component.long_name;
+                    }
+                    break;
+                case "administrative_area_level_2":
+                    $scope.object.attributes.dropOffCounty = component.long_name;
+                    break;
+                case "administrative_area_level_1":
+                    $scope.object.attributes.dropOffState = component.short_name;
+                    break;
+                case "country":
+                    $scope.object.attributes.dropOffCountry = component.short_name;
+                    break;
+                case "postal_code":
+                    $scope.object.attributes.dropOffZip = component.long_name;
+                    break;
+                }
+            });
+        };
+
+
         $scope.setPatientInfo = function(patient){
             $scope.object.set("patient", patient);
             $scope.patient.dob =  patient.attributes.dob.getMonth() + 1 + "/" + patient.attributes.dob.getDate() + "/" + patient.attributes.dob.getFullYear();
@@ -516,6 +631,8 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             $scope.object.attributes.pickUpCity = facility.attributes.city;
             $scope.object.attributes.pickUpZip = facility.attributes.zip;
             $scope.object.attributes.pickUpState = facility.attributes.state;
+            $scope.object.attributes.pickUpCounty = facility.attributes.county;
+            $scope.object.attributes.pickUpCountry = facility.attributes.country;
         };
 
         $scope.setDropOffFacilityInfo = function(facility){
@@ -523,6 +640,8 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             $scope.object.attributes.dropOffCity = facility.attributes.city;
             $scope.object.attributes.dropOffZip = facility.attributes.zip;
             $scope.object.attributes.dropOffState = facility.attributes.state;
+            $scope.object.attributes.dropOffCounty = facility.attributes.county;
+            $scope.object.attributes.dropOffCountry = facility.attributes.country;
         };
 
 
