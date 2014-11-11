@@ -28,14 +28,13 @@
     <div class="well" style="width: 240px; background-color: rgba(255, 255, 255, .7); padding: 0px;">
       <accordion close-others="oneAtATime" style="background-color: rgba(255, 255, 255, .0);";>
         <accordion-group heading="Vehicle List" is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled" style="margin-bottom: 0px; background-color: rgba(255, 255, 255, .0);">
+
           <div ng-repeat="vehicle in vehicles">
             <div class="well vehicleWell" style="padding-top: 5px;" ng-click="centerMap(vehicle.attributes.lat, vehicle.attributes.lon)">
               <p>{{vehicle.attributes.name}}</p>
 
             </div>
           </div>
-
-
         </accordion-group>
     </div>
   </div>
