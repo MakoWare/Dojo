@@ -30,6 +30,7 @@
               </ul>
             </li>
 
+            <li ng-if="role == 'Admin'" ng-class="{active: (dir === 'admin')}"><a href="#/admin">Admin</a></li>
             <li ng-class="{active: (dir === 'documentation')}"><a href="#/documentation">Documentation</a></li>
             <li ng-class="{active: (dir === 'contact')}"><a href="#/contact">Contact</a></li>
             <li><a ng-click="logout()">Logout</a></li>

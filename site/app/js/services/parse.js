@@ -327,6 +327,41 @@ angular.module('parseService', [])
                 });
             },
 
+
+            //Has Role
+            hasRole: function(roleName, callback){
+                var query = (new Parse.Query(Parse.Role));
+                query.equalTo("name", roleName);
+                query.equalTo("users", Parse.User.current());
+                query.first().then(function(adminRole) {
+                    if (adminRole) {
+                        callback(true);
+                    } else {
+                        callback(false);
+                    }
+                });
+            },
+
+            //Change Role
+            changeRole: function(user, newRole, callback){
+                //First Find all Roles the User currently Has
+                var query = new Parse.Query(Parse.Role);
+                query.equalTo("users", user);
+                query.find({
+                    success: function(results){
+                        if(results){
+                            results.forEach(function(role){
+                                role.getUsers().remove(user);
+                            });
+                        }
+                        ParseService.addRole(newRole, user, callback);
+                    },
+                    error: function(error){
+                        callback(error);
+                    }
+                });
+            },
+
             //Add a User to a Role
             addRole: function(roleName, user, callback){
                 var query = new Parse.Query(Parse.Role);

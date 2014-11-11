@@ -34,6 +34,19 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
         });
     };
 
+
+    //On every change
+    $scope.searchObjects = function(){
+        ParseService.findObjectsByAgency(objectType, function(results){
+            GlobalService.dismissSpinner();
+            $scope.$apply(function(){
+                $scope.objects = results;
+                $scope.setUp();
+                console.log(results);
+            });
+        });
+    },
+
     $scope.createObject = function(objectType){
         GlobalService.showSpinner();
         ParseService.createObject(objectType, function(results){

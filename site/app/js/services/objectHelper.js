@@ -810,49 +810,39 @@ var ObjectHelper = {
         var roleACL = new Parse.ACL();
         roleACL.setPublicReadAccess(true);
 
-
         var emt = new Parse.Role("EMT" + agencyId, roleACL);
         var dispatcher = new Parse.Role("Dispatcher" + agencyId, roleACL);
         var manager = new Parse.Role("Manager" + agencyId, roleACL);
-        var admin = new Parse.Role("Administrator" + agencyId, roleACL);
 
-        admin.save({
-            success: function(admin){
-                manager.getRoles().add(admin);
-                manager.save({
-                    success: function(manager){
-                        dispatcher.getRoles().add(manager);
-                        dispatcher.getRoles().add(admin);
-                        dispatcher.save({
-                            success: function(dispatcher){
-                                emt.getRoles().add(admin);
-                                emt.getRoles().add(dispatcher);
-                                emt.getRoles().add(manager);
-                                emt.save({
-                                    success: function(emt){
-                                        console.log("initRoles() success");
-                                        callback();
-                                    },
-                                    error: function(admin, error){
-                                        console.log(error);
-                                    }
-                                });
+
+        manager.getRoles().add("Admin");
+        manager.save({
+            success: function(manager){
+                dispatcher.getRoles().add(manager);
+                dispatcher.getRoles().add("Admin");
+                dispatcher.save({
+                    success: function(dispatcher){
+                        emt.getRoles().add("Admin");
+                        emt.getRoles().add(dispatcher);
+                        emt.getRoles().add(manager);
+                        emt.save({
+                            success: function(emt){
+                                console.log("initRoles() success");
+                                callback();
                             },
-                            error: function(manager, error){
+                            error: function(admin, error){
                                 console.log(error);
                             }
                         });
                     },
-                    error: function(dispatcher, error){
+                    error: function(manager, error){
                         console.log(error);
                     }
                 });
             },
-            error: function(emt, error){
+            error: function(dispatcher, error){
                 console.log(error);
             }
         });
-
-
     }
 };

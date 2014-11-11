@@ -16,6 +16,11 @@ angular.module('dojo', [
         templateUrl: 'partials/admin.html',
         controller: 'AdminCtrl'
       })
+//Run
+      .when('/run', {
+        templateUrl: 'partials/admin.html',
+        controller: 'RunCtrl'
+      })
 //Configurations
       .when('/configurations', {
         templateUrl: 'partials/configurations.html',
