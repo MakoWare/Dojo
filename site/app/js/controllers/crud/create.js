@@ -129,7 +129,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 GlobalService.dismissSpinner();
                 $scope.object = result;
                 console.log(result);
-                alert("Dispatch Updated Successfully");
                 $location.url("/dispatches");
                 $scope.$apply();
             },
@@ -151,7 +150,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 GlobalService.dismissSpinner();
                 $scope.object = result;
                 console.log(result);
-                alert("Facility Updated Successfully");
                 $location.url("/facilities");
                 $scope.$apply();
             },
@@ -173,7 +171,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 ParseService.saveUser($scope.object.id, attributes.username, attributes.firstName, attributes.lastName, attributes.phone, attributes.email, attributes.active, function(result){
                     if(result == "Success"){
                         GlobalService.dismissSpinner();
-                        alert("User Updated Successfully");
                         $location.url("/users");
                         $scope.$apply();
                     }
@@ -189,7 +186,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             ParseService.saveUser($scope.object.id, attributes.username, attributes.firstName, attributes.lastName, attributes.phone, attributes.email, function(result){
                 if(result == "Success"){
                     GlobalService.dismissSpinner();
-                    alert("User Updated Successfully");
                     $location.url("/users");
                     $scope.$apply();
                 }
@@ -211,7 +207,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 GlobalService.dismissSpinner();
                 $scope.object = result;
                 console.log(result);
-                alert("PCR Updated Successfully");
                 $location.url("/pcrs");
                 $scope.$apply();
             },
@@ -325,7 +320,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 GlobalService.dismissSpinner();
                 $scope.object = result;
                 console.log(result);
-                alert("Patient Updated Successfully");
                 $location.url("/patients");
                 $scope.$apply();
             },
@@ -346,7 +340,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 GlobalService.dismissSpinner();
                 $scope.object = result;
                 console.log(result);
-                alert("Vehicle Updated Successfully");
                 $location.url("/vehicles");
                 $scope.$apply();
             },
@@ -375,7 +368,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 GlobalService.dismissSpinner();
                 $scope.object = result;
                 console.log(result);
-                alert("File Updated Successfully");
                 $location.url("/files");
                 $scope.$apply();
             },
@@ -394,7 +386,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             if(typeof results == "error"){
                 alert(GlobalService.errorMessage + results.errorMessage); //Not Sure if this is right
             } else {
-                alert("Object deleted Successfully");
                 var newPath = "/" + $scope.dir;
                 $location.path(newPath);
                 $scope.$apply();
@@ -429,29 +420,14 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     //Dispatch Setup
     $scope.dispatchSetup = function(){
-        $(".pick-a-color").pickAColor({
-            showSpectrum            : false,
-            showSavedColors         : false,
-            saveColorsPerElement    : false,
-            fadeMenuToggle          : true,
-            showHexInput            : false,
-            showAdvanced            : false,
-            showBasicColors         : true,
-            allowBlank              : false,
-            inlineDropdown          : true
-        });
+
 
         if(!$scope.object.attributes.color){
             $scope.object.attributes.color = "FFFFFF";
-        } else {
-            var currentColor =  $scope.object.attributes.color;
-            var rgb = currentColor.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-            $scope.object.attributes.color = (rgb && rgb.length === 4) ?
-                    ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
-                    ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
-                    ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
-            console.log($scope.object.attributes.color);
         }
+
+        console.log($scope.object.attributes.color);
+
 
         $scope.patient = {};
         $scope.facility = {};
@@ -656,6 +632,23 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         if($scope.object.attributes.dropOffFacility){
             $scope.setDropOffFacilityInfo($scope.object.attributes.dropOffFacility);
         }
+
+
+        $(".pick-a-color").pickAColor({
+            showSpectrum            : false,
+            showSavedColors         : false,
+            saveColorsPerElement    : false,
+            fadeMenuToggle          : true,
+            showHexInput            : false,
+            showAdvanced            : false,
+            showBasicColors         : true,
+            allowBlank              : false,
+            inlineDropdown          : true
+        });
+
+        console.log( $(".pick-a-color").val());
+        $(".pick-a-color").val("rgba(153, 55, 35, .9)");
+        console.log( $(".pick-a-color").val());
     },
 
     //Facility Setup
