@@ -12,8 +12,14 @@ var LoginCtrl = function($scope, $location, ParseService, GlobalService){
         ParseService.login($scope.username, $scope.password, function(results){
             GlobalService.dismissSpinner();
             if(results.id){
-		$location.path('/map');
-                $scope.$apply();
+                console.log(results);
+                if(results.attributes.active){
+                    $location.path('/map');
+                    $scope.$apply();
+                } else {
+                    alert("Your User account is not currently active, please have a manager activate your user account");
+                    ParseService.logout();
+                }
             } else {
                 alert(results.message);
             }

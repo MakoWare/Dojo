@@ -36,7 +36,6 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService){
 	ParseService.getMarkers(function(results){
 	    $scope.$apply(function(){
 		$scope.markers = results;
-		console.log(results);
 	    });
 	});
     };
@@ -96,6 +95,14 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService){
         $scope.initialLon = -73.7;
 	$scope.geocoder = new google.maps.Geocoder();
 	$scope.initMap();
+
+        ParseService.findVehiclesByAgency(function(results){
+            console.log(results);
+            $scope.vehicles = results;
+            $scope.$apply();
+        });
+
+
     };
     //Init
     $scope.init();

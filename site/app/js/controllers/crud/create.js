@@ -645,10 +645,11 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             allowBlank              : false,
             inlineDropdown          : true
         });
-
         console.log( $(".pick-a-color").val());
         $(".pick-a-color").val("rgba(153, 55, 35, .9)");
         console.log( $(".pick-a-color").val());
+
+
     },
 
     //Facility Setup
