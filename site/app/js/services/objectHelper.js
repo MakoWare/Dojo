@@ -345,15 +345,20 @@ var ObjectHelper = {
     createSection: function(agencyId, userId, sectionName, callback){
         var section = new this.Section();
         section.set("agencyId", agencyId);
-        section.set("createdBy", userId);
-        section.setACL(ObjectHelper.SectionACL);
+        section.set("createdBy", Parse.User.current());
         section.set("name", sectionName);
         section.set("pcrId", "");
         section.set("elements", []);
         section.set("sections", []);
 
+        var sectionACL = new Parse.ACL();
+        sectionACL.setRoleReadAccess("EMT" + agencyId, true);
+        sectionACL.setRoleWriteAccess("EMT" + agencyId, true);
+        section.setACL(sectionACL);
+
         var subSections = [];
         var subSectionPromises = [];
+        var finalPromise;
 
         //Get NemsisSection
         var query = new Parse.Query("NemsisSection");
@@ -367,28 +372,25 @@ var ObjectHelper = {
             error: function(error){
                 console.log(error);
             }
-        });
-
-        var promise2 = promise1.then(function(results){
+        }).then(function(results){
             section.set("nemsisSection", results);
 
             //create NemsisElements for each of the headers
             var elementHeaders =  results.get('headers') || [];
-
             var nemsisElements = [];
             var promises = [];
+
             elementHeaders.forEach(function(elementHeader){
                 var promise = ObjectHelper.createNemsisElement(agencyId, userId, elementHeader.get('ElementNumber'), elementHeader, function(results){
                     section.add('elements', results);
                 });
                 promises.push(promise);
             });
+
             Parse.Promise.when(promises).then(function(){
                 return;
             });
-        });
-        var promise3 = promise2.then(function(){
-
+        }).then(function(){
             //Check if sub Sections are required
             var requiredSubSectionNames = [];
             if(section.get('nemsisSection').get('sections')){
@@ -399,17 +401,20 @@ var ObjectHelper = {
                 });
             }
             //Create required sub Sections Recursively
-            //Why can NemsisElement be serialized and not Section? fuck Parse
             requiredSubSectionNames.forEach(function(sectionName){
                 subSectionPromises.push(ObjectHelper.createSection(agencyId, userId, sectionName, function(result){
+                    console.log("subSection created: " + sectionName);
                     subSections.push(result);
-                    return result;
                 }));
             });
+        }).then(function(){
             Parse.Promise.when(subSectionPromises).then(function(){
+                console.log("all subsections created for: " + sectionName);
                 section.set('sections', subSections);
-                section.save({
+                finalPromise = section.save({
                     success: function(result){
+                        console.log("calling back: ");
+                        console.log(result);
                         callback(result);
                     },
                     error: function(object, error){
@@ -419,44 +424,25 @@ var ObjectHelper = {
             });
         });
 
-        return promise3;
-
-        /*
-        var promise4 = promise3.then(function(){
-            console.log("in promise 4");
-            Parse.Object.saveAll(subSections, {
-                success: function(results){
-                    return results;
-                },
-                error: function(object, error){
-                    callback(error);
-                }
-            });
+        promise1.then(function(){
+            return finalPromise;
         });
-
-         return promise4.then(function(results){
-            section.set('sections', results);
-            section.save({
-                success: function(result){
-                    callback(result);
-                },
-                error: function(object, error){
-                    callback(error);
-                }
-            });
-        });
-         */
     },
 
     //Create NemsisElement
     createNemsisElement: function(agencyId, userId, elementNumber, header, callback){
         var element = new this.NemsisElement();
         element.set("agencyId", agencyId);
-        element.set("createdBy", userId);
+        element.set("createdBy", Parse.User.current());
         element.setACL(ObjectHelper.NemsisElementACL);
         element.set("title", elementNumber);
         element.set("pcrId", "");
         element.set("value", "");
+
+        var elementACL = new Parse.ACL();
+        elementACL.setRoleReadAccess("EMT" + agencyId, true);
+        elementACL.setRoleWriteAccess("EMT" + agencyId, true);
+        element.setACL(elementACL);
 
         //All elements are need references to their NemsisHeaders
         if(header != ""){ //May have broke everything
@@ -480,28 +466,55 @@ var ObjectHelper = {
     },
 
     //Create Agency ***Wow, look how much code this is, fucking awesome, and easy to extend
-    createAgency: function(name, userId, callback){
-        var agency = new this.Agency();
-        agency.set("createdBy", userId);
+    createAgency: function(name, callback){
+        var agency = new ObjectHelper.Agency();
+        agency.set("createdBy", Parse.User.current());
         agency.set("name", name);
-        agency.setACL(ObjectHelper.AgencyACL);
+
 
         //Save the new agency to give it an id
         agency.save({
             success: function(agency){
+
+                //Create Agency ACL, Read/Write to Managers
+                var agencyACL = new Parse.ACL();
+                agencyACL.setRoleReadAccess("Manager" + agency.id, true);
+                agencyACL.setRoleWriteAccess("Manager" + agency.id, true);
+                agency.setACL(agencyACL);
+
                 var sectionNames = ["dAgency", "dConfiguration", "dContact", "dCustomConfiguration", "dCustomResults", "dDevice", "dFacility", "dLocation", "dPersonnel", "dState", "dVehicle"];
 
                 var promises = [];
                 sectionNames.forEach(function(sectionName){
-                    var promise = ObjectHelper.createSection(agency.id, agency.get("createdBy"), sectionName, function(section){
+                    var promise = ObjectHelper.createSection(agency.id, Parse.User.current().id, sectionName, function(section){
                         agency.set(sectionName, section);
                     });
                     promises.push(promise);
                 });
                 Parse.Promise.when(promises).then(function(){
+                    console.log("all Sections Added to agency");
                     agency.save({
                         success: function(results){
-                            callback(results);
+                            //Create the Roles for the Agency
+                            ObjectHelper.initAgencyRoles(agency.id, function(results){
+
+                                callback(agency);
+
+                                /*
+                                //Create the Ipad Configuration for the Agency
+                                ObjectHelper.initIpadConfiguration(agency.id, function(results){
+                                    agency.set("ipadConfiguration" , results);
+                                    agency.save({
+                                        success: function(result){
+                                            callback(result);
+                                        },
+                                        error: function(object, error){
+                                            callback(error);
+                                        }
+                                    });
+                                });
+                                 */
+                            });
                         },
                         error: function(object, error){
                             callback(error);
@@ -734,8 +747,8 @@ var ObjectHelper = {
         ipad.set("agencyId", agencyId);
 
         var acl = new Parse.ACL();
-        acl.setRoleWriteAccess("EMT", true);
-        acl.setRoleReadAccess("EMT", true);
+        acl.setRoleWriteAccess("EMT" + agencyId, true);
+        acl.setRoleReadAccess("EMT" + agencyId, true);
 
         var elements = {};
         var sectionNames = ["eAirway", "eArrest", "eCrew", "eCustomConfiguration", "eCustomResults", "eDevice", "eDispatch", "eDisposition", "eExam", "eHistory", "eInjury", "eLabs", "eMedications", "eNarrative",  "eOther", "eOutcome", "ePatient", "ePayment", "eProcedures", "eProtocols", "eRecord", "eResponse", "eScene", "eSituation", "eState", "eTimes", "eVitals"];
@@ -777,7 +790,7 @@ var ObjectHelper = {
 		        });
 		    }
 	        });
-	        console.log(elements);
+	        //console.log(elements);
 	        ipad.set('elements', elements);
 	        callback(ipad);
 	    },
@@ -809,40 +822,56 @@ var ObjectHelper = {
     initAgencyRoles: function(agencyId, callback){
         var roleACL = new Parse.ACL();
         roleACL.setPublicReadAccess(true);
+        roleACL.setRoleWriteAccess("Admin", true);
 
-        var emt = new Parse.Role("EMT" + agencyId, roleACL);
-        var dispatcher = new Parse.Role("Dispatcher" + agencyId, roleACL);
-        var manager = new Parse.Role("Manager" + agencyId, roleACL);
+        var emt = new Parse.Role("EMT_" + agencyId, roleACL);
+        var dispatcher = new Parse.Role("Dispatcher_" + agencyId, roleACL);
+        var manager = new Parse.Role("Manager_" + agencyId, roleACL);
 
-
-        manager.getRoles().add("Admin");
-        manager.save({
-            success: function(manager){
-                dispatcher.getRoles().add(manager);
-                dispatcher.getRoles().add("Admin");
-                dispatcher.save({
-                    success: function(dispatcher){
-                        emt.getRoles().add("Admin");
-                        emt.getRoles().add(dispatcher);
-                        emt.getRoles().add(manager);
-                        emt.save({
-                            success: function(emt){
-                                console.log("initRoles() success");
-                                callback();
-                            },
-                            error: function(admin, error){
-                                console.log(error);
-                            }
-                        });
-                    },
-                    error: function(manager, error){
-                        console.log(error);
-                    }
-                });
+        //Get Admin Role
+        var query = new Parse.Query(Parse.Role);
+        query.equalTo("name", "Admin");
+        query.first({
+            success: function(admin){
+                if(admin){
+                    manager.getRoles().add(admin);
+                    manager.save({
+                        success: function(manager){
+                            dispatcher.getRoles().add(manager);
+                            dispatcher.getRoles().add(admin);
+                            dispatcher.save({
+                                success: function(dispatcher){
+                                    emt.getRoles().add(admin);
+                                    emt.getRoles().add(dispatcher);
+                                    emt.getRoles().add(manager);
+                                    emt.save({
+                                        success: function(emt){
+                                            callback();
+                                        },
+                                        error: function(admin, error){
+                                            console.log(error);
+                                            callback(error);
+                                        }
+                                    });
+                                },
+                                error: function(dispatcher, error){
+                                    console.log(error);
+                                    callback(error);
+                                }
+                            });
+                        },
+                        error: function(manager, error){
+                            console.log(error);
+                            callback(error);
+                        }
+                    });
+                }
             },
-            error: function(dispatcher, error){
+            error: function(error){
                 console.log(error);
+                callback(error);
             }
         });
+
     }
 };
