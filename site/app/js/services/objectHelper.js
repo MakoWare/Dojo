@@ -365,7 +365,7 @@ var ObjectHelper = {
         query.equalTo("name", sectionName);
         query.include("headers");
         query.include("sections");
-        var promise1 = query.first({
+        return query.first({
             success: function(results){
                 return results;
             },
@@ -409,23 +409,21 @@ var ObjectHelper = {
             });
         }).then(function(){
             Parse.Promise.when(subSectionPromises).then(function(){
-                console.log("all subsections created for: " + sectionName);
-                section.set('sections', subSections);
-                finalPromise = section.save({
-                    success: function(result){
-                        console.log("calling back: ");
-                        console.log(result);
-                        callback(result);
-                    },
-                    error: function(object, error){
-                        callback(error);
-                    }
-                });
+                return;
             });
-        });
-
-        promise1.then(function(){
-            return finalPromise;
+        }).then(function(){
+            console.log("all subsections created for: " + sectionName);
+            section.set('sections', subSections);
+            section.save({
+                success: function(result){
+                    return (result);
+                },
+                error: function(object, error){
+                    callback(error);
+                }
+            }).then(function(result){
+                callback(result);
+            });
         });
     },
 
