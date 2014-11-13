@@ -140,6 +140,11 @@ var ObjectHelper = {
         dispatch.set("pickUpState", "");
         dispatch.set("pickUpZip", "");
 
+        var acl = new Parse.ACL();
+        acl.setRoleReadAccess("EMT_" + agencyId, true);
+        acl.setRoleWriteAccess("EMT_" + agencyId, true);
+        dispatch.setACL(acl);
+
         ObjectHelper.createSection(agencyId, "eDispatch", function(results){
             dispatch.set("eDispatch", results);
             ObjectHelper.createSection(agencyId, "eTimes", function(results){
@@ -161,8 +166,7 @@ var ObjectHelper = {
         var facility = new ObjectHelper.Facility();
         var dFacilityGroup;
         facility.set("agencyId", agencyId);
-        facility.set("createdBy", userId);
-        facility.setACL(ObjectHelper.FacilityACL);
+        facility.set("createdBy", Parse.User.current());
         facility.set("comments", "");
         facility.set("name", "");
         facility.set("address", "");
@@ -212,7 +216,7 @@ var ObjectHelper = {
         var patient = new ObjectHelper.Patient();
         var ePatient;
         patient.set("agencyId", agencyId);
-        patient.set("createdBy", userId);
+        patient.set("createdBy", Parse.User.current());
         patient.set("address", "");
         patient.set("age", "");
         patient.set("city", "");
@@ -229,6 +233,11 @@ var ObjectHelper = {
         patient.set("ssn", "");
         patient.set("state", "");
         patient.set("zip", "");
+
+        var acl = new Parse.ACL();
+        acl.setRoleReadAccess("EMT_" + agencyId, true);
+        acl.setRoleWriteAccess("EMT_" + agencyId, true);
+        patient.setACL(acl);
 
         ObjectHelper.createSection(agencyId, "ePatient", function(results){
             ePatient = results;
@@ -252,10 +261,15 @@ var ObjectHelper = {
         var user = new Parse.User();
         var rando = ObjectHelper.getRandomInt(0, 100000000);
         user.set("agencyId", agencyId);
-        user.set("createdBy", userId);
+        user.set("createdBy", Parse.User.current());
         user.set("username", "user" + rando);
         user.set("password", "password");
         user.set("active", false);
+
+        var acl = new Parse.ACL();
+        acl.setRoleReadAccess("Manager_" + agencyId, true);
+        acl.setRoleWriteAccess("Manager_" + agencyId, true);
+        user.setACL(acl);
 
         var promise = ObjectHelper.createSection(agencyId, "dPersonnel.PersonnelGroup",  function(results){
             user.set("dPersonnel", results);
@@ -274,13 +288,17 @@ var ObjectHelper = {
     createVehicle: function(agencyId, userId, callback){
         var vehicle = new ObjectHelper.Vehicle();
         vehicle.set("agencyId", agencyId);
-        vehicle.set("createdBy", userId);
-        vehicle.setACL(ObjectHelper.VehicleACL);
+        vehicle.set("createdBy", Parse.User.current());
         vehicle.set("status", "");
         vehicle.set("type", "");
         vehicle.set("name", "");
         vehicle.set("active", false);
         vehicle.set("currentPersonnel", []);
+
+        var acl = new Parse.ACL();
+        acl.setRoleReadAccess("EMT_" + agencyId, true);
+        acl.setRoleWriteAccess("EMT_" + agencyId, true);
+        vehicle.setACL(acl);
 
         ObjectHelper.createSection(agencyId, "dVehicle.VehicleGroup", function(results){
             var dVehicleGroup = results;

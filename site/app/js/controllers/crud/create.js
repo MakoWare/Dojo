@@ -730,6 +730,59 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             $event.preventDefault();
             $event.stopPropagation();
         };
+
+        $scope.addressTypeAhead = function(val){
+            return GlobalService.addressTypeAhead(val);
+        };
+
+        $scope.setAddress = function(item){
+            console.log(item);
+            //First clear everything
+            $scope.object.attributes.address = "";
+            $scope.object.attributes.city = "";
+            $scope.object.attributes.county = "";
+            $scope.object.attributes.state = "";
+            $scope.object.attributes.country = "";
+            $scope.object.attributes.zip = "";
+
+            item.address_components.forEach(function(component){
+                switch (component.types[0]) {
+                case "street_number":
+                    $scope.object.attributes.address = component.long_name + " ";
+                    break;
+                case "route":
+                    $scope.object.attributes.address += component.long_name;
+                    break;
+                case "administrative_area_level_3":
+                    if($scope.object.attributes.city == ""){
+                        $scope.object.attributes.city = component.long_name;
+                    }
+                    break;
+                case "locality":
+                    if($scope.object.attributes.city == ""){
+                        $scope.object.attributes.city = component.long_name;
+                    }
+                case "sublocality_level_1":
+                    if($scope.object.attributes.city == ""){
+                        $scope.object.attributes.city = component.long_name;
+                    }
+                    break;
+                case "administrative_area_level_2":
+                    $scope.object.attributes.county = component.long_name;
+                    break;
+                case "administrative_area_level_1":
+                    $scope.object.attributes.state = component.short_name;
+                    break;
+                case "country":
+                    $scope.object.attributes.country = component.short_name;
+                    break;
+                case "postal_code":
+                    $scope.object.attributes.zip = component.long_name;
+                    break;
+                }
+
+            });
+        };
     },
 
     $scope.userSetup = function(){
