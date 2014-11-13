@@ -140,9 +140,9 @@ var ObjectHelper = {
         dispatch.set("pickUpState", "");
         dispatch.set("pickUpZip", "");
 
-        ObjectHelper.createSection(agencyId, userId, "eDispatch", function(results){
+        ObjectHelper.createSection(agencyId, "eDispatch", function(results){
             dispatch.set("eDispatch", results);
-            ObjectHelper.createSection(agencyId, userId, "eTimes", function(results){
+            ObjectHelper.createSection(agencyId, "eTimes", function(results){
                 dispatch.set('eTimes', results);
                 dispatch.save({
                     success: function(dispatch){
@@ -172,9 +172,9 @@ var ObjectHelper = {
         facility.set("zip", "");
         facility.set("type", "");
 
-        ObjectHelper.createSection(agencyId, userId, "dFacilityGroup", function(results){
+        ObjectHelper.createSection(agencyId, "dFacilityGroup", function(results){
             dFacilityGroup = results;
-            ObjectHelper.createSection(agencyId, userId, "dFacility.FacilityGroup", function(results){
+            ObjectHelper.createSection(agencyId,  "dFacility.FacilityGroup", function(results){
                 dFacilityGroup.add("sections", results);
 
                 var query = new Parse.Query("Section");
@@ -230,9 +230,9 @@ var ObjectHelper = {
         patient.set("state", "");
         patient.set("zip", "");
 
-        ObjectHelper.createSection(agencyId, userId, "ePatient", function(results){
+        ObjectHelper.createSection(agencyId, "ePatient", function(results){
             ePatient = results;
-            ObjectHelper.createSection(agencyId, userId, "ePatient.PatientNameGroup", function(results){
+            ObjectHelper.createSection(agencyId, "ePatient.PatientNameGroup", function(results){
                 ePatient.add("sections", results);
                 patient.set("ePatient", ePatient);
                 patient.save({
@@ -257,7 +257,7 @@ var ObjectHelper = {
         user.set("password", "password");
         user.set("active", false);
 
-        var promise = ObjectHelper.createSection(agencyId, userId, "dPersonnel.PersonnelGroup",  function(results){
+        var promise = ObjectHelper.createSection(agencyId, "dPersonnel.PersonnelGroup",  function(results){
             user.set("dPersonnel", results);
             user.save(null, {
                 success: function(user) {
@@ -282,7 +282,7 @@ var ObjectHelper = {
         vehicle.set("active", false);
         vehicle.set("currentPersonnel", []);
 
-        ObjectHelper.createSection(agencyId, userId, "dVehicle.VehicleGroup", function(results){
+        ObjectHelper.createSection(agencyId, "dVehicle.VehicleGroup", function(results){
             var dVehicleGroup = results;
             vehicle.set("dVehicle", dVehicleGroup);
 
@@ -342,7 +342,7 @@ var ObjectHelper = {
 
     //Nemsis Objects
     //Create Section   *Think I got it, boss ass async function
-    createSection: function(agencyId, userId, sectionName, callback){
+    createSection: function(agencyId,  sectionName, callback){
         var section = new this.Section();
         section.set("agencyId", agencyId);
         section.set("createdBy", Parse.User.current());
@@ -352,8 +352,8 @@ var ObjectHelper = {
         section.set("sections", []);
 
         var sectionACL = new Parse.ACL();
-        sectionACL.setRoleReadAccess("EMT" + agencyId, true);
-        sectionACL.setRoleWriteAccess("EMT" + agencyId, true);
+        sectionACL.setRoleReadAccess("EMT_" + agencyId, true);
+        sectionACL.setRoleWriteAccess("EMT_" + agencyId, true);
         section.setACL(sectionACL);
 
         var subSections = [];
@@ -381,13 +381,13 @@ var ObjectHelper = {
             var promises = [];
 
             elementHeaders.forEach(function(elementHeader){
-                var promise = ObjectHelper.createNemsisElement(agencyId, userId, elementHeader.get('ElementNumber'), elementHeader, function(results){
+                var promise = ObjectHelper.createNemsisElement(agencyId,  elementHeader.get('ElementNumber'), elementHeader, function(results){
                     section.add('elements', results);
                 });
                 promises.push(promise);
             });
 
-            Parse.Promise.when(promises).then(function(){
+            return Parse.Promise.when(promises).then(function(){
                 return;
             });
         }).then(function(){
@@ -402,19 +402,19 @@ var ObjectHelper = {
             }
             //Create required sub Sections Recursively
             requiredSubSectionNames.forEach(function(sectionName){
-                subSectionPromises.push(ObjectHelper.createSection(agencyId, userId, sectionName, function(result){
+                subSectionPromises.push(ObjectHelper.createSection(agencyId, sectionName, function(result){
                     console.log("subSection created: " + sectionName);
                     subSections.push(result);
                 }));
             });
         }).then(function(){
-            Parse.Promise.when(subSectionPromises).then(function(){
+            return Parse.Promise.when(subSectionPromises).then(function(){
                 return;
             });
         }).then(function(){
             console.log("all subsections created for: " + sectionName);
             section.set('sections', subSections);
-            section.save({
+            return section.save({
                 success: function(result){
                     return (result);
                 },
@@ -428,19 +428,18 @@ var ObjectHelper = {
     },
 
     //Create NemsisElement
-    createNemsisElement: function(agencyId, userId, elementNumber, header, callback){
+    createNemsisElement: function(agencyId, elementNumber, header, callback){
         var element = new this.NemsisElement();
         element.set("agencyId", agencyId);
         element.set("createdBy", Parse.User.current());
-        element.setACL(ObjectHelper.NemsisElementACL);
         element.set("title", elementNumber);
         element.set("pcrId", "");
         element.set("value", "");
 
-        var elementACL = new Parse.ACL();
-        elementACL.setRoleReadAccess("EMT" + agencyId, true);
-        elementACL.setRoleWriteAccess("EMT" + agencyId, true);
-        element.setACL(elementACL);
+        var acl = new Parse.ACL();
+        acl.setRoleReadAccess("EMT_" + agencyId, true);
+        acl.setRoleWriteAccess("EMT_" + agencyId, true);
+        element.setACL(acl);
 
         //All elements are need references to their NemsisHeaders
         if(header != ""){ //May have broke everything
@@ -469,22 +468,21 @@ var ObjectHelper = {
         agency.set("createdBy", Parse.User.current());
         agency.set("name", name);
 
-
         //Save the new agency to give it an id
         agency.save({
             success: function(agency){
 
                 //Create Agency ACL, Read/Write to Managers
                 var agencyACL = new Parse.ACL();
-                agencyACL.setRoleReadAccess("Manager" + agency.id, true);
-                agencyACL.setRoleWriteAccess("Manager" + agency.id, true);
+                agencyACL.setRoleReadAccess("Manager_" + agency.id, true);
+                agencyACL.setRoleWriteAccess("Manager_" + agency.id, true);
                 agency.setACL(agencyACL);
 
                 var sectionNames = ["dAgency", "dConfiguration", "dContact", "dCustomConfiguration", "dCustomResults", "dDevice", "dFacility", "dLocation", "dPersonnel", "dState", "dVehicle"];
 
                 var promises = [];
                 sectionNames.forEach(function(sectionName){
-                    var promise = ObjectHelper.createSection(agency.id, Parse.User.current().id, sectionName, function(section){
+                    var promise = ObjectHelper.createSection(agency.id, sectionName, function(section){
                         agency.set(sectionName, section);
                     });
                     promises.push(promise);
@@ -492,13 +490,10 @@ var ObjectHelper = {
                 Parse.Promise.when(promises).then(function(){
                     console.log("all Sections Added to agency");
                     agency.save({
-                        success: function(results){
+                        success: function(agency){
                             //Create the Roles for the Agency
                             ObjectHelper.initAgencyRoles(agency.id, function(results){
 
-                                callback(agency);
-
-                                /*
                                 //Create the Ipad Configuration for the Agency
                                 ObjectHelper.initIpadConfiguration(agency.id, function(results){
                                     agency.set("ipadConfiguration" , results);
@@ -507,20 +502,22 @@ var ObjectHelper = {
                                             callback(result);
                                         },
                                         error: function(object, error){
+                                            console.log(error);
                                             callback(error);
                                         }
                                     });
                                 });
-                                 */
                             });
                         },
                         error: function(object, error){
+                            console.log(error);
                             callback(error);
                         }
                     });
                 });
             },
             error: function(object, error){
+                console.log(error);
                 callback(error);
             }
         });
@@ -788,9 +785,16 @@ var ObjectHelper = {
 		        });
 		    }
 	        });
-	        //console.log(elements);
-	        ipad.set('elements', elements);
-	        callback(ipad);
+	       	ipad.set('elements', elements);
+                ipad.save({
+                    success: function(ipad){
+	                callback(ipad);
+                    },
+                    error: function(ipad, error){
+                        console.log(error);
+                        callback(error);
+                    }
+                });
 	    },
 	    error: function(error){
 	        console.log(error);

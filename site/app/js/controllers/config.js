@@ -15,6 +15,7 @@ var ConfigCtrl = function($scope, $location, ParseService, GlobalService){
     //Get Odd Ball Sections, Thanks Nemsis for making sense!!!
     $scope.getSectionByName = function(sectionName){
         ParseService.getSectionByName(sectionName, function(results){
+            console.log(results);
             $scope.$apply(function(){
                 if(sectionName === "dAgency"){
                     $scope.dAgencyId = results.id;

@@ -5,8 +5,8 @@ var RunCtrl = function($scope, $location, ParseService, GlobalService){
         console.log("running");
 
 
-
         /*
+
         ObjectHelper.createAgency("Best Medical", function(result){
             console.log(result);
         });

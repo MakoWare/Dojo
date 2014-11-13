@@ -19,7 +19,7 @@ var NavCtrl = function($scope, $location, ParseService, GlobalService){
 	} else {
             $scope.loggedIn = true;
             ParseService.getRole(ParseService.getCurrentUser(), function(result){
-                $scope.role = result.get('name');
+                $scope.role = result.get('name').split("_")[0];
                 $scope.$apply();
             });
         }
