@@ -10,6 +10,7 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
             $scope.getPartial();
             $scope.findObjects($scope.objectType);
             $scope.searchParam = "";
+            $scope.attribute = "";
 
 
             $scope.format = 'MM/dd/yyyy';
@@ -49,8 +50,15 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
             GlobalService.dismissSpinner();
             $scope.$apply(function(){
                 $scope.objects = results;
+                $scope.attributes = [];
+                if(results.length > 0){
+                    for(var propertyName in results[0].attributes) {
+                        if(typeof results[0].attributes[propertyName] == "string"){
+                            $scope.attributes.push(propertyName);
+                        }
+                    }
+                }
                 $scope.setUp();
-                console.log(results);
             });
         });
     };
@@ -58,6 +66,26 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
 
     //On every change
     $scope.searchObjects = function(){
+        console.log("Searching");
+
+        var query = new Parse.Query($scope.objectType);
+        if($scope.searchParam != "" && $scope.attribute != ""){
+            query.startsWith($scope.attribute, $scope.searchParam);
+        }
+
+        console.log(query);
+        query.find({
+            success: function(results){
+                console.log(results);
+                $scope.objects = results;
+                $scope.$apply();
+            },
+            error: function(error){
+                alert(GlobalService.errorMessage + error.message);
+                console.log(error);
+            }
+        });
+        /*
         ParseService.findObjectsByAgency(objectType, function(results){
             GlobalService.dismissSpinner();
             $scope.$apply(function(){
@@ -66,6 +94,7 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
                 console.log(results);
             });
         });
+         */
     },
 
     $scope.createObject = function(objectType){
