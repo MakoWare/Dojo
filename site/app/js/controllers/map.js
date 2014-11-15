@@ -1,6 +1,6 @@
 'use strict';
 //Map Controller
-var MapCtrl = function($rootScope, $scope, $location, ParseService){
+var MapCtrl = function($rootScope, $scope, $location, ParseService, GlobalService){
 
     //Tool bar
     var height = $(window).height();
@@ -102,6 +102,10 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService){
             $scope.$apply();
         });
 
+        //Addres TypeAhead
+        $scope.addressTypeAhead = function(val){
+            return GlobalService.addressTypeAhead(val);
+        };
 
     };
     //Init

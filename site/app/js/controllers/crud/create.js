@@ -183,7 +183,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             });
         }
         else {
-            ParseService.saveUser($scope.object.id, attributes.username, attributes.firstName, attributes.lastName, attributes.phone, attributes.email, function(result){
+            ParseService.saveUser($scope.object.id, attributes.username, attributes.firstName, attributes.lastName, attributes.phone, attributes.email, attributes.active, function(result){
                 if(result == "Success"){
                     GlobalService.dismissSpinner();
                     $location.url("/users");

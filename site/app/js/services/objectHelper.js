@@ -267,8 +267,9 @@ var ObjectHelper = {
         user.set("active", false);
 
         var acl = new Parse.ACL();
-        acl.setRoleReadAccess("Manager_" + agencyId, true);
-        acl.setRoleWriteAccess("Manager_" + agencyId, true);
+        acl.setPublicReadAccess(false);
+        acl.setPublicWriteAccess(false);
+        acl.setRoleReadAccess("EMT_" + agencyId, true);
         user.setACL(acl);
 
         var promise = ObjectHelper.createSection(agencyId, "dPersonnel.PersonnelGroup",  function(results){
