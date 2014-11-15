@@ -10,6 +10,27 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
             $scope.getPartial();
             $scope.findObjects($scope.objectType);
             $scope.searchParam = "";
+
+
+            $scope.format = 'MM/dd/yyyy';
+            $scope.dateOptions = {
+                startingDay: 1
+            };
+
+            $scope.startDateOpen = function($event) {
+                $scope.startDateOpened = true;
+                $event.preventDefault();
+                $event.stopPropagation();
+            };
+
+            $scope.endDateOpen = function($event) {
+                $scope.endDateOpened = true;
+                $event.preventDefault();
+                $event.stopPropagation();
+            };
+
+
+
         } else {
             $location.url("/");
         }
