@@ -33,7 +33,7 @@
 
       <div class="col-md-1" style="margin-top: 10px;">
 	<label for="patient">Attribute</label>
-	<select class="form-control" ng-model="attribute" ng-options="attribute for attribute in attributes" ng-change="searchObjects()">
+	<select class="form-control" ng-model="attribute" ng-options="attribute.value as attribute.name for attribute in attributes" ng-change="searchObjects()">
           <option class="form-control" value="">Any</option>
         </select>
       </div>

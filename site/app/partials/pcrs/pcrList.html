@@ -5,8 +5,8 @@
         <thead>
 	  <tr>
             <th><a href="" ng-click="predicate = 'attributes.name'; reverse=!reverse">Name</a></th>
-            <th><a href="" ng-click="predicate = 'attributes.submitted; reverse=!reverse">Submitted</a></th>
-            <th><a href="" ng-click="predicate = 'attributes.status; reverse=!reverse">Status</a></th>
+            <th><a href="" ng-click="predicate = 'attributes.submitted'; reverse=!reverse">Submitted</a></th>
+            <th><a href="" ng-click="predicate = 'attributes.status'; reverse=!reverse">Status</a></th>
             <th>View PCR</th>
 	  </tr>
         </thead>
@@ -14,7 +14,7 @@
 	  <tr ng-repeat="object in objects | filter:searchParam:strict | orderBy:predicate:reverse">
             <td>{{object.attributes.name}}</td>
 	    <td>{{object.attributes.submitted}}</td>
-            <td>{{(object.attributes.status}}</td>
+            <td>{{object.attributes.status}}</td>
             <td><a ng-href="{{'#/pcrs/' + object.id}}"><button class="btn btn-primary">{{object.id}}</button></a></td>
 	  </tr>
         </tbody>
