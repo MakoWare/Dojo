@@ -5,7 +5,7 @@
         <h1 style="margin-top: 10px;">Update Ipad Configurations</h1>
       </div>
       <div class="col-sm-2 col-sm-offset-4">
-        <button class="btn btn-lg btn-primary" style="margin-top: 10px;" ng-click="saveObject()">Update</button>
+        <button class="btn btn-lg btn-primary" style="margin-top: 10px;" ng-click="save()">Update</button>
       </div>
     </div>
 
@@ -17,21 +17,20 @@
             <th>Element Name</th>
             <th>Definition</th>
             <th>Usage</th>
-            <th>Value</th>
+            <th>Capturing</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="element in object.attributes.elements">
-            <td class="col-xs-1">{{tmpElement.name}}</td>
-            <td class="col-xs-1">{{tmpElement.header.get('ElementName')}}</td>
-            <td class="col-xs-3">{{tmpElement.header.get('Definition')}}</td>
-            <td class="col-xs-1">{{tmpElement.header.get('Usage')}}</td>
-            <td>
-              <div class="form-group col-md-2" style="margin-left: 2px;">
-                <p style="margin-bottom: 5px"><b>Capture</b></p>
+          <tr ng-repeat="header in headers">
+            <td><h4>{{header.attributes.ElementNumber}}</h43></td>
+            <td>{{header.attributes.ElementName}}</td>
+            <td>{{header.attributes.Definition}}</td>
+            <td>{{header.attributes.Usage}}</td>
+            <td class="col-md-2">
+              <div class="form-group">
                 <div class="btn-group">
-                  <label class="btn btn-default" ng-model="element" btn-radio="true">Yes</label>
-                  <label class="btn btn-default" ng-model="element" btn-radio="false">No</label>
+                  <label class="btn btn-default" ng-model="header.capturing" btn-radio="true">Yes</label>
+                  <label class="btn btn-default" ng-model="header.capturing" btn-radio="false">No</label>
                 </div>
               </div>
             </td>

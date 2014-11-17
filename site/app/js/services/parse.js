@@ -184,10 +184,7 @@ angular.module('parseService', [])
             },
 
 
-            //Parse Object Helpers
-            //Create
-
-            //Agency
+            //Create Agency
             createAgency: function(name, callback){
                 var userId = Parse.User.current().id;
                 ObjectHelper.createAgency(name, userId, function(results){
@@ -195,12 +192,43 @@ angular.module('parseService', [])
                 });
             },
 
-
             //Create Object
             createObject: function(objectType, callback){
                 var currentUser = Parse.User.current();
                 ObjectHelper.createObject(objectType, currentUser.get('agencyId'), currentUser.id, callback);
             },
+
+
+            //Get Ipad Configuration
+            getIpadConfig: function(callback){
+                var query = new Parse.Query(IpadConfiguration);
+                query.equalTo("agencyId", Parse.User.current().get('agencyId'));
+                query.first({
+                    success: function(result){
+                        callback(result);
+                    },
+                    error: function(error){
+                        callback(error);
+                    }
+                });
+            },
+
+            //Get All NemsisHeaders
+            getAllNemsisHeaders: function(callback){
+                var query = new Parse.Query(NemsisHeader);
+                query.limit(1000);
+                query.equalTo("DatasetName", "EMSDataSet");
+                query.ascending("ElementNumber");
+                query.find({
+                    success: function(results){
+                        callback(results);
+                    },
+                    error: function(error){
+                        callback(error);
+                    }
+                });
+            },
+
 
             //Get Object By Id
             getObjectById: function(objectType, objectId, callback){
