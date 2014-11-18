@@ -125,7 +125,7 @@ var ObjectHelper = {
         var dispatch = new ObjectHelper.Dispatch();
         dispatch.setACL(ObjectHelper.DispatchACL);
         dispatch.set("agencyId", agencyId);
-        dispatch.set("createdBy", userId);
+        dispatch.set("createdBy", Parse.User.current());
         dispatch.set("comments", "");
         dispatch.set("dropOffAddress", "");
         dispatch.set("dropOffCity", "");
@@ -345,7 +345,7 @@ var ObjectHelper = {
     createFile: function(agencyId, userId, callback){
         var file = new ObjectHelper.File();
         file.set("agencyId", agencyId);
-        file.set("createdBy", userId);
+        file.set("createdBy", Parse.User.current());
         file.setACL(ObjectHelper.FileACL);
         file.set("name", "");
         file.set("comments", "");

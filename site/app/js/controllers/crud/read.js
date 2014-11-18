@@ -10,6 +10,7 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
             $scope.getPartial();
             $scope.findObjects($scope.objectType);
             $scope.searchParam = "";
+            $scope.attribute = "";
 
             $scope.format = 'MM/dd/yyyy';
             $scope.dateOptions = {
@@ -60,14 +61,21 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
         console.log($scope.attribute);
 
         var query = new Parse.Query($scope.objectType);
-        if($scope.searchParam != "" && $scope.attribute != ""){
-            query.startsWith($scope.attribute, $scope.searchParam);
-        }
+        query.include("priority");
 
         console.log($scope.startDate);
         console.log($scope.endDate);
-        var isDate = typeof $scope.objects[0].attributes[$scope.attribute] == "date";
-        console.log("isDate: " + isDate);
+        var dateAttributes = ["pickUpDate", "dropOffDate", "createdAt", "dob"];
+        var isDate = false;
+
+
+        if($.inArray($scope.attribute, dateAttributes) > -1){
+            isDate = true;
+        }
+
+        if($scope.searchParam != "" && $scope.attribute != "" && !isDate){
+            query.startsWith($scope.attribute, $scope.searchParam);
+        }
 
         if($scope.attribute != "" &&  isDate ){
             if($scope.endDate){
