@@ -14,10 +14,14 @@ var LoginCtrl = function($scope, $location, ParseService, GlobalService){
             if(results.id){
                 console.log(results);
                 if(results.attributes.active){
+                    //Agency Select Here
+
+
+
                     $location.path('/map');
                     $scope.$apply();
                 } else {
-                    alert("Your User account is not currently active, please have a manager activate your user account");
+                    alert("Your User account is not currently active, please have a manager activate your account");
                     ParseService.logout();
                 }
             } else {
