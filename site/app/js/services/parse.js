@@ -379,7 +379,6 @@ angular.module('parseService', [])
                     success: function(results){
                         if(results){
                             var promises = [];
-                            console.log(results);
                             results.forEach(function(role){
                                 role.getUsers().remove(user);
                                 promises.push(role.save());
@@ -398,12 +397,7 @@ angular.module('parseService', [])
             //Add a User to a Role
             addRole: function(roleName, user, callback){
                 var query = new Parse.Query(Parse.Role);
-                if(roleName == "Admin"){
-                    query.equalTo("name", roleName);
-                } else {
-                    query.equalTo("name", roleName + "_" +  Parse.User.current().get('agencyId'));
-                }
-
+                query.equalTo("name", roleName);
                 query.first({
                     success: function(result){
                         result.getUsers().add(user);

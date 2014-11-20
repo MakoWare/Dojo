@@ -789,11 +789,33 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         $scope.hasNemsis = true;
         $scope.nemsisLocation = "dPersonnel/" + $scope.object.attributes.dPersonnel.id;
 
+
+        var agencyId = Parse.User.current().get('agencyId');
+        ParseService.getRole(Parse.User.current(), function(result){
+            if(result.attributes.name == "Admin"){
+                $scope.roles = [
+                    {name: "EMT", value: "EMT_" + agencyId},
+                    {name: "Dispatcher", value: "Dispatcher_" + agencyId},
+                    {name: "Manager", value: "Manager_" + agencyId},
+                    {name: "Admin", value: "Admin"}
+                ];
+            }
+            else {
+                $scope.roles = [
+                    {name: "EMT", value: "EMT_" + agencyId},
+                    {name: "Dispatcher", value: "Dispatcher_" + agencyId},
+                    {name: "Manager", value: "Manager_" + agencyId}
+                ];
+            }
+
         ParseService.getRole($scope.object, function(result){
             if(result){
+                console.log(result);
                 $scope.object.attributes.role = result.attributes.name;
                 $scope.$apply();
             }
+        });
+
         });
     },
 

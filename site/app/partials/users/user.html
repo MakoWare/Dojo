@@ -31,11 +31,7 @@
 
       <div class="form-group col-md-2">
 	<label for="patient">Role</label>
-	<select class="form-control" ng-model="object.attributes.role">
-	  <option class="form-control" value=""></option>
-	  <option class="form-control" value="EMT">EMT</option>
-	  <option class="form-control" value="Manager">Manager</option>
-	  <option class="form-control" value="Admin">Admin</option>
+	<select class="form-control" ng-model="object.attributes.role" ng-options="role.value as role.name for role in roles">
         </select>
       </div>
 
