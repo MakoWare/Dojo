@@ -183,6 +183,7 @@ var ObjectHelper = {
 
                 var query = new Parse.Query("Section");
                 query.equalTo("name", "dFacility");
+                query.equalTo("agencyId", Parse.User.current().get('agencyId'));
                 query.first({
                     success: function(result){
                         result.add("sections", dFacilityGroup);
@@ -656,8 +657,11 @@ var ObjectHelper = {
     //Delete Facility
     deleteFacility: function(facility, callback){
         var query = new Parse.Query("Section");
+        console.log(facility);
         query.equalTo("name", "dFacility");
-        query.containedIn("sections", facility.get("dFacility"));
+        console.log(facility.get("dFacility"));
+        query.equalTo("sections", facility.get("dFacility"));
+        console.log(query);
         query.first({
             success: function(object){
                 return object;

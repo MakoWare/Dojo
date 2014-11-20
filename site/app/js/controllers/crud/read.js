@@ -29,8 +29,6 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
                 $event.stopPropagation();
             };
 
-
-
         } else {
             $location.url("/");
         }
@@ -207,7 +205,6 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
         ];
     },
 
-
     $scope.setUpVehicle = function(){
         $scope.attributes = [
             {name: "Object Id", value: "objectId"},
@@ -246,7 +243,7 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
         $scope.objects.forEach(function(user){
             ParseService.getRole(user, function(result){
                 if(result){
-                    user.attributes.role = result.attributes.name;
+                    user.attributes.role = result.attributes.name.split("_")[0];
                     $scope.$apply();
                 }
             });
