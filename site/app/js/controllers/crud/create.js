@@ -167,7 +167,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         //First Update the Role
         var roleName = $scope.object.attributes.role;
         if(roleName){
-            ParseService.addRole(roleName, $scope.object, function(result){
+            ParseService.changeRole($scope.object, roleName, function(result){
                 ParseService.saveUser($scope.object.id, attributes.username, attributes.firstName, attributes.lastName, attributes.phone, attributes.email, attributes.active, function(result){
                     if(result == "Success"){
                         GlobalService.dismissSpinner();
