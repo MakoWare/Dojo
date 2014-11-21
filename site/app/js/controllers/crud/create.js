@@ -383,8 +383,9 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         GlobalService.showSpinner();
         ParseService.deleteObject($scope.object, $scope.objectType, function(results){
             GlobalService.dismissSpinner();
-            if(typeof results == "error"){
-                alert(GlobalService.errorMessage + results.errorMessage); //Not Sure if this is right
+            console.log(results);
+            if(results.message != null){
+                alert(GlobalService.errorMessage + results.message); //Not Sure if this is right
             } else {
                 var newPath = "/" + $scope.dir;
                 $location.path(newPath);
@@ -808,14 +809,15 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 ];
             }
 
-        ParseService.getRole($scope.object, function(result){
-            if(result){
-                console.log(result);
-                $scope.object.attributes.role = result.attributes.name;
-                $scope.$apply();
-            }
-        });
-
+            ParseService.getRole($scope.object, function(result){
+                if(result){
+                    console.log(result);
+                    $scope.object.attributes.role = result.attributes.name;
+                    $scope.$apply();
+                } else {
+                    $scope.$apply();
+                }
+            });
         });
     },
 

@@ -273,13 +273,34 @@ var ObjectHelper = {
         acl.setRoleReadAccess("EMT_" + agencyId, true);
         user.setACL(acl);
 
-        var promise = ObjectHelper.createSection(agencyId, "dPersonnel.PersonnelGroup",  function(results){
-            user.set("dPersonnel", results);
-            user.save(null, {
-                success: function(user) {
-                    callback(user);
+        //Create dPersonnel.PersonnelGroup Section for User
+        var promise = ObjectHelper.createSection(agencyId, "dPersonnel.PersonnelGroup",  function(dPersonnel){
+            user.set("dPersonnel", dPersonnel);
+
+            //Add PersonnelGroup Section to Agency's dPersonnel
+            var query = new Parse.Query("Section");
+            query.equalTo("name", "dPersonnel");
+            query.equalTo("agencyId", Parse.User.current().get('agencyId'));
+            query.first({
+                success: function(result){
+                    result.add('sections', dPersonnel);
+                    result.save({
+                        success: function(result){
+                            user.save(null, {
+                                success: function(user) {
+                                    callback(user);
+                                },
+                                error: function(user, error) {
+                                    callback(error);
+                                }
+                            });
+                        },
+                        error: function(object, error){
+                            callback(error);
+                        }
+                    });
                 },
-                error: function(user, error) {
+                error: function(error){
                     callback(error);
                 }
             });
@@ -704,12 +725,32 @@ var ObjectHelper = {
     },
 
     deleteUser: function(user, callback){
-        user.destroy({
-            success: function(result){
-                callback("Successfully deleted the User");
+        //First Remove the PersonnelGroup from dPersonnel
+        var query = new Parse.Query("Section");
+        query.equalTo("agencyId", Parse.User.current().get('agencyId'));
+        query.equalTo("name", "dPersonnel");
+        query.first({
+            success: function(dPersonnel){
+                dPersonnel.remove("sections", user.get('dPersonnel'));
+                dPersonnel.save({
+                    success: function(dPersonnel){
+                        //Now Destroy the User object from CC
+                        Parse.Cloud.run('deleteUser', { id: user.id}, {
+                            success: function(result) {
+                                callback(result);
+                            },
+                            error: function(error) {
+                                callback(error);
+                            }
+                        });
+                    },
+                    error: function(object, error){
+                        callback(error);
+                    }
+                });
             },
             error: function(object, error){
-                callback(error.message);
+                callback(error);
             }
         });
     },
