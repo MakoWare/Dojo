@@ -36,7 +36,7 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
 
     $scope.getPartial = function(){
         if(ParseService.getCurrentUser()){
-            var object = $scope.objectType.charAt(0).toLowerCase() + $scope.objectType.slice(1);
+            var object = $scope.objectType.toLowerCase();
             var partialLocation = $scope.dir + "/" + object + "List.html";
             return "partials/" + partialLocation;
         }
