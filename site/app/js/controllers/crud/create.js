@@ -31,7 +31,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     //2. Get Partial
     $scope.getPartial = function(){
-        var object = $scope.objectType.charAt(0).toLowerCase() + $scope.objectType.slice(1);
+        var object = $scope.objectType.toLowerCase();
         var partialLocation = $scope.dir + "/" + object + ".html";
         return "partials/" + partialLocation;
     };
