@@ -251,6 +251,10 @@ angular.module('parseService', [])
                 case "User":
                     ParseService.getUserById(objectId, callback);
                     break;
+                case "PCR":
+                    ParseService.getPCRById(objectId, callback);
+                    break;
+
                 }
             },
 
@@ -340,6 +344,21 @@ angular.module('parseService', [])
                     }
                 });
             },
+
+            getPCRById: function(objectId, callback){
+                var query = new Parse.Query(PCR);
+                query.include("demDataSet");
+                query.include("emsDataSet");
+                query.get(objectId,{
+                    success: function(result){
+                        callback(result);
+                    },
+                    error: function(object, error){
+                        callback(error);
+                    }
+                });
+            },
+
 
             //Get a User's Role
             getRole: function(user, callback){
@@ -547,6 +566,8 @@ angular.module('parseService', [])
             findPCRsByAgency: function(callback){
                 var query = new Parse.Query(PCR);
                 query.equalTo("agencyId", Parse.User.current().get("agencyId"));
+                //query.include("user");
+                query.include("device");
                 query.find({
                     success: function(results){
                         callback(results);

@@ -45,6 +45,7 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
     $scope.findObjects = function(objectType){
         ParseService.findObjectsByAgency(objectType, function(results){
             GlobalService.dismissSpinner();
+            console.log(results);
             $scope.$apply(function(){
                 $scope.objects = results;
                 $scope.setUp();
