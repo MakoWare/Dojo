@@ -417,7 +417,9 @@ var ObjectHelper = {
             section.set("nemsisSection", results);
 
             //create NemsisElements for each of the headers
-            var elementHeaders =  results.get('headers') || [];
+            if(results){
+                var elementHeaders =  results.get('headers') || [];
+            }
             var nemsisElements = [];
             var promises = [];
 
