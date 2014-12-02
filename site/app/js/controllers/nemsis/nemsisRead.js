@@ -17,6 +17,7 @@ var NemsisReadCtrl = function($scope, $location, GlobalService, ParseService){
         ParseService.getSectionByName(sectionName, function(results){
             $scope.$apply(function(){
                 $scope.parentSection = results;
+                console.log(results);
                 $scope.childNemsisSectionName = results.get('nemsisSection').get('sections')[0].get('name');
                 $scope.childSections = results.get('sections');
             });

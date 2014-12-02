@@ -91,7 +91,7 @@ angular.module('parseService', [])
                 var agencyId = Parse.User.current().get("agencyId");
                 var userId = Parse.User.current().id;
 
-                ObjectHelper.createSection(agencyId, userId, name, function(results){
+                ObjectHelper.createSection(agencyId, name, function(results){
                     callback(results);
                 });
             },
@@ -124,8 +124,8 @@ angular.module('parseService', [])
                     success: function(results){
                         callback(results);
                     },
-                    error: function(object, error){
-                        alert(ERRORMESSAGE + error.message);
+                    error: function(error){
+                        callback(error);
                     }
                 });
             },
@@ -450,6 +450,11 @@ angular.module('parseService', [])
             //Delete Object
             deleteObject: function(object, objectType, callback){
                 ObjectHelper.deleteObject(objectType, object, callback);
+            },
+
+
+            deleteSection: function(section, callback){
+                ObjectHelper.deleteSection(section, callback);
             },
 
             //Find Objects

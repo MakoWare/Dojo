@@ -417,9 +417,7 @@ var ObjectHelper = {
             section.set("nemsisSection", results);
 
             //create NemsisElements for each of the headers
-            if(results){
-                var elementHeaders =  results.get('headers') || [];
-            }
+            var elementHeaders =  results.get('headers') || [];
             var nemsisElements = [];
             var promises = [];
 
@@ -572,7 +570,7 @@ var ObjectHelper = {
     deleteSection: function(section, callback){
         //First Remove from Parent Section
         var query = new Parse.Query("Section");
-        query.containedIn("sections", section); //not sure if this is right
+        query.equalTo("sections", section); //not sure if this is right
         query.first({
             success: function(object){
                 return object;
@@ -593,7 +591,7 @@ var ObjectHelper = {
                 //Now Delete the Section object
                 section.destroy({
                     success: function(result){
-                        callback("Successfully deleted the Section");
+                        callback(result);
                     },
                     error: function(object, error){
                         callback(error);

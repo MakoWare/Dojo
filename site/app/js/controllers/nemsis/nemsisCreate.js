@@ -44,17 +44,24 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
         GlobalService.showSpinner();
         ParseService.getSection(sectionId, function(results){
             GlobalService.dismissSpinner();
-            $scope.$apply(function(){
-                $scope.section = results;
-                $scope.nemsisSection = results.get('nemsisSection');
-                $scope.subNemsisSections = $scope.nemsisSection.get('sections');
-                $scope.getNemsisElementCodes();
-                $scope.canDeleteSection($scope.section);
-                if($scope.subNemsisSections){
-                    $scope.generateSubSections();
-                }
-                console.log($scope.section);
-            });
+            if(results){
+                $scope.$apply(function(){
+                    $scope.section = results;
+                    $scope.nemsisSection = results.get('nemsisSection');
+                    $scope.subNemsisSections = $scope.nemsisSection.get('sections');
+                    $scope.getNemsisElementCodes();
+                    $scope.canDeleteSection($scope.section);
+                    if($scope.subNemsisSections){
+                        $scope.generateSubSections();
+                    }
+                });
+            } else {
+                alert("Could not Find this Section, please contact us");
+                var newPathArray = $location.url().split("/");
+                var newPath = "/" + newPathArray[1] + "/" + newPathArray[2] + "/" + newPathArray[3];
+                $location.url(newPath);
+                $scope.$apply();
+            }
         });
     },
 
@@ -297,16 +304,19 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
         });
     },
 
-    //Delete Section ***TODO*** need to find parent section and remove object from parent.sections
+
     $scope.deleteSection = function(section){
         GlobalService.showSpinner();
-        section.destroy({
-            success: function(result){
-                GlobalService.dismissSpinner();
-                alert("Section successfully deleted");
-            },
-            error: function(object, error){
-                alert("Error deleting section: " + error.message);
+        ParseService.deleteSection(section, function(result){
+            GlobalService.dismissSpinner();
+            console.log(result);
+            if(result.message){
+
+            } else {
+                var newPathArray = $location.url().split("/");
+                var newPath = "/configurations";
+                $location.url(newPath);
+                $scope.$apply();
             }
         });
     },
