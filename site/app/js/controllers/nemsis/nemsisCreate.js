@@ -98,6 +98,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
 
     $scope.generateElements = function(){
         //Init the tmpElements with headers, codes, and title
+
         $scope.nemsisSection.get('headers').forEach(function(header){
             //Create a new Set of Elements
             var set = {};
@@ -186,9 +187,23 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
 //        console.log(element);
     },
 
-    //Can Add Element         ***TODO***
-    $scope.canAddElement = function(parentSection, element){
 
+    $scope.addElement = function(tmpElement){
+        GlobalService.showSpinner();
+        ParseService.createNemsisElement(tmpElement.elements[0].attributes.title, function(result){
+            GlobalService.dismissSpinner();
+            tmpElement.elements.push(result);
+            $scope.$apply();
+        });
+    },
+
+    //Can Add Element         ***Fix***
+    $scope.canAddElement = function(element){
+        if(element.header.attributes.MaxOccurs == "M"){
+            return true;
+        } else {
+            return false;
+        }
     },
 
     //Can Delete Element      ***TODO***
@@ -282,6 +297,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
             elements.forEach(function(element){
                 element.set('value', element.attributes.value);
             });
+            console.log(elements);
 
             Parse.Object.saveAll(elements,{
                 success: function(results){

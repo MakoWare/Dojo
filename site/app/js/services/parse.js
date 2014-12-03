@@ -69,13 +69,10 @@ angular.module('parseService', [])
 
                 //First Get the Header
                 var query = new Parse.Query(NemsisHeader);
-                console.log("elementnumber " + elementNumber);
                 query.equalTo("ElementNumber", elementNumber);
                 var promise = query.first({
-                    success: function(result){
-                        ObjectHelper.createNemsisElement(agencyId, userId, elementNumber, result, function(results){
-                            callback(results);
-                        });
+                    success: function(header){
+                        ObjectHelper.createNemsisElement(agencyId, elementNumber, header, callback);
                     },
                     error: function(error){
                         console.log(error);

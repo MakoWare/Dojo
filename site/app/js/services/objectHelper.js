@@ -471,7 +471,7 @@ var ObjectHelper = {
     //Create NemsisElement
     createNemsisElement: function(agencyId, elementNumber, header, callback){
         var element = new this.NemsisElement();
-        element.set("agencyId", agencyId);
+        element.set("agencyId", Parse.User.current().attributes.agencyId);
         element.set("createdBy", Parse.User.current());
         element.set("title", elementNumber);
         element.set("pcrId", "");
@@ -485,7 +485,14 @@ var ObjectHelper = {
         //All elements are need references to their NemsisHeaders
         if(header != ""){ //May have broke everything
             element.set('header', header);
-            callback(element);
+            element.save({
+                success: function(result){
+                    callback(element);
+                },
+                error: function(object, error){
+                    callback(error);
+                }
+            });
         } else {
             console.log("getting header for element");
             var query = new Parse.Query("NemsisHeader");

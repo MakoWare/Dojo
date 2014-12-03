@@ -1,7 +1,12 @@
 <div>
-  <form role="form">
   <div class="form-group">
-    <input type="text" class="form-control" ng-change="elementChanged(tmpElement)" ng-model="tmpElement.elements[0].attributes.value"/>
+    <div class="row">
+      <div class="col-xs-8" ng-repeat="element in tmpElement.elements" style="margin-bottom: 3px">
+        <input type="text" class="form-control" ng-change="elementChanged(tmpElement)" ng-model="element.attributes.value"/>
+      </div>
+      <div class="col-xs-4">
+        <button class="btn btn-success" ng-if="canAddElement(tmpElement)" ng-click="addElement(tmpElement)">Add</button>
+      </div>
+    </div>
   </div>
-  </form>
 </div>
