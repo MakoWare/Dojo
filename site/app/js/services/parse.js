@@ -183,10 +183,12 @@ angular.module('parseService', [])
 
             //Create Agency
             createAgency: function(name, callback){
+                /*
                 var userId = Parse.User.current().id;
                 ObjectHelper.createAgency(name, userId, function(results){
                     callback(results);
                 });
+                 */
             },
 
             //Create Object
@@ -306,6 +308,8 @@ angular.module('parseService', [])
 
             getFacilityById: function(objectId, callback){
                 var query = new Parse.Query(Facility);
+                query.include("dFacility.elements");
+                query.include("dFacility.sections.elements");
                 query.get(objectId,{
                     success: function(result){
                         callback(result);

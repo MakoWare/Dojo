@@ -9,9 +9,9 @@
             <th><a href="" ng-click="predicate = 'attributes.currentLocation'; reverse=!reverse">Current Location</a></th>
             <th><a href="" ng-click="predicate = 'attributes.pickUpAddress'; reverse=!reverse">Pick-up Address</a></th>
             <th><a href="" ng-click="predicate = 'attributes.dropOffAddress'; reverse=!reverse">Drop-off Address</a></th>
-            <th><a href="" ng-click="predicate = 'attributes.patient'; reverse=!reverse">Patient</a></th>
-            <th><a href="" ng-click="predicate = 'attributes.dispatch'; reverse=!reverse">Dispatch</a></th>
-            <th>View Vehicle</th>
+            <th><a href="" ng-click="predicate = 'attributes.patient'; reverse=!reverse">Current Patient</a></th>
+            <th><a href="" ng-click="predicate = 'attributes.dispatch'; reverse=!reverse">Current Dispatch</a></th>
+            <th>Edit Vehicle</th>
 	  </tr>
         </thead>
         <tbody>
@@ -23,7 +23,7 @@
             <td>{{object.attributes.currentDispatch.attributes.dropOffAddress}}</td>
             <td><a ng-href="#/patients/{{object.attributes.patient.id}}" ng-show="object.attributes.patient"> <button class="btn btn-primary">Patient</button></a></td>
             <td><a ng-href="#/dispatches/{{object.attributes.currentDispatch.id}}" ng-show="object.attributes.currentDispatch"><button class="btn btn-primary">Dispatch</button></a></td>
-            <td><a ng-href="#/vehicles/{{object.id}}" ><button class="btn btn-primary">View Vehicle</button></a></td>
+            <td><a ng-href="#/vehicles/{{object.id}}" ><button class="btn btn-primary">Edit</button></a></td>
 	  </tr>
         </tbody>
       </table>

@@ -128,7 +128,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             success: function(result){
                 GlobalService.dismissSpinner();
                 $scope.object = result;
-                console.log(result);
                 $location.url("/dispatches");
                 $scope.$apply();
             },
@@ -145,16 +144,56 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         for(var name in $scope.object.attributes) {
             $scope.object.set(name, $scope.object.attributes[name]);
         }
-        $scope.object.save({
-            success: function(result){
-                GlobalService.dismissSpinner();
-                $scope.object = result;
-                console.log(result);
-                $location.url("/facilities");
-                $scope.$apply();
+        var dFacility = $scope.object.attributes.dFacility;
+        var attributes = $scope.object.attributes;
+        dFacility.attributes.elements.forEach(function(element){
+            if(element.attributes.title == "dFacility.01"){
+                element.set('value', attributes.type.split(" ")[0]);
+            }
+        });
+
+        dFacility.attributes.sections.forEach(function(section){
+            section.attributes.elements.forEach(function(element){
+                if(element.attributes.title == "dFacility.02"){
+                    element.set('value', attributes.name);
+                }
+                if(element.attributes.title == "dFacility.07"){
+                    element.set('value', attributes.address);
+                }
+                if(element.attributes.title == "dFacility.08"){
+                    element.set('value', attributes.city);
+                }
+                if(element.attributes.title == "dFacility.09"){
+                    element.set('value', attributes.state);
+                }
+                if(element.attributes.title == "dFacility.10"){
+                    element.set('value', attributes.zip);
+                }
+                if(element.attributes.title == "dFacility.11"){
+                    element.set('value', attributes.county);
+                }
+                if(element.attributes.title == "dFacility.12"){
+                    element.set('value', attributes.country);
+                }
+            });
+        });
+
+        dFacility.save({
+            success: function(dFacility){
+                $scope.object.save({
+                    success: function(result){
+                        GlobalService.dismissSpinner();
+                        $scope.object = result;
+                        $location.url("/facilities");
+                        $scope.$apply();
+                    },
+                    error: function(object, error){
+                        GlobalService.dismissSpinner();
+                        alert(GlobalService.errorMessage + error.message);
+                    }
+                });
             },
             error: function(object, error){
-                GlobalService.dismissSpinner();
                 alert(GlobalService.errorMessage + error.message);
             }
         });
@@ -163,11 +202,26 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     //Save User
     $scope.saveUser = function(){
         var attributes = $scope.object.attributes;
+        var dPersonnel = attributes.dPersonnel;
 
-        //First Update the Role
-        var roleName = $scope.object.attributes.role;
-        if(roleName){
-            ParseService.changeRole($scope.object, roleName, function(result){
+        var updateUser = function(){
+            //Update the Role
+            var roleName = $scope.object.attributes.role;
+            if(roleName){
+                ParseService.changeRole($scope.object, roleName, function(result){
+                    ParseService.saveUser($scope.object.id, attributes.username, attributes.firstName, attributes.lastName, attributes.phone, attributes.email, attributes.active, function(result){
+                        if(result == "Success"){
+                            GlobalService.dismissSpinner();
+                            $location.url("/users");
+                            $scope.$apply();
+                        }
+                        else {
+                            GlobalService.dismissSpinner();
+                            alert(GlobalService.errorMessage + result.message);
+                        }
+                    });
+                });
+            } else {
                 ParseService.saveUser($scope.object.id, attributes.username, attributes.firstName, attributes.lastName, attributes.phone, attributes.email, attributes.active, function(result){
                     if(result == "Success"){
                         GlobalService.dismissSpinner();
@@ -175,25 +229,57 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                         $scope.$apply();
                     }
                     else {
-                        console.log(result);
                         GlobalService.dismissSpinner();
-                        alert(GlobalService.errorMessage + result.message);
+                        alert(GlobalService.errorMessage + result);
+                    }
+                });
+            }
+        };
+
+
+        var updateDPersonnel = function(){
+            dPersonnel.attributes.elements.forEach(function(element){
+                if(element.attributes.title == "dPersonnel.09"){
+                    element.set('value', attributes.phone);
+                }
+                if(element.attributes.title == "dPersonnel.10"){
+                    element.set('value', attributes.email);
+                }
+            });
+
+            dPersonnel.attributes.sections.forEach(function(section){
+                section.attributes.elements.forEach(function(element){
+                    if(element.attributes.title == "dPersonnel.01"){
+                        element.set('value', attributes.lastName);
+                    }
+                    if(element.attributes.title == "dPersonnel.02"){
+                        element.set('value', attributes.firstName);
                     }
                 });
             });
-        }
-        else {
-            ParseService.saveUser($scope.object.id, attributes.username, attributes.firstName, attributes.lastName, attributes.phone, attributes.email, attributes.active, function(result){
-                if(result == "Success"){
-                    GlobalService.dismissSpinner();
-                    $location.url("/users");
-                    $scope.$apply();
-                }
-                else {
-                    GlobalService.dismissSpinner();
-                    alert(GlobalService.errorMessage + result);
-                }
+        };
+
+        if(attributes.dPersonnel.attributes.sections.length == 0){
+            ParseService.createSection("dPersonnel.NameGroup", function(nameGroup){
+                ParseService.createSection("dPersonnel.AddressGroup", function(addressGroup){
+                    dPersonnel.add("sections", nameGroup);
+                    dPersonnel.add("sections", addressGroup);
+
+                    updateDPersonnel();
+                    dPersonnel.save({
+                        success: function(dPersonnel){
+                            //Now Update User
+                            updateUser();
+
+                        },
+                        error: function(object, error){
+                            alert(GlobalService.errorMessage + error.message);
+                        }
+                    });
+                });
             });
+        } else {
+            updateUser();
         }
     },
 
@@ -206,7 +292,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             success: function(result){
                 GlobalService.dismissSpinner();
                 $scope.object = result;
-                console.log(result);
                 $location.url("/pcrs");
                 $scope.$apply();
             },
@@ -319,7 +404,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             success: function(result){
                 GlobalService.dismissSpinner();
                 $scope.object = result;
-                console.log(result);
                 $location.url("/patients");
                 $scope.$apply();
             },
@@ -339,7 +423,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             success: function(result){
                 GlobalService.dismissSpinner();
                 $scope.object = result;
-                console.log(result);
                 $location.url("/vehicles");
                 $scope.$apply();
             },
@@ -367,7 +450,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             success: function(result){
                 GlobalService.dismissSpinner();
                 $scope.object = result;
-                console.log(result);
                 $location.url("/files");
                 $scope.$apply();
             },
@@ -383,7 +465,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         GlobalService.showSpinner();
         ParseService.deleteObject($scope.object, $scope.objectType, function(results){
             GlobalService.dismissSpinner();
-            console.log(results);
             if(results.message != null){
                 alert(GlobalService.errorMessage + results.message); //Not Sure if this is right
             } else {
@@ -426,8 +507,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         if(!$scope.object.attributes.color){
             $scope.object.attributes.color = "FFFFFF";
         }
-
-        console.log($scope.object.attributes.color);
 
 
         $scope.patient = {};
@@ -489,14 +568,12 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         //Type Aheads
         $scope.getPatients = function(name){
             return ParseService.patientsTypeAhead(name, function(results){
-                console.log(results);
                 return results;
             });
         };
 
         $scope.getFacilities = function(name){
             return ParseService.facilitiesTypeAhead(name, function(results){
-                console.log(results);
                 return results;
             });
         };
@@ -506,7 +583,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         };
 
         $scope.setPickUpAddress = function(item){
-            console.log(item);
             //First clear everything
             $scope.object.attributes.pickUpAddress = "";
             $scope.object.attributes.pickUpCity = "";
@@ -551,7 +627,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         };
 
         $scope.setDropOffAddress = function(item){
-            console.log(item);
             //First clear everything
             $scope.object.attributes.dropOffAddress = "";
             $scope.object.attributes.dropOffCity = "";
@@ -646,9 +721,9 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             allowBlank              : false,
             inlineDropdown          : true
         });
-        console.log( $(".pick-a-color").val());
+
         $(".pick-a-color").val("rgba(153, 55, 35, .9)");
-        console.log( $(".pick-a-color").val());
+
 
 
     },
@@ -663,7 +738,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         };
 
         $scope.setAddress = function(item){
-            console.log(item);
             //First clear everything
             $scope.object.attributes.address = "";
             $scope.object.attributes.city = "";
@@ -737,7 +811,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         };
 
         $scope.setAddress = function(item){
-            console.log(item);
             //First clear everything
             $scope.object.attributes.address = "";
             $scope.object.attributes.city = "";
@@ -811,7 +884,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
             ParseService.getRole($scope.object, function(result){
                 if(result){
-                    console.log(result);
                     $scope.object.attributes.role = result.attributes.name;
                     $scope.$apply();
                 } else {
