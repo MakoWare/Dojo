@@ -10,6 +10,7 @@ angular.module('parseService', [])
 	//Define Parse Objects
 	var Agency = Parse.Object.extend("Agency");
 	var User = Parse.Object.extend("User");
+	var Contact = Parse.Object.extend("Contact");
 	var Role = Parse.Object.extend("Role");
 	var PCR = Parse.Object.extend("PCR");
 	var AgencyFile = Parse.Object.extend("AgencyFile");
@@ -228,12 +229,14 @@ angular.module('parseService', [])
                 });
             },
 
-
             //Get Object By Id
             getObjectById: function(objectType, objectId, callback){
                 switch (objectType){
                 case "Vehicle":
                     ParseService.getVehicleById(objectId, callback);
+                    break;
+                case "Contact" :
+                    ParseService.getContactById(objectId, callback);
                     break;
                 case "Dispatch" :
                     ParseService.getDispatchById(objectId, callback);
@@ -253,13 +256,13 @@ angular.module('parseService', [])
                 case "PCR":
                     ParseService.getPCRById(objectId, callback);
                     break;
-
                 }
             },
 
             getVehicleById: function(objectId, callback){
                 var query = new Parse.Query(Vehicle);
-                query.include("dVehicleGroup.sections.elements");
+                query.include("dVehicle.elements");
+                query.include("dVehicle.sections.elements");
                 query.get(objectId,{
                     success: function(result){
                         callback(result);
@@ -269,6 +272,21 @@ angular.module('parseService', [])
                     }
                 });
             },
+
+            getContactById: function(objectId, callback){
+                var query = new Parse.Query(Contact);
+                query.include("dContact.elements");
+                query.include("dContact.sections.elements");
+                query.get(objectId,{
+                    success: function(result){
+                        callback(result);
+                    },
+                    error: function(object, error){
+                        callback(error);
+                    }
+                });
+            },
+
 
             getPatientById: function(objectId, callback){
                 var query = new Parse.Query(Patient);
@@ -467,6 +485,9 @@ angular.module('parseService', [])
                 case "Dispatch" :
                     ParseService.findDispatchesByAgency(callback);
                     break;
+                case "Contact" :
+                    ParseService.findContactsByAgency(callback);
+                    break;
                 case "Patient":
                     ParseService.findPatientsByAgency(callback);
                     break;
@@ -574,6 +595,22 @@ angular.module('parseService', [])
                 query.equalTo("agencyId", Parse.User.current().get("agencyId"));
                 //query.include("user");
                 query.include("device");
+                query.find({
+                    success: function(results){
+                        callback(results);
+                    },
+                    error: function(error){
+                        alert(ERRORMESSAGE + error.message);
+                    }
+                });
+            },
+
+            //Find Contacts by Agency
+            findContactsByAgency: function(callback){
+                var query = new Parse.Query(Contact);
+                query.equalTo("agencyId", Parse.User.current().get("agencyId"));
+                query.include("dContact.elements");
+                query.include("dContact.sections.elements");
                 query.find({
                     success: function(results){
                         callback(results);

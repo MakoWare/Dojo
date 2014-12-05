@@ -3,7 +3,7 @@ var AdminCtrl = function($scope, $location, GlobalService, ParseService){
 
     $scope.init = function(){
         //$scope.agency = {};
-        Parse.Cloud.run("helloPDF", {}, {});
+
     },
 
     $scope.createAgency = function(){

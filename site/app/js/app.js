@@ -16,11 +16,6 @@ angular.module('dojo', [
         templateUrl: 'partials/admin.html',
         controller: 'AdminCtrl'
       })
-//Run
-      .when('/run', {
-        templateUrl: 'partials/admin.html',
-        controller: 'RunCtrl'
-      })
 //Configurations
       .when('/configurations', {
         templateUrl: 'partials/configurations.html',
@@ -35,6 +30,15 @@ angular.module('dojo', [
       .when('/contact', {
         templateUrl: 'partials/contact.html',
         controller: 'ContactCtrl'
+      })
+//Contact
+      .when('/contacts', {
+          templateUrl: 'partials/read.html',
+          controller: 'ReadCtrl'
+      })
+      .when('/contacts/:id', {
+          templateUrl: 'partials/update.html',
+          controller: 'CreateCtrl'
       })
 //Dispatches
       .when('/dispatches', {

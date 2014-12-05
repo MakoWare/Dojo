@@ -8,6 +8,9 @@ angular.module('globalService', [])
 
             getObjectType: function(url){
                 switch (url){
+                case "contacts":
+                    return "Contact";
+                    break;
                 case "devices":
                     return "Device";
                     break;

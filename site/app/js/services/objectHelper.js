@@ -6,6 +6,7 @@ var ObjectHelper = {
     //Declare Parse Objects Here
     Agency: Parse.Object.extend("Agency"),
     User: Parse.Object.extend("User"),
+    Contact: Parse.Object.extend("Contact"),
     Section: Parse.Object.extend("Section"),
     NemsisSection: Parse.Object.extend("NemsisSection"),
     Dispatch: Parse.Object.extend("Dispatch"),
@@ -66,6 +67,9 @@ var ObjectHelper = {
     //Create Object
     createObject: function(objectType, agencyId, userId, callback){
         switch (objectType) {
+        case "Contact":
+            this.createContact(agencyId, userId, callback);
+            break;
         case "Dispatch":
             this.createDispatch(agencyId, userId, callback);
             break;
@@ -90,6 +94,9 @@ var ObjectHelper = {
     //Delete Object
     deleteObject: function(objectType, object, callback){
         switch (objectType) {
+        case "Contact":
+            this.deleteContact(object, callback);
+            break;
         case "Device":
             this.deleteDevice(object, callback);
             break;
@@ -119,6 +126,64 @@ var ObjectHelper = {
 
 
     //**Create**//
+
+    //Contact
+    createContact: function(agencyId, userId, callback){
+        var contact = new ObjectHelper.Contact();
+        contact.setACL(ObjectHelper.DispatchACL);
+        contact.set("agencyId", agencyId);
+        contact.set("createdBy", Parse.User.current());
+        contact.set("comments", "");
+        contact.set("firstName", "");
+        contact.set("lastName", "");
+        contact.set("middleInitial", "");
+        contact.set("type", "");
+        contact.set("phone", "");
+        contact.set("email", "");
+        contact.set("address", "");
+        contact.set("city", "");
+        contact.set("state", "");
+        contact.set("zip", "");
+        contact.set("country", "");
+        contact.set("county", "");
+
+
+        var acl = new Parse.ACL();
+        acl.setRoleReadAccess("EMT_" + agencyId, true);
+        acl.setRoleWriteAccess("EMT_" + agencyId, true);
+        contact.setACL(acl);
+
+        ObjectHelper.createSection(agencyId, "dContact.ContactInfoGroup", function(dContact){
+            contact.set("dContact", dContact);
+            var query = new Parse.Query("Section");
+            query.equalTo("name", "dContact");
+            query.equalTo("agencyId", Parse.User.current().get('agencyId'));
+            query.first({
+                success: function(result){
+                    result.add("sections", dContact);
+                    result.save({
+                        success: function(result){
+                            contact.save({
+                                success: function(contact){
+                                    callback(contact);
+                                },
+                                error: function(object, error){
+                                    callback(error);
+                                }
+                            });
+                        },
+                        error: function(object, error){
+                            callback(error);
+                        }
+                    });
+                },
+                error: function(error){
+                    callback(error);
+                }
+            });
+        });
+    },
+
 
     //Dispatch
     createDispatch: function(agencyId, userId, callback){
@@ -719,6 +784,42 @@ var ObjectHelper = {
             });
         });
     },
+
+    //Delete Contact
+    deleteContact: function(contact, callback){
+        var query = new Parse.Query("Section");
+        query.equalTo("name", "dContact");
+        query.equalTo("sections", contact.get("dContact"));
+        query.first({
+            success: function(object){
+                return object;
+            },
+            error: function(error){
+                callback(error);
+            }
+        }).then(function(parentSection){
+            parentSection.remove("sections", contact.get("dContact"));
+            parentSection.save({
+                success: function(object){
+                    return;
+                },
+                error: function(object, error){
+                    callback(error);
+                }
+            }).then(function(){
+                //Now Delete the Facility object
+                contact.destroy({
+                    success: function(result){
+                        callback("Successfully deleted the Contact");
+                    },
+                    error: function(object, error){
+                        callback(error);
+                    }
+                });
+            });
+        });
+    },
+
 
     deletePatient: function(patient, callback){
         patient.destroy({

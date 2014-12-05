@@ -419,16 +419,33 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         for(var name in $scope.object.attributes) {
             $scope.object.set(name, $scope.object.attributes[name]);
         }
-        $scope.object.save({
-            success: function(result){
-                GlobalService.dismissSpinner();
-                $scope.object = result;
-                $location.url("/vehicles");
-                $scope.$apply();
+
+        var attributes = $scope.object.attributes;
+        var dVehicle = attributes.dVehicle;
+
+        dVehicle.attributes.elements.forEach(function(element){
+            if(element.attributes.title == "dVehicle.04"){
+                element.set('value', attributes.type.split(" ")[0]);
+            }
+        });
+
+        dVehicle.save({
+            success: function(dVehicle){
+                $scope.object.save({
+                    success: function(result){
+                        GlobalService.dismissSpinner();
+                        $scope.object = result;
+                        $location.url("/vehicles");
+                        $scope.$apply();
+                    },
+                    error: function(object, error){
+                        GlobalService.dismissSpinner();
+                        alert(GlobalService.errorMessage + error.message);
+                    }
+                });
             },
             error: function(object, error){
-                GlobalService.dismissSpinner();
-                alert(GlobalService.errorMessage + error.message);
+
             }
         });
     },
