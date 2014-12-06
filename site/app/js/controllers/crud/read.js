@@ -134,8 +134,8 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
 
     $scope.setUp = function(){
         switch($scope.objectType){
-        case "Vehicle":
-            $scope.setUpVehicle();
+        case "Contact":
+            $scope.setUpContact();
             break;
         case "Dispatch":
             $scope.setUpDispatch();
@@ -155,9 +155,18 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
         case "File":
             $scope.setUpFile();
             break;
+        case "Vehicle":
+            $scope.setUpVehicle();
+            break;
         }
     },
 
+
+    $scope.setUpContact = function(){
+        $scope.attributes = [
+            {name: "Object Id", value: "objectId"}
+        ];
+    },
 
     $scope.setUpDispatch = function(){
         $scope.attributes = [

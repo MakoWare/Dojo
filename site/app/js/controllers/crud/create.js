@@ -13,6 +13,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     //1. Get Object
     $scope.getObject = function(objectType, objectId){
         GlobalService.showSpinner();
+        console.log(objectType);
         ParseService.getObjectById(objectType, objectId, function(results){
             console.log(results);
             if(results.id){
@@ -40,6 +41,9 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     $scope.saveObject = function(){
         GlobalService.showSpinner();
         switch($scope.objectType){
+        case "Contact":
+            $scope.saveContact();
+            break;
         case "Dispatch":
             $scope.saveDispatch();
             break;
@@ -63,6 +67,77 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             break;
         }
     };
+
+
+    //Save Contact
+    $scope.saveContact = function(){
+        for(var name in $scope.object.attributes) {
+            $scope.object.set(name, $scope.object.attributes[name]);
+        }
+        var dContact = $scope.object.attributes.dContact;
+        var attributes = $scope.object.attributes;
+
+        dContact.attributes.elements.forEach(function(element){
+            if(element.attributes.title == "dContact.01"){
+                element.set('value', attributes.type.split(" ")[0]);
+            }
+            if(element.attributes.title == "dContact.02"){
+                element.set('value', attributes.lastName);
+            }
+            if(element.attributes.title == "dContact.03"){
+                element.set('value', attributes.firstName);
+            }
+            if(element.attributes.title == "dContact.04"){
+                element.set('value', attributes.middleInitial);
+            }
+            if(element.attributes.title == "dContact.05"){
+                element.set('value', attributes.address);
+            }
+            if(element.attributes.title == "dContact.06"){
+                element.set('value', attributes.city);
+            }
+            if(element.attributes.title == "dContact.07"){
+                element.set('value', attributes.state);
+            }
+            if(element.attributes.title == "dContact.08"){
+                element.set('value', attributes.zip);
+            }
+            if(element.attributes.title == "dContact.09"){
+                element.set('value', attributes.country);
+            }
+            if(element.attributes.title == "dContact.10"){
+                element.set('value', attributes.phone);
+            }
+            if(element.attributes.title == "dContact.11"){
+                element.set('value', attributes.email);
+            }
+        });
+        dContact.attributes.sections.forEach(function(section){
+            section.attributes.elements.forEach(function(element){
+
+            });
+        });
+
+        dContact.save({
+            success: function(dContact){
+                $scope.object.save({
+                    success: function(result){
+                        GlobalService.dismissSpinner();
+                        $scope.object = result;
+                        $location.url("/contacts");
+                        $scope.$apply();
+                    },
+                    error: function(object, error){
+                        GlobalService.dismissSpinner();
+                        alert(GlobalService.errorMessage + error.message);
+                    }
+                });
+            },
+            error: function(object, error){
+                alert(GlobalService.errorMessage + error.message);
+            }
+        });
+    },
 
     //Save Dispatch
     $scope.saveDispatch = function(){
@@ -495,9 +570,11 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     /** Begin to destroy nice and clean Controller here  **/
     $scope.setUp = function(){
         switch($scope.objectType){
+        case "Contact":
+            $scope.contactSetup();
+            break;
         case "Dispatch":
             $scope.dispatchSetup();
-
             break;
         case "Facility":
             $scope.facilitySetup();
@@ -516,6 +593,14 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
         GlobalService.dismissSpinner();
     },
+
+
+    $scope.contactSetup = function(){
+        $scope.hasNemsis = true;
+        $scope.nemsisLocation = "dContact/" + $scope.object.attributes.dContact.id;
+
+    },
+
 
     //Dispatch Setup
     $scope.dispatchSetup = function(){

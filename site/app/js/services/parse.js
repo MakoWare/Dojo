@@ -275,8 +275,10 @@ angular.module('parseService', [])
 
             getContactById: function(objectId, callback){
                 var query = new Parse.Query(Contact);
+
                 query.include("dContact.elements");
                 query.include("dContact.sections.elements");
+                console.log(query);
                 query.get(objectId,{
                     success: function(result){
                         callback(result);
