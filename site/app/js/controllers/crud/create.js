@@ -13,7 +13,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     //1. Get Object
     $scope.getObject = function(objectType, objectId){
         GlobalService.showSpinner();
-        console.log(objectType);
         ParseService.getObjectById(objectType, objectId, function(results){
             console.log(results);
             if(results.id){
@@ -604,6 +603,37 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     //Dispatch Setup
     $scope.dispatchSetup = function(){
+
+        //Push dispatch to installation
+        $scope.sendDispatch = function(){
+            GlobalService.showSpinner();
+
+            var query = new Parse.Query(Parse.Installation);
+            var dispatchId = $scope.object.id;
+            var installationId = $scope.object.attributes.vehicle.attributes.installation.id;
+            console.log(installationId);
+            query.equalTo('objectId', installationId);
+
+            Parse.Push.send({
+                where: query,
+                data: {
+                    dispatchId: dispatchId,
+                    type: "dispatch sent"
+                }
+            }, {
+                success: function() {
+                    GlobalService.dismissSpinner();
+                    alert("Dispatch Sent");
+
+                },
+                error: function(error) {
+                    GlobalService.dismissSpinner();
+                    alert(GlobalService.errorMessage + error.message);
+                }
+            });
+        };
+
+
 
 
         if(!$scope.object.attributes.color){
