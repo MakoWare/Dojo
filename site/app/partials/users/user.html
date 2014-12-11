@@ -43,5 +43,19 @@
         </div>
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-md-4">
+	<label for="licensureLevel">Licensure Level</label>
+	<select class="form-control" ng-model="object.attributes.licensureLevel" ng-options="level.attributes.code as level.attributes.codeDescription for level in levels">
+        </select>
+      </div>
+
+      <div class="col-md-3">
+	<label for="licenseId">License Id #</label>
+	<input type="text" class="form-control" ng-model="object.attributes.licenseId"/>
+      </div>
+
+    </div>
   </form>
 </div>

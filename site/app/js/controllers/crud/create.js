@@ -283,11 +283,9 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             var roleName = $scope.object.attributes.role;
             if(roleName){
                 ParseService.changeRole($scope.object, roleName, function(result){
-                    ParseService.saveUser($scope.object.id, attributes.username, attributes.firstName, attributes.lastName, attributes.phone, attributes.email, attributes.active, function(result){
+                    ParseService.saveUser($scope.object.id, attributes.username, attributes.firstName, attributes.lastName, attributes.phone, attributes.email, attributes.active,  attributes.licensureLevel, attributes.licenseId, function(result){
                         if(result == "Success"){
-                            GlobalService.dismissSpinner();
-                            $location.url("/users");
-                            $scope.$apply();
+                            updateDPersonnel();
                         }
                         else {
                             GlobalService.dismissSpinner();
@@ -296,7 +294,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                     });
                 });
             } else {
-                ParseService.saveUser($scope.object.id, attributes.username, attributes.firstName, attributes.lastName, attributes.phone, attributes.email, attributes.active, function(result){
+                ParseService.saveUser($scope.object.id, attributes.username, attributes.firstName, attributes.lastName, attributes.phone, attributes.email, attributes.active, attributes.licensureLevel, attributes.licenseId, function(result){
                     if(result == "Success"){
                         GlobalService.dismissSpinner();
                         $location.url("/users");
@@ -323,38 +321,78 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
             dPersonnel.attributes.sections.forEach(function(section){
                 section.attributes.elements.forEach(function(element){
+                    console.log(element);
                     if(element.attributes.title == "dPersonnel.01"){
                         element.set('value', attributes.lastName);
                     }
                     if(element.attributes.title == "dPersonnel.02"){
                         element.set('value', attributes.firstName);
                     }
+                    if(element.attributes.title == "dPersonnel.23"){
+                        element.set('value', attributes.licenseId);
+                    }
+                    if(element.attributes.title == "dPersonnel.24"){
+                        element.set('value', attributes.licensureLevel);
+                    }
+                });
+            });
+
+            dPersonnel.save({
+                success: function(dPersonnel){
+                    GlobalService.dismissSpinner();
+                    $location.url("/users");
+                    $scope.$apply();
+                },
+                error: function(object, error){
+                    alert(GlobalService.errorMessage + error.message);
+                }
+            });
+        };
+
+        var addSections = function(){
+            var dPersonnel = $scope.object.attributes.dPersonnel;
+            var sectionNames = [];
+            var promises = [];
+            dPersonnel.attributes.sections.forEach(function(section){
+                sectionNames.push(section.attributes.name);
+            });
+
+            if($.inArray("dPersonnel.NameGroup", sectionNames) == -1){
+               promises.push(ParseService.createSection("dPersonnel.NameGroup", function(nameGroup){
+                    dPersonnel.add("sections", nameGroup);
+                }));
+            }
+            if($.inArray("dPersonnel.AddressGroup", sectionNames) == -1){
+                promises.push(ParseService.createSection("dPersonnel.AddressGroup", function(addressGroup){
+                    dPersonnel.add("sections", addressGroup);
+                }));
+            }
+            if($.inArray("dPersonnel.LicensureGroup", sectionNames) == -1){
+                promises.push(ParseService.createSection("dPersonnel.LicensureGroup", function(licenseGroup){
+                    dPersonnel.add("sections", licenseGroup);
+                }));
+            }
+            if($.inArray("dPersonnel.CertificationLevelGroup", sectionNames) == -1){
+                promises.push(ParseService.createSection("dPersonnel.CertificationLevelGroup", function(certGroup){
+                    dPersonnel.add("sections", certGroup);
+                }));
+            }
+
+            Parse.Promise.when(promises).then(function(){
+                dPersonnel.save({
+                    success: function(dPersonnel){
+                        //Now Update User
+                        console.log(dPersonnel);
+                        updateUser();
+                    },
+                    error: function(object, error){
+                        alert(GlobalService.errorMessage + error.message);
+                    }
                 });
             });
         };
 
-        if(attributes.dPersonnel.attributes.sections.length == 0){
-            ParseService.createSection("dPersonnel.NameGroup", function(nameGroup){
-                ParseService.createSection("dPersonnel.AddressGroup", function(addressGroup){
-                    dPersonnel.add("sections", nameGroup);
-                    dPersonnel.add("sections", addressGroup);
-
-                    updateDPersonnel();
-                    dPersonnel.save({
-                        success: function(dPersonnel){
-                            //Now Update User
-                            updateUser();
-
-                        },
-                        error: function(object, error){
-                            alert(GlobalService.errorMessage + error.message);
-                        }
-                    });
-                });
-            });
-        } else {
-            updateUser();
-        }
+        addSections();
     },
 
     //Save PCR
@@ -995,6 +1033,10 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         $scope.hasNemsis = true;
         $scope.nemsisLocation = "dPersonnel/" + $scope.object.attributes.dPersonnel.id;
 
+        ParseService.getNemsisElementCodes(["dPersonnel.24"], function(results){
+            $scope.levels = results;
+            $scope.$apply();
+        });
 
         var agencyId = Parse.User.current().get('agencyId');
         ParseService.getRole(Parse.User.current(), function(result){
@@ -1003,14 +1045,16 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                     {name: "EMT", value: "EMT_" + agencyId},
                     {name: "Dispatcher", value: "Dispatcher_" + agencyId},
                     {name: "Manager", value: "Manager_" + agencyId},
-                    {name: "Admin", value: "Admin"}
+                    {name: "Admin", value: "Admin"},
+                    {name: "None", value: "None"}
                 ];
             }
             else {
                 $scope.roles = [
                     {name: "EMT", value: "EMT_" + agencyId},
                     {name: "Dispatcher", value: "Dispatcher_" + agencyId},
-                    {name: "Manager", value: "Manager_" + agencyId}
+                    {name: "Manager", value: "Manager_" + agencyId},
+                    {name: "None", value: "None"}
                 ];
             }
 
@@ -1019,6 +1063,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                     $scope.object.attributes.role = result.attributes.name;
                     $scope.$apply();
                 } else {
+                    $scope.object.attributes.role = "None";
                     $scope.$apply();
                 }
             });

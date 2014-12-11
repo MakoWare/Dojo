@@ -255,6 +255,9 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
                 if(result){
                     user.attributes.role = result.attributes.name.split("_")[0];
                     $scope.$apply();
+                } else {
+                    user.attributes.role = "None";
+                    $scope.$apply();
                 }
             });
         });

@@ -424,7 +424,11 @@ angular.module('parseService', [])
                                 promises.push(role.save());
                             });
                             Parse.Promise.when(promises).then(function(){
-                                ParseService.addRole(newRole, user, callback);
+                                if(newRole != "None"){
+                                    ParseService.addRole(newRole, user, callback);
+                                } else {
+                                    callback();
+                                }
                             });
                         }
                     },
@@ -457,8 +461,8 @@ angular.module('parseService', [])
             },
 
             //Update User
-            saveUser: function(userId, username, firstName, lastName, phone, email, active, callback){
-                Parse.Cloud.run('modifyUser', { id: userId, username: username, firstName: firstName, lastName: lastName, phone: phone, email: email, active: active}, {
+            saveUser: function(userId, username, firstName, lastName, phone, email, active, licensureLevel, licenseId, callback){
+                Parse.Cloud.run('modifyUser', { id: userId, username: username, firstName: firstName, lastName: lastName, phone: phone, email: email, active: active, licensureLevel: licensureLevel, licenseId: licenseId}, {
                     success: function(result) {
                         callback(result);
                     },
