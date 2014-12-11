@@ -649,14 +649,16 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             var query = new Parse.Query(Parse.Installation);
             var dispatchId = $scope.object.id;
             var installationId = $scope.object.attributes.vehicle.attributes.installation.id;
-            console.log(installationId);
             query.equalTo('objectId', installationId);
 
             Parse.Push.send({
                 where: query,
                 data: {
+                    aps: {
+                        "content-available": 1
+                    },
                     dispatchId: dispatchId,
-                    type: "dispatch sent"
+                    type: "1"
                 }
             }, {
                 success: function() {
