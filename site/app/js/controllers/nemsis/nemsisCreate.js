@@ -211,7 +211,7 @@ var NemsisCreateCtrl = function($scope, $location,  ParseService, GlobalService)
 
     },
 
-    //Add Section             ***TODO***  Add Dirty Check
+    //Add Section
     $scope.addSection = function(childSection){
         GlobalService.showSpinner();
         //First check if current Section is dirty

@@ -106,13 +106,6 @@
     </div>
 
     <div class="row">
-      <div class="form-group col-md-2" style="margin-top: 10px">
-	<label for="vehicle">Vehicle</label>
-	<select class="form-control" ng-model="object.attributes.vehicle" ng-options="vehicle as vehicle.get('name') for vehicle in vehicles track by vehicle.id">
-	  <option class="form-control" value=""></option>
-	</select>
-      </div>
-
       <div class="col-md-3" style="margin-top: 10px">
         <p class="input-group">
 	  <label for="pickUpDate">Pick Up Date</label>
@@ -179,7 +172,19 @@
         </div>
       </div>
 
-      <div class="col-md-4 col-md-offset-3" style="margin-top: 32px">
+      <div class="form-group col-md-2" style="margin-top: 10px">
+	<label for="vehicle">Vehicle</label>
+	<select class="form-control" ng-model="object.attributes.vehicle" ng-options="vehicle as vehicle.get('name') for vehicle in vehicles track by vehicle.id">
+	  <option class="form-control" value=""></option>
+	</select>
+      </div>
+
+      <div class="form-group col-md-2" style="margin-top: 10px">
+	<label for="vehicleStatus">Vehicle Status</label>
+	<input ng-model="object.attributes.vehicle.attributes.status" type="text" class="form-control"  disabled/>
+      </div>
+
+      <div class="col-md-3 " style="margin-top: 32px">
         <button class="btn btn-success btn-lg" ng-click="sendDispatch()">Send Dispatch to iPad</button>
       </div>
 
