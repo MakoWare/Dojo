@@ -528,6 +528,19 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
     //Save Vehicle
     $scope.saveVehicle = function(){
+        $scope.object.attributes.crew = [];
+        console.log($scope.users);
+        $scope.users.forEach(function(user){
+            if(user.ticked){
+                $scope.fullUsers.forEach(function(fullUser){
+                    if(fullUser.id == user.id){
+                        $scope.object.attributes.crew.push(fullUser);
+                    }
+                });
+            }
+        });
+
+
         for(var name in $scope.object.attributes) {
             $scope.object.set(name, $scope.object.attributes[name]);
         }
@@ -960,6 +973,45 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     $scope.vehicleSetup = function(){
         $scope.hasNemsis = true;
         $scope.nemsisLocation = "dVehicle/" + $scope.object.attributes.dVehicle.id;
+
+        //get all Users
+        var query = new Parse.Query("User");
+        query.equalTo("agencyId", Parse.User.current().attributes.agencyId);
+        query.find({
+            success: function(results){
+                console.log(results);
+                $scope.fullUsers = results;
+                $scope.users = [];
+                results.forEach(function(user){
+                    var userObject = {};
+                    userObject.ticked = false;
+                    userObject.id = user.id;
+                    if(user.attributes.firstName){
+                        userObject.fullName = user.attributes.firstName;
+                    }
+                    if(user.attributes.lastName){
+                        userObject.fullName = userObject.fullName + " " + user.attributes.lastName;
+                    }
+
+                    if($scope.object.attributes.crew){
+                        $scope.object.attributes.crew.forEach(function(crewMember){
+                            if(user.id == crewMember.id){
+                                userObject.ticked = true;
+                            }
+                        });
+                    }
+                    $scope.users.push(userObject);
+                });
+
+                $scope.$apply();
+            },
+            error: function(error){
+                alert(GlobalService.errorMessage + error.message);
+            }
+        });
+
+
+
     },
 
     //Patient Setup
