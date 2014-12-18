@@ -518,6 +518,7 @@ angular.module('parseService', [])
                 query.equalTo("agencyId", Parse.User.current().get("agencyId"));
                 query.include("currentDispatch");
                 query.include("installation");
+                query.include("crew");
                 query.find({
                     success: function(results){
                         callback(results);
@@ -724,6 +725,7 @@ angular.module('parseService', [])
 		query.equalTo('agencyId', currentUser.get('agencyId'));
 		query.equalTo('active', true);
 		query.include('currentDispatch');
+		query.include('crew');
 		query.find({
 		    success: function(vehicles){
 			var markers = [];
@@ -735,6 +737,7 @@ angular.module('parseService', [])
 			    var status = vehicle.get('status');
 			    var dispatchId = "None";
 			    var vehicleId = vehicle.id;
+                            var crew = vehicle.get('crew');
 			    if(vehicle.get('currentDispatch') != undefined){
 				dispatchId = vehicle.get('currentDispatch').id;
 			    }
@@ -746,9 +749,11 @@ angular.module('parseService', [])
 				status: status,
 				dispatchId: dispatchId,
 				vehicleId: vehicleId,
+                                crew: crew,
                                 idKey: vehicleId,
 				animation: google.maps.Animation.DROP
 			    };
+                            console.log(marker);
 			    markers.push(marker);
 			});
 			callback(markers);

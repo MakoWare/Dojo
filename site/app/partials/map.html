@@ -1,8 +1,8 @@
 <div class="content-widscreen">
   <google-map id="mymap" center="center" zoom="zoom" draggable="true" options="options" mark-click="false" style="position: absolute">
     <markers>
-      <marker ng-repeat="marker in markers" coords="marker" icon="marker.icon" idKey="marker.idKey">
-	<window>
+      <marker ng-repeat="marker in markers" coords="marker" icon="marker.icon" idKey="marker.idKey" click="onMarkerClick(marker)">
+	<window class="mapWindow" show="marker.showWindow">
 	  <div ng-controller="WindowCtrl">
 	    <table class="table table-condensed table-bordered" style="font-size: 18px;">
 	      <tr>
@@ -16,6 +16,16 @@
 	      <tr>
 		<th>Status:</th>
 		<th>{{marker.status}}</th>
+	      </tr>
+	      <tr>
+		<th>Crew:</th>
+                <th>
+                  <h4>{{marker.crew[0].attributes.firstName + " " + marker.crew[0].attributes.lastName}}</h4>
+                  <h4>{{marker.crew[1].attributes.firstName + " " + marker.crew[1].attributes.lastName}}</h4>
+                  <h4>{{marker.crew[2].attributes.firstName + " " + marker.crew[2].attributes.lastName}}</h4>
+                  <h4>{{marker.crew[3].attributes.firstName + " " + marker.crew[3].attributes.lastName}}</h4>
+                  <h4>{{marker.crew[4].attributes.firstName + " " + marker.crew[4].attributes.lastName}}</h4>
+                </th>
 	      </tr>
 	    </table>
 	  </div>
@@ -32,9 +42,21 @@
 
                       <div ng-repeat="vehicle in vehicles">
                           <div class="well vehicleWell" style="padding-top: 5px;" ng-click="centerMap(vehicle.attributes.lat, vehicle.attributes.lon)">
-                              <p>{{vehicle.attributes.name}}</p>
-
+                            <div class="row">
+                              <div class="col-md-12">
+                                <h4>{{vehicle.attributes.name}}</h4>
+                              </div>
+                            </div>
+                            <h5>Crew</h5>
+                            <div ng-repeat="user in vehicle.attributes.crew">
+                              <div class="row" style="margin-bottom: 3px; margin-left: 5px">
+                                <div class="col-md-6">
+                                  <p>{{user.attributes.firstName + " " + user.attributes.lastName}}</p>
+                                </div>
+                              </div>
+                            </div>
                           </div>
+
                       </div>
                   </accordion-group>
               </accordion>

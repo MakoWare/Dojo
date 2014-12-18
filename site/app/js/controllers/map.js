@@ -33,11 +33,28 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService, GlobalServic
 	$scope.fit = true;
     	$scope.resizeMap();
 
+        $( document ).on('click', function(e){
+            console.log("doc click");
+            $scope.markers.forEach(function(marker){
+                console.log(marker.showWindow);
+                marker.showWindow = false;
+            });
+            $scope.$apply();
+        });
+
+        $scope.onMarkerClick = function(marker){
+            setTimeout(function(){
+                marker.showWindow = true;
+                console.log(marker);
+                $scope.$apply();
+            }, 0);
+
+        };
+
 	ParseService.getMarkers(function(results){
-	    $scope.$apply(function(){
-		$scope.markers = results;
-	    });
-	});
+	    $scope.markers = results;
+            $scope.$apply();
+        });
     };
 
     //resize map
