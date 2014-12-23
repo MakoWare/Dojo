@@ -147,10 +147,14 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         eDispatch.attributes.elements.forEach(function(element){
             switch (element.attributes.title){
             case "eDispatch.01":
-                element.set("value", $scope.object.attributes.complaint.attributes.code);
+                if($scope.object.attributes.complaint){
+                    element.set("value", $scope.object.attributes.complaint.attributes.code);
+                }
                 break;
             case "eDispatch.02":
-                element.set("value", $scope.object.attributes.emd.attributes.code);
+                if($scope.object.attributes.emd){
+                    element.set("value", $scope.object.attributes.emd.attributes.code);
+                }
                 break;
             case "eDispatch.05":
                 if($scope.object.attributes.priority){

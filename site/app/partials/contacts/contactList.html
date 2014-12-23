@@ -9,8 +9,8 @@
             <th><a href="" ng-click="predicate = 'attributes.email'; reverse=!reverse">Email</a></th>
             <th><a href="" ng-click="predicate = 'attributes.address'; reverse=!reverse">Address</a></th>
             <th><a href="" ng-click="predicate = 'attributes.type'; reverse=!reverse">Type</a></th>
-
-            <th>Edit</th>
+            <th>Edit Contact</th>
+            <th>Delete Contact</th>
 	  </tr>
         </thead>
         <tbody>
@@ -21,6 +21,7 @@
 	    <td>{{object.attributes.phone}}</td>
 	    <td>{{object.attributes.email}}</td>
             <td><a ng-href="#/contacts/{{object.id}}"> <button class="btn btn-primary">Edit</button></a></td>
+            <td><button class="btn btn-danger" ng-click="deleteObject(object)">Delete</button></a></td>
 	  </tr>
         </tbody>
       </table>

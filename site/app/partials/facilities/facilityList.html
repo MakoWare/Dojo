@@ -8,8 +8,8 @@
             <th><a href="" ng-click="predicate = 'attributes.address'; reverse=!reverse">Address</a></th>
             <th><a href="" ng-click="predicate = 'attributes.type'; reverse=!reverse">Type</a></th>
             <th><a href="" ng-click="predicate = 'id'; reverse=!reverse">Id</a></th>
-
-            <th>Edit</th>
+            <th>Edit Facility</th>
+            <th>Delete Facility</th>
 	  </tr>
         </thead>
         <tbody>
@@ -19,6 +19,7 @@
 	    <td>{{object.attributes.type.split(" ")[1]}}</td>
 	    <td>{{object.id}}</td>
             <td><a ng-href="#/facilities/{{object.id}}"> <button class="btn btn-primary">Edit</button></a></td>
+            <td><button class="btn btn-danger" ng-click="deleteObject(object)">Delete</button></a></td>
 	  </tr>
         </tbody>
       </table>

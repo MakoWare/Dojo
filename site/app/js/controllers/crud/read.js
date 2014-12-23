@@ -263,6 +263,20 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
         });
     };
 
+
+    //Delete Object
+    $scope.deleteObject = function(object){
+        GlobalService.showSpinner();
+        ParseService.deleteObject(object, $scope.objectType, function(results){
+            if(results.message != null){
+                alert(GlobalService.errorMessage + results.message);
+            } else {
+                $scope.findObjects($scope.objectType);
+            }
+        });
+    };
+
+
     //Init
     $scope.init();
 };

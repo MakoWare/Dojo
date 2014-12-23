@@ -14,6 +14,7 @@
             <th>View Patient</th>
             <th>View Vehicle</th>
             <th>Edit Dispatch</th>
+            <th>Delete Dispatch</th>
 	  </tr>
         </thead>
         <tbody>
@@ -28,6 +29,7 @@
             <td><a ng-href="#/patients/{{object.attributes.patient.id}}" ng-if="object.attributes.patient"><button class="btn btn-primary">Patient</button></a></td>
             <td><a ng-href="#/vehicles/{{object.attributes.vehicle.id}}" ng-if="object.attributes.vehicle"><button class="btn btn-primary">Vehicle</button></a></td>
             <td><a ng-href="#/dispatches/{{object.id}}"><button class="btn btn-primary">Edit</button></a></td>
+            <td><button class="btn btn-danger" ng-click="deleteObject(object)">Delete</button></a></td>
 	  </tr>
         </tbody>
       </table>

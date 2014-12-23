@@ -10,6 +10,7 @@
             <th><a href="" ng-click="predicate = 'attributes.ssn'; reverse=!reverse">SSN</a></th>
             <th><a href="" ng-click="predicate = 'attributes.phone'; reverse=!reverse">Phone</a></th>
             <th>Edit Patient</th>
+            <th>Delete Patient</th>
 	  </tr>
         </thead>
         <tbody>
@@ -20,6 +21,7 @@
             <td>{{"xxx-xx-" + object.attributes.ssn.substr(object.attributes.ssn.length - 4);}}</td>
             <td>{{object.attributes.phone}}</td>
             <td><a ng-href="{{'#/patients/' + object.id}}"><button class="btn btn-primary">Edit</button></a></td>
+            <td><button class="btn btn-danger" ng-click="deleteObject(object)">Delete</button></a></td>
 	  </tr>
         </tbody>
       </table>

@@ -12,6 +12,7 @@
             <th><a href="" ng-click="predicate = 'attributes.patient'; reverse=!reverse">Current Patient</a></th>
             <th><a href="" ng-click="predicate = 'attributes.dispatch'; reverse=!reverse">Current Dispatch</a></th>
             <th>Edit Vehicle</th>
+            <th>Delete Vehicle</th>
 	  </tr>
         </thead>
         <tbody>
@@ -24,6 +25,7 @@
             <td><a ng-href="#/patients/{{object.attributes.patient.id}}" ng-show="object.attributes.patient"> <button class="btn btn-primary">Patient</button></a></td>
             <td><a ng-href="#/dispatches/{{object.attributes.currentDispatch.id}}" ng-show="object.attributes.currentDispatch"><button class="btn btn-primary">Dispatch</button></a></td>
             <td><a ng-href="#/vehicles/{{object.id}}" ><button class="btn btn-primary">Edit</button></a></td>
+            <td><button class="btn btn-danger" ng-click="deleteObject(object)">Delete</button></a></td>
 	  </tr>
         </tbody>
       </table>
