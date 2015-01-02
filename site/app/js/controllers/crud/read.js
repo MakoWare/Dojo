@@ -62,8 +62,6 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
         var query = new Parse.Query($scope.objectType);
         query.include("priority");
 
-        console.log($scope.startDate);
-        console.log($scope.endDate);
         var dateAttributes = ["pickUpDate", "dropOffDate", "createdAt", "dob"];
         var isDate = false;
 
@@ -78,14 +76,26 @@ var ReadCtrl = function($scope, $location, GlobalService, ParseService){
 
         if($scope.attribute != "" &&  isDate ){
             if($scope.endDate){
-                query.lessThan($scope.attribute, $scope.endDate);
+                var endDate = new Date();
+                endDate.setDate($scope.endDate.getDate() + 1);
+                endDate.setFullYear($scope.endDate.getFullYear());
+                endDate.setMonth($scope.endDate.getMonth());
+                endDate.setHours(0);
+                query.lessThan($scope.attribute, endDate);
             }
             if($scope.startDate){
+                var startDate = new Date();
+                startDate.setDate($scope.startDate.getDate() - 1);
                 query.greaterThan($scope.attribute, $scope.startDate);
             }
         } else {
             if($scope.endDate){
-                query.lessThan('createdAt', $scope.endDate);
+                var endDate = new Date();
+                endDate.setDate($scope.endDate.getDate() + 1);
+                endDate.setFullYear($scope.endDate.getFullYear());
+                endDate.setMonth($scope.endDate.getMonth());
+                endDate.setHours(0);
+                query.lessThan('createdAt', endDate);
             }
             if($scope.startDate){
                 query.greaterThan('createdAt', $scope.startDate);

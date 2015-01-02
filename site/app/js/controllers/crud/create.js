@@ -899,6 +899,18 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         }
 
 
+        function rgb2hex(rgb){
+            rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+            return (rgb && rgb.length === 4) ? "#" +
+                ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+                ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+                ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+        }
+
+        var color = $scope.object.attributes.color;
+        var hex = rgb2hex(color);
+
+        $(".pick-a-color").val(hex);
         $(".pick-a-color").pickAColor({
             showSpectrum            : false,
             showSavedColors         : false,
@@ -910,11 +922,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             allowBlank              : false,
             inlineDropdown          : true
         });
-
-        $(".pick-a-color").val("rgba(153, 55, 35, .9)");
-
-
-
     },
 
     //Facility Setup
