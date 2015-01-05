@@ -672,7 +672,8 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 where: query,
                 data: {
                     aps: {
-                        "content-available": 1
+                        "content-available": 1,
+                        "category": "DISPATCH_CATEGORY"
                     },
                     dispatchId: dispatchId,
                     type: "1"
