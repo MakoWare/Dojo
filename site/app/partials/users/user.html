@@ -19,47 +19,73 @@
     <div class="row">
       <div class="form-group col-md-3" ng-class="{ 'has-error': userForm.firstName.$invalid }">
         <label for="firstName">First Name</label>
-        <input ng-model="object.attributes.firstName" type="text" class="form-control" id="firstName" placeholder="First Name" name="firstName" required/>
+        <input ng-model="user.attributes.firstName" type="text" class="form-control" id="firstName" placeholder="First Name" name="firstName" required/>
       </div>
 
-
-      <div class="form-group col-md-3">
+      <div class="form-group col-md-3" ng-class="{ 'has-error': userForm.lastName.$invalid }">
         <label for="lastName">Last Name</label>
-        <input ng-model="object.attributes.lastName" type="text" class="form-control" id="lastName" placeholder="Last Name" required/>
+        <input ng-model="user.attributes.lastName" type="text" class="form-control" id="lastName" placeholder="Last Name" name="lastName" required/>
       </div>
-
-      <div class="form-group col-md-3">
-        <label for="lastName">Username</label>
-        <input ng-model="object.attributes.username" type="text" class="form-control" id="lastName" placeholder="Last Name" required/>
-      </div>
-
-    </div>
-    <div class="row">
 
       <div class="form-group col-md-2">
+        <label for="middleInitial">Middle Initial</label>
+        <input ng-model="user.attributes.middleInitial" type="text" class="form-control" id="lastName" placeholder="Middle initial"/>
+      </div>
+
+      <div class="form-group col-md-3" ng-class="{ 'has-error': userForm.username.$invalid }">
+        <label for="username">Username</label>
+        <input ng-model="user.attributes.username" type="text" class="form-control" id="lastName" placeholder="Username" name="username" required/>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-2">
         <label for="phone">Phone Number</label>
-        <input ng-model="object.attributes.phone" type="text" class="form-control" id="phone" placeholder="Phone"/>
+        <input ng-model="user.attributes.phone" type="text" class="form-control" id="phone" placeholder="Phone"/>
       </div>
 
       <div class="form-group col-md-2">
         <label for="phone">Email</label>
-        <input ng-model="object.attributes.email" type="text" class="form-control" id="email" placeholder="Email"/>
+        <input ng-model="user.attributes.email" type="text" class="form-control" id="email" placeholder="Email"/>
       </div>
 
       <div class="form-group col-md-2">
 	<label for="patient">Role</label>
-	<select class="form-control" ng-model="object.attributes.role" ng-options="role.value as role.name for role in roles">
+	<select class="form-control" ng-model="user.attributes.role" ng-options="role.value as role.name for role in roles">
         </select>
       </div>
 
       <div class="form-group col-md-2" style="margin-left: 2px;">
         <p style="margin-bottom: 5px"><b>Active</b></p>
         <div class="btn-group">
-          <label class="btn btn-default" ng-model="object.attributes.active" btn-radio="{{true}}">Yes</label>
-          <label class="btn btn-default" ng-model="object.attributes.active" btn-radio="{{false}}">No</label>
+          <label class="btn btn-default" ng-model="user.attributes.active" btn-radio="{{true}}">Yes</label>
+          <label class="btn btn-default" ng-model="user.attributes.active" btn-radio="{{false}}">No</label>
         </div>
       </div>
     </div>
+
+    <div class="row">
+      <div class="form-group col-md-4">
+        <label for="address">Address</label>
+        <input ng-model="user.attributes.address" type="text" class="form-control" id="address" placeholder="Address"/>
+      </div>
+
+      <div class="form-group col-md-3">
+        <label for="city">City</label>
+        <input ng-model="user.attributes.city" type="text" class="form-control" id="city" placeholder="City"/>
+      </div>
+
+      <div class="form-group col-md-1">
+        <label for="state">State</label>
+        <input ng-model="user.attributes.state" type="text" class="form-control" id="state" placeholder="State"/>
+      </div>
+
+      <div class="form-group col-md-2">
+        <label for="zip">Zip</label>
+        <input ng-model="user.attributes.zip" type="text" class="form-control" id="zip" placeholder="Zip"/>
+      </div>
+    </div>
+
 
     <div class="row">
       <div class="col-md-4">
