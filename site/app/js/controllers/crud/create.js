@@ -182,8 +182,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
         //Color Picker
         var color = $("#colorPicker").val();
-        console.log(color);
-
         if(color.charAt(0) != "r"){
             var bigint = parseInt(color, 16);
             var r = (bigint >> 16) & 255;
@@ -193,8 +191,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         }
 
         $scope.object.attributes.color = color;
-
-        console.log("rgba: " + $scope.object.attributes.color);
 
         if($scope.object.attributes.pickUpFacility == ""){
             $scope.object.attributes.pickUpFacility = null;
@@ -689,6 +685,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 success: function() {
                     GlobalService.dismissSpinner();
                     alert("Dispatch Sent");
+                    $scope.saveDispatch();
 
                 },
                 error: function(error) {
@@ -912,9 +909,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
         var hex = rgb2hex(color);
 
-        console.log(color);
-        console.log(hex);
-
 
         $(".pick-a-color").val(hex);
         $(".pick-a-color").pickAColor({
@@ -996,7 +990,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         query.equalTo("agencyId", Parse.User.current().attributes.agencyId);
         query.find({
             success: function(results){
-                console.log(results);
                 $scope.fullUsers = results;
                 $scope.users = [];
                 results.forEach(function(user){
