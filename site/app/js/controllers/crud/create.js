@@ -920,6 +920,10 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
 
         var color = $scope.object.attributes.color;
 
+        if(!color){
+            color = "rgba(255, 255, 255, 1)";
+        }
+
 
         var hex = rgb2hex(color);
 
