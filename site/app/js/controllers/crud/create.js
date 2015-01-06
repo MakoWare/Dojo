@@ -150,16 +150,19 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             case "eDispatch.01":
                 if($scope.object.attributes.complaint){
                     element.set("value", $scope.object.attributes.complaint.attributes.code);
+                    element.set("codeString", $scope.object.attributes.complaint.attributes.codeDescription);
                 }
                 break;
             case "eDispatch.02":
                 if($scope.object.attributes.emd){
                     element.set("value", $scope.object.attributes.emd.attributes.code);
+                    element.set("codeString", $scope.object.attributes.emd.attributes.codeDescription);
                 }
                 break;
             case "eDispatch.05":
                 if($scope.object.attributes.priority){
                     element.set("value", $scope.object.attributes.priority.attributes.code);
+                    element.set("codeString", $scope.object.attributes.priority.attributes.codeDescription);
                 }
                 break;
             }

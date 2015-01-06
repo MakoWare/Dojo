@@ -213,6 +213,20 @@ angular.module('parseService', [])
                 });
             },
 
+            //Get All States
+            getAllStates: function(callback){
+                var query = new Parse.Query("AllStates");
+                query.find({
+                    success: function(results){
+                        callback(results);
+                    },
+                    error: function(error){
+                        callback(error);
+                    }
+                });
+            },
+
+
             //Get All NemsisHeaders
             getAllNemsisHeaders: function(callback){
                 var query = new Parse.Query(NemsisHeader);
