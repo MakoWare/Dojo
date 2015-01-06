@@ -121,8 +121,8 @@ angular.module('dojo', [
         controller: 'ReadCtrl'
       })
       .when('/users/:id', {
-        templateUrl: 'partials/update.html',
-        controller: 'CreateCtrl'
+        templateUrl: 'partials/users/user.html',
+        controller: 'UserCtrl'
       })
 //Vehicles
       .when('/vehicles', {

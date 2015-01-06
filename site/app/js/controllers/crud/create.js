@@ -4,6 +4,7 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     $scope.init = function(){
         $scope.object = {};
         $scope.hasNemsis = false;
+        $scope.returnToList = true;
         $scope.dir = $location.url().slice(1).split("/")[0];
         $scope.objectType = GlobalService.getObjectType($scope.dir);
         var id = $location.url().split("/")[$location.url().split("/").length - 1];
@@ -208,9 +209,12 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         $scope.object.save({
             success: function(result){
                 GlobalService.dismissSpinner();
-                $scope.object = result;
-                $location.url("/dispatches");
-                $scope.$apply();
+
+                if($scope.returnToList){
+                    $scope.object = result;
+                    $location.url("/dispatches");
+                    $scope.$apply();
+                }
             },
             error: function(object, error){
                 GlobalService.dismissSpinner();
@@ -666,6 +670,13 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         $scope.sendDispatch = function(){
             GlobalService.showSpinner();
 
+            var dispatchedAt = new Date();
+            $scope.object.set("dispatchedAt", dispatchedAt);
+
+            var alertMessage = "New Dispatch";
+            var priority = $scope.object.attributes.priority.attributes.codeDescription;
+            var complaint = $scope.object.attributes.complaint.attributes.codeDescription;
+
             var query = new Parse.Query(Parse.Installation);
             var dispatchId = $scope.object.id;
             var installationId = $scope.object.attributes.vehicle.attributes.installation.id;
@@ -676,9 +687,12 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
                 data: {
                     aps: {
                         "content-available": 1,
-                        "category": "DISPATCH_CATEGORY"
+                        "category": "DISPATCH_CATEGORY",
+                        "sound": "default"
                     },
+                    'complaint': complaint,
                     dispatchId: dispatchId,
+                    priority: priority,
                     type: "1"
                 }
             }, {
