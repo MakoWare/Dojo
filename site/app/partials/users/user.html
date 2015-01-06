@@ -6,7 +6,7 @@
         <h1 style="margin-top: 10px;">{{action}} User</h1>
       </div>
       <div class="col-sm-2 col-sm-offset-2">
-        <button class="btn btn-lg btn-primary" style="margin-top: 10px;" ng-click="saveObject()" ng-disabled="userForm.$invalid">{{action}}</button>
+        <button class="btn btn-lg btn-primary" style="margin-top: 10px;" ng-click="saveUser()" ng-disabled="userForm.$invalid">{{action}}</button>
       </div>
       <div class="col-sm-2">
         <button class="btn btn-lg btn-danger" style="margin-top: 10px;" ng-click="deleteUser()">Delete</button>
@@ -88,24 +88,20 @@
 
       <div class="form-group col-md-2">
         <label for="country">Country</label>
-        <input ng-model="user.attributes.country" type="text" class="form-control" id="country" placeholder="Country"/>
-      </div>
-    </div>
-
-
-
-    <div class="row">
-      <div class="col-md-4">
-	<label for="licensureLevel">Licensure Level</label>
-	<select class="form-control" ng-model="object.attributes.licensureLevel" ng-options="level.attributes.code as level.attributes.codeDescription for level in levels">
+	<select class="form-control" ng-model="user.attributes.country">
+          <option class="form-control" value=""></option>
+          <option class="form-control" value="CA">Canada</option>
+          <option class="form-control" value="US">United States</option>
+          <option class="form-control" value="MX">Mexico</option>
         </select>
       </div>
-
-      <div class="col-md-3">
-	<label for="licenseId">License Id #</label>
-	<input type="text" class="form-control" ng-model="object.attributes.licenseId"/>
-      </div>
-
     </div>
+
+
   </form>
+
+
+    <div section templatePath="partials/users/immunizations.html" name="Immunizations"></div>
+
+
 </div>

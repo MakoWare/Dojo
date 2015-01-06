@@ -7,6 +7,7 @@ angular.module('dojo', [
     'multi-select',
     'ui.bootstrap',
     'google-maps',
+    'dojo.section',
     'ngRoute'
   ])
   .config(function ($routeProvider) {
