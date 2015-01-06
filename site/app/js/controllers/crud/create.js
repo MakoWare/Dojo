@@ -181,13 +181,20 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
          */
 
         //Color Picker
-        var hex = $("#colorPicker").val();
-        var bigint = parseInt(hex, 16);
-        var r = (bigint >> 16) & 255;
-        var g = (bigint >> 8) & 255;
-        var b = bigint & 255;
+        var color = $("#colorPicker").val();
+        console.log(color);
 
-        $scope.object.attributes.color = "rgba(" + r + "," + g + "," + b + ", .8)";
+        if(color.charAt(0) != "r"){
+            var bigint = parseInt(color, 16);
+            var r = (bigint >> 16) & 255;
+            var g = (bigint >> 8) & 255;
+            var b = bigint & 255;
+            color = "rgba(" + r + "," + g + "," + b + ", .8)";
+        }
+
+        $scope.object.attributes.color = color;
+
+        console.log("rgba: " + $scope.object.attributes.color);
 
         if($scope.object.attributes.pickUpFacility == ""){
             $scope.object.attributes.pickUpFacility = null;
@@ -691,14 +698,6 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
             });
         };
 
-
-
-
-        if(!$scope.object.attributes.color){
-            $scope.object.attributes.color = "FFFFFF";
-        }
-
-
         $scope.patient = {};
         $scope.facility = {};
 
@@ -909,7 +908,13 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
         }
 
         var color = $scope.object.attributes.color;
+
+
         var hex = rgb2hex(color);
+
+        console.log(color);
+        console.log(hex);
+
 
         $(".pick-a-color").val(hex);
         $(".pick-a-color").pickAColor({
