@@ -1047,5 +1047,29 @@ var ObjectHelper = {
             }
         });
 
+    },
+
+
+    createEmptySection: function(name, callback){
+        var user = Parse.User.current();
+        var agencyId = user.get('agencyId');
+        var section = new Parse.Object("Section");
+        section.set("agencyId", agencyId);
+        section.set("createdBy", user);
+        section.set("name", name);
+        section.set("pcrId", "");
+        section.set("elements", []);
+        section.set("sections", []);
+
+        var sectionACL = new Parse.ACL();
+        sectionACL.setRoleReadAccess("EMT_" + agencyId, true);
+        sectionACL.setRoleWriteAccess("EMT_" + agencyId, true);
+        section.setACL(sectionACL);
+
+        callback(section);
+
     }
+
+
+
 };

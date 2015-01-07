@@ -17,9 +17,11 @@ var SectionModalCtrl = function($scope, $modalInstance, title, action, sectionNa
     //Create Section
     $scope.createSection = function(){
         ParseService.constructNemsisSection(sectionName, function(results){
-            console.log(results);
             $scope.nemsisSection = results;
-            $scope.$apply();
+            ParseService.createEmptySection(sectionName, function(results){
+                $scope.section = results;
+                $scope.$apply();
+            });
         });
     };
 

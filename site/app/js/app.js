@@ -8,6 +8,7 @@ angular.module('dojo', [
     'ui.bootstrap',
     'google-maps',
     'dojo.section',
+    'dojo.header',
     'ngRoute'
   ])
   .config(function ($routeProvider) {

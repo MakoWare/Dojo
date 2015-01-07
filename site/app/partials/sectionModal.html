@@ -1,0 +1,13 @@
+<div class="modal-header">
+  <h3 class="modal-title">{{title}}</h3>
+</div>
+<div class="modal-body">
+  <div ng-repeat="nemsisHeader in nemsisSection.attributes.headers">
+    <header></header>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="ok()">{{action}}</button>
+  <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

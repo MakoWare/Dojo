@@ -26,6 +26,7 @@ var SectionDirective = function($scope, $elm, $attrs){
         var modalInstance = $scope.$modal.open({
             templateUrl: 'partials/sectionModal.html',
             controller: 'SectionModalCtrl',
+            size: 'lg',
             resolve: {
                 title: function(){ return $scope.header;},
                 action: function(){ return "Create";},
