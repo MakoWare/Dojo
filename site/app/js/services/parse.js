@@ -474,6 +474,47 @@ angular.module('parseService', [])
                 });
             },
 
+
+            //ConstructNemsisSection
+            constructNemsisSection: function(name, callback){
+                var query = new Parse.Query("NemsisSection");
+                query.equalTo("name", name);
+                query.include("headers");
+                query.first({
+                    success: function(result){
+                        var nemsisSection = result;
+                        var elementNames = [];
+                        result.attributes.headers.forEach(function(header){
+                            elementNames.push(header.attributes.ElementNumber);
+                        });
+                        var query = new Parse.Query("NemsisElementCode");
+                        console.log(elementNames);
+                        query.containedIn("elementNumber", elementNames);
+                        query.find({
+                            success: function(results){
+                                console.log(results);
+                                nemsisSection.attributes.headers.forEach(function(header){
+                                    header.attributes.codes = [];
+                                    results.forEach(function(code){
+                                        if(code.attributes.elementNumber == header.attributes.ElementNumber){
+                                            header.attributes.codes.push(code);
+                                        }
+                                    });
+                                });
+                                callback(nemsisSection);
+                            },
+                            error: function(error){
+                                callback(error);
+                            }
+                        });
+                    },
+                    error: function(error){
+                        callback(error);
+                    }
+                });
+            },
+
+
             //Update User
             saveUser: function(userId, username, firstName, lastName, phone, email, active, licensureLevel, licenseId, callback){
                 Parse.Cloud.run('modifyUser', { id: userId, username: username, firstName: firstName, lastName: lastName, phone: phone, email: email, active: active, licensureLevel: licensureLevel, licenseId: licenseId}, {
