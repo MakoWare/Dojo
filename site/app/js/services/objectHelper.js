@@ -468,6 +468,7 @@ var ObjectHelper = {
 
         //Get NemsisSection
         var query = new Parse.Query("NemsisSection");
+        console.log(sectionName);
         query.equalTo("name", sectionName);
         query.include("headers");
         query.include("sections");

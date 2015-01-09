@@ -20,7 +20,6 @@ var NemsisHeaderDirective = function($scope, $elm, $attrs){
 
     };
 
-
     $scope.fillMissingElements = function(){
         var hasElement = false;
         $scope.nemsisHeader.attributes.elements = [];
@@ -31,25 +30,55 @@ var NemsisHeaderDirective = function($scope, $elm, $attrs){
             }
         });
         if(!hasElement){
-            var element = new Parse.Object("NemsisElement");
-            var user = Parse.User.current();
-            var agencyId = user.get('agencyId');
-            element.set("agencyId", agencyId);
-            element.set("createdBy", user);
-            element.set("title", $scope.nemsisHeader.attributes.ElementNumber);
-            element.set("pcrId", "");
-            element.set("value", "");
-
-            var acl = new Parse.ACL();
-            acl.setRoleReadAccess("EMT_" + agencyId, true);
-            acl.setRoleWriteAccess("EMT_" + agencyId, true);
-            element.setACL(acl);
-
-            $scope.section.add('elements', element);
-            $scope.nemsisHeader.attributes.elements.push(element);
+            $scope.addElement();
         }
     };
 
+    //Can Add Element
+    $scope.canAddElement = function(){
+        if($scope.nemsisHeader.attributes.MaxOccurs == "1"){
+            return false;
+        } else {
+            return true;
+        }
+    };
+
+    //Can Add Element
+    $scope.canDeleteElement = function(){
+        if($scope.nemsisHeader.attributes.elements.length < 1){
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+
+    //Add Element
+    $scope.addElement = function(){
+        var element = new Parse.Object("NemsisElement");
+        var user = Parse.User.current();
+        var agencyId = user.get('agencyId');
+        element.set("agencyId", agencyId);
+        element.set("createdBy", user);
+        element.set("title", $scope.nemsisHeader.attributes.ElementNumber);
+        element.set("pcrId", "");
+        element.set("value", "");
+
+        var acl = new Parse.ACL();
+        acl.setRoleReadAccess("EMT_" + agencyId, true);
+        acl.setRoleWriteAccess("EMT_" + agencyId, true);
+        element.setACL(acl);
+
+        $scope.section.add('elements', element);
+        $scope.nemsisHeader.attributes.elements.push(element);
+    };
+
+
+    //Delete Element
+    $scope.deleteElement = function(element){
+        $scope.section.remove('elements', element);
+        $scope.nemsisHeader.attributes.elements.pop(element); //Not sure how to pop spec ele
+    };
 
     init();
 };
