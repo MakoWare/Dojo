@@ -22,8 +22,8 @@ var SectionDirective = function($scope, $elm, $attrs){
                     $scope.sections.push(section);
                 }
             });
+            $scope.convertSectionsForTable();
         });
-
     };
 
     $scope.addSection = function(){
@@ -35,7 +35,8 @@ var SectionDirective = function($scope, $elm, $attrs){
                 title: function(){ return $scope.header;},
                 action: function(){ return "Create";},
                 sectionName: function(){ return $scope.sectionName;},
-                ParseService: function(){ return $scope.ParseService;}
+                ParseService: function(){ return $scope.ParseService;},
+                section: function(){return ;}
             }
         });
 
@@ -43,13 +44,67 @@ var SectionDirective = function($scope, $elm, $attrs){
             if(results){
                 console.log(results);
                 $scope.sections.push(results);
+                $scope.convertSectionsForTable();
             }
         }, function () {
             console.log("modal dismissed");
         });
     };
 
+    $scope.updateSection = function(section){
+        console.log("updateSection");
 
+        var modalInstance = $scope.$modal.open({
+            templateUrl: 'partials/sectionModal.html',
+            controller: 'SectionModalCtrl',
+            size: 'lg',
+            resolve: {
+                title: function(){ return $scope.header;},
+                action: function(){ return "Update";},
+                sectionName: function(){ return $scope.sectionName;},
+                ParseService: function(){ return $scope.ParseService;},
+                section: function(){return section;}
+            }
+        });
+
+        modalInstance.result.then(function(results) {
+            if(results){
+                console.log(results);
+                console.log($scope.sections);
+                $scope.convertSectionsForTable();
+            }
+        }, function () {
+            console.log("modal dismissed");
+        });
+    };
+
+    //Delete Section
+    $scope.deleteSection = function(){
+        console.log("deleteSection");
+    };
+
+    $scope.convertSectionsForTable = function(){
+        console.log("converting sections");
+        $scope.sections.forEach(function(section){
+            section.values = [];
+            $scope.nemsisSection.attributes.headers.forEach(function(header){
+                var valueArray = [];
+                section.attributes.elements.forEach(function(element){
+                    if(element.attributes.title == header.attributes.ElementNumber){
+                        console.log(element);
+                        if(element.attributes.codeString != ""){
+                            valueArray.push(element.attributes.codeString);
+                        } else {
+                            valueArray.push(element.attributes.value);
+                        }
+                    }
+                });
+                section.values.push(valueArray);
+            });
+            console.log(section);
+        });
+
+    };
 
 
     init();

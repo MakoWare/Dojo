@@ -11,6 +11,7 @@ var NemsisHeaderDirective = function($scope, $elm, $attrs){
         if($scope.nemsisHeader.attributes.codes.length > 0){
             if($scope.nemsisHeader.attributes.MaxOccurs == "1"){
                 $scope.elementPartialPath = "partials/nemsisElementPartials/singleSelect.html";
+                $scope.setSingleSelect();
             } else {
                 $scope.elementPartialPath = "partials/nemsisElementPartials/multiSelect.html";
             }
@@ -20,9 +21,37 @@ var NemsisHeaderDirective = function($scope, $elm, $attrs){
 
     };
 
+    $scope.setSingleSelect = function(){
+        console.log("setting select");
+        $scope.nemsisHeader.attributes.elements = [];
+        $scope.section.attributes.elements.forEach(function(element){
+            if(element.attributes.title == $scope.nemsisHeader.attributes.ElementNumber){
+                $scope.nemsisHeader.attributes.elements.push(element);
+            }
+        });
+
+        if($scope.nemsisHeader.attributes.elements.length > 0){
+            console.log("in");
+            $scope.nemsisHeader.attributes.codes.forEach(function(code){
+                if($scope.nemsisHeader.attributes.elements[0].attributes.value == code.attributes.code){
+                    $scope.nemsisHeader.attributes.code = code;
+                }
+            });
+        }
+    };
+
+    $scope.singleSelectChanged = function(element, nemsisHeader){
+        element.set("value", nemsisHeader.attributes.code.attributes.code);
+        element.set("codeString", nemsisHeader.attributes.code.attributes.codeDescription);
+        console.log(element);
+
+    };
+
     $scope.fillMissingElements = function(){
         var hasElement = false;
-        $scope.nemsisHeader.attributes.elements = [];
+        if(!$scope.nemsisHeader.attributes.elements){
+            $scope.nemsisHeader.attributes.elements = [];
+        }
         $scope.section.attributes.elements.forEach(function(element){
             if(element.attributes.title == $scope.nemsisHeader.attributes.ElementNumber){
                 $scope.nemsisHeader.attributes.elements.push(element);
@@ -62,8 +91,6 @@ var NemsisHeaderDirective = function($scope, $elm, $attrs){
         }
     };
 
-
-
     //Add Element
     $scope.addElement = function(){
         var element = new Parse.Object("NemsisElement");
@@ -74,6 +101,7 @@ var NemsisHeaderDirective = function($scope, $elm, $attrs){
         element.set("title", $scope.nemsisHeader.attributes.ElementNumber);
         element.set("pcrId", "");
         element.set("value", "");
+        element.set("codeString", "");
 
         var acl = new Parse.ACL();
         acl.setRoleReadAccess("EMT_" + agencyId, true);

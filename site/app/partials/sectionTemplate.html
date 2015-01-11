@@ -10,10 +10,14 @@
   </thead>
   <tbody>
     <tr ng-repeat="section in sections">
-      <th scope="row">1</th>
-
-      <th>Edit</th>
-      <th>Delete</th>
+      <th scope="row">{{$index + 1}}</th>
+      <th ng-repeat="values in section.values">
+        <div ng-repeat="value in values">
+          <p>{{value}}</p>
+        </div>
+      </th>
+      <th><button class="btn btn-info" ng-click="updateSection(section)">Edit</button></th>
+      <th><button class="btn btn-danger" ng-click="deleteSection(section)">Delete</button></th>
     </tr>
   </tbody>
 </table>

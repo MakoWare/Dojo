@@ -1,8 +1,9 @@
 //Section Modal
 
-var SectionModalCtrl = function($scope, $modalInstance, title, action, sectionName, ParseService){
+var SectionModalCtrl = function($scope, $modalInstance, title, action, sectionName, ParseService, section){
 
     $scope.init = function(){
+        $scope.section = section;
         $scope.title = title;
         $scope.action = action;
 
@@ -27,6 +28,11 @@ var SectionModalCtrl = function($scope, $modalInstance, title, action, sectionNa
 
     //Update Section
     $scope.updateSection = function(){
+        console.log("sectionModal: update section");
+        ParseService.constructNemsisSection(sectionName, function(results){
+            $scope.nemsisSection = results;
+            $scope.$apply();
+        });
 
     };
 
