@@ -79,8 +79,26 @@ var SectionDirective = function($scope, $elm, $attrs){
     };
 
     //Delete Section
-    $scope.deleteSection = function(){
+    $scope.deleteSection = function(section){
+        console.log($scope.sections);
+        console.log(section);
         console.log("deleteSection");
+
+        if(section.id){
+            section.destroy({
+                success: function(result){
+                    var index = $scope.sections.indexOf(section);
+                    console.log(index);
+                    $scope.sections.splice(index, 1);
+                },
+                error: function(object,  error){
+                    console.log(error);
+                }
+            });
+        } else {
+            var index = $scope.sections.indexOf(section);
+            $scope.sections.splice(index, 1);
+        }
     };
 
     $scope.convertSectionsForTable = function(){
