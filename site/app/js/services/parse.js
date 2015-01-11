@@ -162,6 +162,22 @@ angular.module('parseService', [])
                 });
             },
 
+
+            //Get NemsisSection
+            getNemsisSelction: function(name, callback){
+                var query = new Parse.Query("NemsisSection");
+                query.containedIn("name", name);
+                query.find({
+                    success: function(results){
+                        callback(results);
+                    },
+                    error: function(error){
+                        callback(error);
+                    }
+                });
+            },
+
+
             //Has sibling
             hasSiblingSection: function(section, callback){
                 var query = new Parse.Query(Section);
@@ -493,11 +509,9 @@ angular.module('parseService', [])
                             elementNames.push(header.attributes.ElementNumber);
                         });
                         var query = new Parse.Query("NemsisElementCode");
-                        console.log(elementNames);
                         query.containedIn("elementNumber", elementNames);
                         query.find({
                             success: function(results){
-                                console.log(results);
                                 nemsisSection.attributes.headers.forEach(function(header){
                                     header.attributes.codes = [];
                                     results.forEach(function(code){

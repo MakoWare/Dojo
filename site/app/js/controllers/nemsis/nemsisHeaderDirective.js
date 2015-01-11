@@ -52,6 +52,17 @@ var NemsisHeaderDirective = function($scope, $elm, $attrs){
         }
     };
 
+    //Is element Required
+    $scope.isElementRequired = function(){
+        var usage = $scope.nemsisHeader.attributes.Usage;
+        if(usage == "Mandatory" ){
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+
 
     //Add Element
     $scope.addElement = function(){

@@ -31,12 +31,14 @@ var SectionModalCtrl = function($scope, $modalInstance, title, action, sectionNa
     };
 
 
-    $scope.ok = function(){
-        $modalInstance.close("taco!");
+    //Done Button
+    $scope.done = function(){
+        $modalInstance.close($scope.section);
     };
 
+
     $scope.cancel = function(){
-        $modalInstance.dismiss('cancel');
+        $modalInstance.close();
     };
 
 

@@ -1,12 +1,18 @@
 var SectionDirective = function($scope, $elm, $attrs){
 
     var init = function(){
-        $scope.templatePath = $attrs.templatepath;
+        //$scope.templatePath = $attrs.templatepath;
+        $scope.templatePath = "partials/sectionTemplate.html";
         $scope.sectionName = $attrs.sectionname;
         $scope.header = $attrs.header;
         $scope.sections = [];
         $scope.$modal = $scope.$parent.$modal;
         $scope.ParseService = $scope.$parent.ParseService;
+
+        $scope.ParseService.constructNemsisSection($scope.sectionName, function(results){
+            $scope.nemsisSection = results;
+            $scope.$apply();
+        });
 
         $scope.$on('gotUser', function(event, args) {
             $scope.parentSection = $scope.$parent.user.attributes.dPersonnel;
@@ -16,8 +22,6 @@ var SectionDirective = function($scope, $elm, $attrs){
                     $scope.sections.push(section);
                 }
             });
-
-
         });
 
     };
@@ -36,7 +40,10 @@ var SectionDirective = function($scope, $elm, $attrs){
         });
 
         modalInstance.result.then(function(results) {
-            console.log(results);
+            if(results){
+                console.log(results);
+                $scope.sections.push(results);
+            }
         }, function () {
             console.log("modal dismissed");
         });
