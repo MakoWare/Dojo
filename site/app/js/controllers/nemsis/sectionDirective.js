@@ -4,6 +4,7 @@ var SectionDirective = function($scope, $elm, $attrs){
         $scope.templatePath = "partials/sectionTemplate.html";
         $scope.sectionName = $attrs.sectionname;
         $scope.header = $attrs.header;
+        $scope.delim = $attrs.delim;
         $scope.sections = [];
         $scope.$modal = $scope.$parent.$modal;
         $scope.ParseService = $scope.$parent.ParseService;
@@ -22,8 +23,6 @@ var SectionDirective = function($scope, $elm, $attrs){
                     $scope.sections.push(section);
                 }
             });
-            console.log($scope.sections);
-            //$scope.convertSectionsForTable();
         });
     };
 
@@ -43,9 +42,8 @@ var SectionDirective = function($scope, $elm, $attrs){
 
         modalInstance.result.then(function(results) {
             if(results){
-                console.log(results);
                 $scope.sections.push(results);
-                $scope.parentSection.attributes.sections =  $scope.sections;
+                $scope.parentSection.attributes.sections.push(results);
                 $scope.convertSectionsForTable();
             }
         }, function () {
@@ -54,8 +52,6 @@ var SectionDirective = function($scope, $elm, $attrs){
     };
 
     $scope.updateSection = function(section){
-        console.log("updateSection");
-
         var modalInstance = $scope.$modal.open({
             templateUrl: 'partials/sectionModal.html',
             controller: 'SectionModalCtrl',
@@ -73,7 +69,6 @@ var SectionDirective = function($scope, $elm, $attrs){
             if(results){
                 console.log(results);
                 console.log($scope.sections);
-                $scope.parentSection.attributes.sections =  $scope.sections;
                 $scope.convertSectionsForTable();
             }
         }, function () {
@@ -87,25 +82,39 @@ var SectionDirective = function($scope, $elm, $attrs){
         console.log(section);
         console.log("deleteSection");
 
+
         if(section.id){
-            section.destroy({
-                success: function(result){
-                    var index = $scope.sections.indexOf(section);
-                    console.log(index);
-                    $scope.sections.splice(index, 1);
+            console.log("has id");
+            $scope.parentSection.remove("sections", section);
+            $scope.parentSection.save({
+                success: function(object){
+                    console.log(object);
+                    section.destroy({
+                        success: function(result){
+                            var index = $scope.sections.indexOf(section);
+                            console.log(index);
+                            $scope.sections.splice(index, 1);
+                            console.log($scope.sections);
+                            $scope.$apply();
+                        },
+                        error: function(object,  error){
+                            console.log(error);
+                        }
+                    });
                 },
-                error: function(object,  error){
+                error: function(object, error){
                     console.log(error);
                 }
             });
         } else {
+            $scope.parentSection.remove("sections", section);
             var index = $scope.sections.indexOf(section);
             $scope.sections.splice(index, 1);
+            $scope.$apply();
         }
     };
 
     $scope.convertSectionsForTable = function(){
-        console.log("converting sections");
         $scope.sections.forEach(function(section){
             section.values = [];
             $scope.nemsisSection.attributes.headers.forEach(function(header){

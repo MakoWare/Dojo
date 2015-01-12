@@ -339,36 +339,9 @@ var ObjectHelper = {
         user.setACL(acl);
 
         //Create dPersonnel.PersonnelGroup Section for User
-        var promise = ObjectHelper.createSection(agencyId, "dPersonnel.PersonnelGroup",  function(dPersonnel){
-            user.set("dPersonnel", dPersonnel);
-
-            //Add PersonnelGroup Section to Agency's dPersonnel
-            var query = new Parse.Query("Section");
-            query.equalTo("name", "dPersonnel");
-            query.equalTo("agencyId", Parse.User.current().get('agencyId'));
-            query.first({
-                success: function(result){
-                    result.add('sections', dPersonnel);
-                    result.save({
-                        success: function(result){
-                            user.save(null, {
-                                success: function(user) {
-                                    callback(user);
-                                },
-                                error: function(user, error) {
-                                    callback(error);
-                                }
-                            });
-                        },
-                        error: function(object, error){
-                            callback(error);
-                        }
-                    });
-                },
-                error: function(error){
-                    callback(error);
-                }
-            });
+        ObjectHelper.createEmptySection("dPersonnel.PersonnelGroup",  function(dPersonnel){
+            user.attributes.dPersonnel =  dPersonnel;
+            callback(user);
         });
     },
 
@@ -468,7 +441,6 @@ var ObjectHelper = {
 
         //Get NemsisSection
         var query = new Parse.Query("NemsisSection");
-        console.log(sectionName);
         query.equalTo("name", sectionName);
         query.include("headers");
         query.include("sections");

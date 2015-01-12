@@ -22,7 +22,6 @@ var NemsisHeaderDirective = function($scope, $elm, $attrs){
     };
 
     $scope.setSingleSelect = function(){
-        console.log("setting select");
         $scope.nemsisHeader.attributes.elements = [];
         $scope.section.attributes.elements.forEach(function(element){
             if(element.attributes.title == $scope.nemsisHeader.attributes.ElementNumber){
@@ -31,7 +30,6 @@ var NemsisHeaderDirective = function($scope, $elm, $attrs){
         });
 
         if($scope.nemsisHeader.attributes.elements.length > 0){
-            console.log("in");
             $scope.nemsisHeader.attributes.codes.forEach(function(code){
                 if($scope.nemsisHeader.attributes.elements[0].attributes.value == code.attributes.code){
                     $scope.nemsisHeader.attributes.code = code;
@@ -43,7 +41,6 @@ var NemsisHeaderDirective = function($scope, $elm, $attrs){
     $scope.singleSelectChanged = function(element, nemsisHeader){
         element.set("value", nemsisHeader.attributes.code.attributes.code);
         element.set("codeString", nemsisHeader.attributes.code.attributes.codeDescription);
-        console.log(element);
 
     };
 

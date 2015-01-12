@@ -10,9 +10,11 @@ var UserCtrl = function($rootScope, $scope, $location, ParseService, GlobalServi
 
         if(last == "create"){
             $scope.action = "Create";
-            $scope.createNewUser();
+            $scope.title = "New User";
+            $scope.createUser();
         } else {
             $scope.action = "Update";
+            $scope.title = "Update";
             $scope.getUser(last);
         }
     };
@@ -20,15 +22,11 @@ var UserCtrl = function($rootScope, $scope, $location, ParseService, GlobalServi
     //Create User
     $scope.createUser = function(){
         ParseService.createObject("User", function(results){
-            if(results.id){
+            setTimeout(function(){
                 console.log(results);
                 $scope.user = results;
                 $scope.setUpUser();
-            } else {
-                var newPath = "/users";
-                $location.path(newPath);
-                $scope.$apply();
-            }
+            }, 500);
         });
     };
 
@@ -42,8 +40,7 @@ var UserCtrl = function($rootScope, $scope, $location, ParseService, GlobalServi
                     $scope.fullName = results.attributes.firstName + " " + results.attributes.lastName;
                 }
                 $scope.setUpUser();
-                //console.log($rootScope);
-                $scope.$broadcast("gotUser");
+                //$scope.$broadcast("gotUser");
             } else {
                 var newPath = "/users";
                 $location.path(newPath);
@@ -85,24 +82,93 @@ var UserCtrl = function($rootScope, $scope, $location, ParseService, GlobalServi
                 ];
             }
 
-            ParseService.getRole($scope.user, function(result){
-            GlobalService.dismissSpinner();
-                if(result){
-                    $scope.user.attributes.role = result.attributes.name;
-                    $scope.$apply();
-                } else {
-                    $scope.user.attributes.role = "None";
-                    $scope.$apply();
-                }
-            });
+            if($scope.user.id){
+                ParseService.getRole($scope.user, function(result){
+                    GlobalService.dismissSpinner();
+                    if(result){
+                        $scope.user.attributes.role = result.attributes.name;
+                        $scope.$apply();
+                    } else {
+                        $scope.user.attributes.role = "None";
+                        $scope.$apply();
+                    }
+                });
+            } else {
+                GlobalService.dismissSpinner();
+                $scope.user.attributes.role = "None";
+                $scope.$apply();
+            }
         });
+        $scope.$broadcast("gotUser");
     };
 
 
 
     //Save User
     $scope.saveUser = function(){
-        console.log($scope.user);
+        console.log("saveUser()");
+        GlobalService.showSpinner();
+        //Set EveryThing
+        var user = $scope.user;
+        //user.set("firstName", user.attributes.firstName);
+        //user.set("lastName", user.attributes.lastName);
+
+
+        //First Save Each NemsisElement in each Section
+        var sectionSavePromises = [];
+        var elementSavePromises = [];
+
+        //Elements in dPersonnel.attributes.elements
+        $scope.user.attributes.dPersonnel.attributes.elements.forEach(function(element){
+            element.set("value", element.attributes.value);
+            element.set("codeString", element.attributes.codeString);
+            elementSavePromises.push(element.save());
+        });
+
+        //Elements in dPersonnel.attributes.sections.attributes.elements
+        $scope.user.attributes.dPersonnel.attributes.sections.forEach(function(section){
+            section.attributes.elements.forEach(function(element){
+                element.set("value", element.attributes.value);
+                element.set("codeString", element.attributes.codeString);
+                elementSavePromises.push(element.save());
+            });
+        });
+
+        //After each NemsisElement has been saved, save Each Section
+        Parse.Promise.when(elementSavePromises).then(function(){
+            $scope.user.attributes.dPersonnel.attributes.sections.forEach(function(section){
+                section.set("elements", section.attributes.elements);
+                sectionSavePromises.push(section.save());
+            });
+
+            //After each Section has been saved, save dPersonnel Section
+            Parse.Promise.when(sectionSavePromises).then(function(){
+                $scope.user.attributes.dPersonnel.set("sections", $scope.user.attributes.dPersonnel.attributes.sections);
+                $scope.user.attributes.dPersonnel.set("elements", $scope.user.attributes.dPersonnel.attributes.elements);
+                $scope.user.attributes.dPersonnel.save({
+                    success: function(dPersonnel){
+                        //Now Save the User
+                        $scope.user.set("dPersonnel", dPersonnel);
+                        $scope.user.save({
+                            success: function(user){
+                                GlobalService.showSpinner();
+                                console.log(user);
+
+                            },
+                            errror: function(object, error){
+                                console.log(error);
+                                alert(GlobalService.errorMessage + error.message);
+                            }
+                        });
+                    },
+                    error: function(object, error){
+                        console.log(error);
+                        alert(GlobalService.errorMessage + error.message);
+                    }
+                });
+            });
+        });
+
     };
 
     //Delete Object
