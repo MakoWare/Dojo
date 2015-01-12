@@ -153,35 +153,11 @@ var ObjectHelper = {
         acl.setRoleWriteAccess("EMT_" + agencyId, true);
         contact.setACL(acl);
 
-        ObjectHelper.createSection(agencyId, "dContact.ContactInfoGroup", function(dContact){
-            contact.set("dContact", dContact);
-            var query = new Parse.Query("Section");
-            query.equalTo("name", "dContact");
-            query.equalTo("agencyId", Parse.User.current().get('agencyId'));
-            query.first({
-                success: function(result){
-                    result.add("sections", dContact);
-                    result.save({
-                        success: function(result){
-                            contact.save({
-                                success: function(contact){
-                                    callback(contact);
-                                },
-                                error: function(object, error){
-                                    callback(error);
-                                }
-                            });
-                        },
-                        error: function(object, error){
-                            callback(error);
-                        }
-                    });
-                },
-                error: function(error){
-                    callback(error);
-                }
-            });
+        ObjectHelper.createEmptySection("dContact.ContactInfoGroup", function(dContact){
+            contact.attributes.dContat = dContact;
         });
+
+        callback(contact);
     },
 
 

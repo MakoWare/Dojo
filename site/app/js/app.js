@@ -31,7 +31,7 @@ angular.module('dojo', [
 //Contact
       .when('/contact', {
         templateUrl: 'partials/contact.html',
-        controller: 'ContactCtrl'
+        controller: 'ContactInfoCtrl'
       })
 //Contact
       .when('/contacts', {
@@ -39,8 +39,8 @@ angular.module('dojo', [
           controller: 'ReadCtrl'
       })
       .when('/contacts/:id', {
-          templateUrl: 'partials/update.html',
-          controller: 'CreateCtrl'
+          templateUrl: 'partials/contacts/contact.html',
+          controller: 'ContactCtrl'
       })
 //Dispatches
       .when('/dispatches', {

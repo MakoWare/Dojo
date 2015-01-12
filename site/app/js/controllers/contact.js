@@ -1,5 +1,5 @@
-//Contact Controller
-var ContactCtrl = function($scope, $location, ParseService, GlobalService){
+//Contact Info Controller
+var ContactInfoCtrl = function($scope, $location, ParseService, GlobalService){
 
     $scope.init = function(){
 
