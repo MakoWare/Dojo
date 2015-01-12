@@ -102,11 +102,8 @@ var UserCtrl = function($rootScope, $scope, $location, ParseService, GlobalServi
 
     //Save User
     $scope.saveUser = function(){
-
         console.log($scope.user);
-
     };
-
 
     //Delete Object
     $scope.deleteUser = function(){

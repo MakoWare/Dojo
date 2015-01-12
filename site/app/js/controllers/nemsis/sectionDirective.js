@@ -1,7 +1,6 @@
 var SectionDirective = function($scope, $elm, $attrs){
 
     var init = function(){
-        //$scope.templatePath = $attrs.templatepath;
         $scope.templatePath = "partials/sectionTemplate.html";
         $scope.sectionName = $attrs.sectionname;
         $scope.header = $attrs.header;
@@ -9,20 +8,22 @@ var SectionDirective = function($scope, $elm, $attrs){
         $scope.$modal = $scope.$parent.$modal;
         $scope.ParseService = $scope.$parent.ParseService;
 
+
         $scope.ParseService.constructNemsisSection($scope.sectionName, function(results){
             $scope.nemsisSection = results;
+            $scope.convertSectionsForTable();
             $scope.$apply();
         });
 
         $scope.$on('gotUser', function(event, args) {
             $scope.parentSection = $scope.$parent.user.attributes.dPersonnel;
-
             $scope.parentSection.attributes.sections.forEach(function(section){
                 if(section.attributes.name == $scope.sectionName){
                     $scope.sections.push(section);
                 }
             });
-            $scope.convertSectionsForTable();
+            console.log($scope.sections);
+            //$scope.convertSectionsForTable();
         });
     };
 
@@ -44,6 +45,7 @@ var SectionDirective = function($scope, $elm, $attrs){
             if(results){
                 console.log(results);
                 $scope.sections.push(results);
+                $scope.parentSection.attributes.sections =  $scope.sections;
                 $scope.convertSectionsForTable();
             }
         }, function () {
@@ -71,6 +73,7 @@ var SectionDirective = function($scope, $elm, $attrs){
             if(results){
                 console.log(results);
                 console.log($scope.sections);
+                $scope.parentSection.attributes.sections =  $scope.sections;
                 $scope.convertSectionsForTable();
             }
         }, function () {
@@ -109,7 +112,6 @@ var SectionDirective = function($scope, $elm, $attrs){
                 var valueArray = [];
                 section.attributes.elements.forEach(function(element){
                     if(element.attributes.title == header.attributes.ElementNumber){
-                        console.log(element);
                         if(element.attributes.codeString != ""){
                             valueArray.push(element.attributes.codeString);
                         } else {
