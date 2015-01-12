@@ -2,18 +2,11 @@
 
   <div class="page-header" style="margin-top: 0px; margin-bottom: 15px;">
     <div class="row">
-      <div class="col-sm-5">
-        <h1 style="margin-top: 10px;">{{action}} User</h1>
-      </div>
-      <div class="col-sm-2 col-sm-offset-2">
-        <button class="btn btn-lg btn-primary" style="margin-top: 10px;" ng-click="saveUser()" ng-disabled="userForm.$invalid">{{action}}</button>
-      </div>
-      <div class="col-sm-2">
-        <button class="btn btn-lg btn-danger" style="margin-top: 10px;" ng-click="deleteUser()">Delete</button>
+      <div class="col-sm-12">
+        <h1 style="margin-top: 10px;">{{action}} {{fullName}}</h1>
       </div>
     </div>
   </div>
-
 
   <form name="userForm">
     <div class="row">
@@ -96,15 +89,24 @@
         </select>
       </div>
     </div>
-
-
   </form>
 
+  <br>
+  <div section header="Immunizations" sectionName="dPersonnel.ImmunizationsGroup"></div>
+  <br>
+  <div section header="Licences" sectionName="dPersonnel.LicensureGroup"></div>
+  <br>
+  <div section header="Certifications" sectionName="dPersonnel.CertificationLevelGroup"></div>
 
-    <div section header="Immunizations" sectionName="dPersonnel.ImmunizationsGroup"></div>
+  <div class="row">
+    <div class="col-sm-2 col-sm-offset-8">
+      <button class="btn btn-lg btn-primary" style="margin-top: 10px;" ng-click="saveUser()" ng-disabled="userForm.$invalid">{{action}}</button>
+    </div>
+    <div class="col-sm-2">
+      <button class="btn btn-lg btn-danger" style="margin-top: 10px;" ng-click="deleteUser()">Delete</button>
+    </div>
+  </div>
+  <br>
 
-    <div section header="Licences" sectionName="dPersonnel.LicensureGroup"></div>
-
-    <div section header="Certifications" sectionName="dPersonnel.CertificationLevelGroup"></div>
 
 </div>

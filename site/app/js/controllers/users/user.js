@@ -38,6 +38,9 @@ var UserCtrl = function($rootScope, $scope, $location, ParseService, GlobalServi
             if(results.id){
                 console.log(results);
                 $scope.user = results;
+                if(results.attributes.firstName && results.attributes.lastName){
+                    $scope.fullName = results.attributes.firstName + " " + results.attributes.lastName;
+                }
                 $scope.setUpUser();
                 //console.log($rootScope);
                 $scope.$broadcast("gotUser");
