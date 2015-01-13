@@ -65,28 +65,28 @@ var ObjectHelper = {
 
     //***Generics***//
     //Create Object
-    createObject: function(objectType, agencyId, userId, callback){
+    createObject: function(objectType){
         switch (objectType) {
         case "Contact":
-            this.createContact(agencyId, userId, callback);
+            this.createContact();
             break;
         case "Dispatch":
-            this.createDispatch(agencyId, userId, callback);
+            this.createDispatch();
             break;
         case "Facility":
-            this.createFacility(agencyId, userId, callback);
+            this.createFacility();
             break;
         case "File":
-            this.createFile(agencyId, userId, callback);
+            this.createFile();
             break;
         case "Patient":
-            this.createPatient(agencyId, userId, callback);
+            this.createPatient();
             break;
         case "User":
-            this.createUser(agencyId, userId, callback);
+            this.createUser();
             break;
         case "Vehicle":
-            this.createVehicle(agencyId, userId, callback);
+            this.createVehicle();
             break;
         }
     },
@@ -128,11 +128,15 @@ var ObjectHelper = {
     //**Create**//
 
     //Contact
-    createContact: function(agencyId, userId, callback){
+    createContact: function(){
+        var user = Parse.User.current();
+        var agencyId = user.get('agencyId');
+
         var contact = new ObjectHelper.Contact();
+
         contact.setACL(ObjectHelper.DispatchACL);
         contact.set("agencyId", agencyId);
-        contact.set("createdBy", Parse.User.current());
+        contact.set("createdBy", user);
         contact.set("comments", "");
         contact.set("firstName", "");
         contact.set("lastName", "");
@@ -153,20 +157,23 @@ var ObjectHelper = {
         acl.setRoleWriteAccess("EMT_" + agencyId, true);
         contact.setACL(acl);
 
-        ObjectHelper.createEmptySection("dContact.ContactInfoGroup", function(dContact){
-            contact.attributes.dContact = dContact;
-        });
+        var dContact = ObjectHelper.createEmptySection("dContact.ContactInfoGroup");
+        contact.attributes.dContact = dContact;
 
-        callback(contact);
+        return contact;
     },
 
 
     //Dispatch
-    createDispatch: function(agencyId, userId, callback){
+    createDispatch: function(){
+        var user = Parse.User.current();
+        var agencyId = user.get('agencyId');
+
         var dispatch = new ObjectHelper.Dispatch();
+
         dispatch.setACL(ObjectHelper.DispatchACL);
         dispatch.set("agencyId", agencyId);
-        dispatch.set("createdBy", Parse.User.current());
+        dispatch.set("createdBy", user);
         dispatch.set("comments", "");
         dispatch.set("dropOffAddress", "");
         dispatch.set("dropOffCity", "");
@@ -186,28 +193,24 @@ var ObjectHelper = {
         acl.setRoleWriteAccess("EMT_" + agencyId, true);
         dispatch.setACL(acl);
 
-        ObjectHelper.createSection(agencyId, "eDispatch", function(results){
-            dispatch.set("eDispatch", results);
-            ObjectHelper.createSection(agencyId, "eTimes", function(results){
-                dispatch.set('eTimes', results);
-                dispatch.save({
-                    success: function(dispatch){
-                        callback(dispatch);
-                    },
-                    error: function(object, error){
-                        callback(error);
-                    }
-                });
-            });
-        });
+        var eDispatch = ObjectHelper.createEmptySectionSection("eDispatch");
+        dispatch.attributes.eDispatch = eDispatch;
+
+        var eTimes = ObjectHelper.createEmptySection("eTimes");
+        dispatch.attributes.eTimes = eTimes;
+
+        return dispatch;
     },
 
     //Facility
-    createFacility: function(agencyId, userId, callback){
+    createFacility: function(){
+        var user = Parse.User.current();
+        var agencyId = user.get('agencyId');
+
         var facility = new ObjectHelper.Facility();
-        var dFacilityGroup;
+
         facility.set("agencyId", agencyId);
-        facility.set("createdBy", Parse.User.current());
+        facility.set("createdBy", user);
         facility.set("comments", "");
         facility.set("name", "");
         facility.set("address", "");
@@ -217,48 +220,21 @@ var ObjectHelper = {
         facility.set("zip", "");
         facility.set("type", "");
 
-        ObjectHelper.createSection(agencyId, "dFacilityGroup", function(results){
-            dFacilityGroup = results;
-            ObjectHelper.createSection(agencyId,  "dFacility.FacilityGroup", function(results){
-                dFacilityGroup.add("sections", results);
+        var dFacility = ObjectHelper.createEmptySection("dFacility.FacilityGroup");
+        facility.attributes.dFacility = dFacility;
 
-                var query = new Parse.Query("Section");
-                query.equalTo("name", "dFacility");
-                query.equalTo("agencyId", Parse.User.current().get('agencyId'));
-                query.first({
-                    success: function(result){
-                        result.add("sections", dFacilityGroup);
-                        result.save({
-                            success: function(result){
-                                facility.set("dFacility", dFacilityGroup);
-                                facility.save({
-                                    success: function(facility){
-                                        callback(facility);
-                                    },
-                                    error: function(object, error){
-                                        callback(error);
-                                    }
-                                });
-                            },
-                            error: function(object, error){
-                                callback(error);
-                            }
-                        });
-                    },
-                    error: function(error){
-                        callback(error);
-                    }
-                });
-            });
-        });
+        return facility;
     },
 
     //Patient
-    createPatient: function(agencyId, userId, callback){
+    createPatient: function(){
+        var user = Parse.User.current();
+        var agencyId = user.get('agencyId');
+
         var patient = new ObjectHelper.Patient();
-        var ePatient;
+
         patient.set("agencyId", agencyId);
-        patient.set("createdBy", Parse.User.current());
+        patient.set("createdBy", user);
         patient.set("address", "");
         patient.set("age", "");
         patient.set("city", "");
@@ -281,27 +257,22 @@ var ObjectHelper = {
         acl.setRoleWriteAccess("EMT_" + agencyId, true);
         patient.setACL(acl);
 
-        ObjectHelper.createSection(agencyId, "ePatient", function(results){
-            ePatient = results;
-            ObjectHelper.createSection(agencyId, "ePatient.PatientNameGroup", function(results){
-                ePatient.add("sections", results);
-                patient.set("ePatient", ePatient);
-                patient.save({
-                    success: function(patient){
-                        callback(patient);
-                    },
-                    error: function(object, error){
-                        callback(error);
-                    }
-                });
-            });
-        });
+        var ePatient = ObjectHelper.createEmptySection("ePatient");
+        var nameGroup = ObjectHelper.createEmptySection("ePatient.PatientNameGroup");
+        var ageGroup = ObjectHelper.createEmptySection("ePatient.PatientAgeGroup");
+
+        ePatient.attributes.ePatient.attributes.sections.push(nameGroup);
+        ePatient.attributes.ePatient.attributes.sections.push(ageGroup);
+
+        patient.attributes.ePatient = ePatient;
+        return patient;
     },
 
     //User
-    createUser: function(agencyId, userId, callback){
+    createUser: function(){
         var user = new Parse.User();
         var rando = ObjectHelper.getRandomInt(0, 100000000);
+
         user.set("agencyId", agencyId);
         user.set("createdBy", Parse.User.current());
         user.set("username", "user" + rando);
@@ -315,10 +286,10 @@ var ObjectHelper = {
         user.setACL(acl);
 
         //Create dPersonnel.PersonnelGroup Section for User
-        ObjectHelper.createEmptySection("dPersonnel.PersonnelGroup",  function(dPersonnel){
-            user.attributes.dPersonnel =  dPersonnel;
-            callback(user);
-        });
+        var dPersonnel = ObjectHelper.createEmptySection("dPersonnel.PersonnelGroup");
+        user.attributes.dPersonnel =  dPersonnel;
+
+        return user;
     },
 
     //Vehicle
@@ -999,7 +970,7 @@ var ObjectHelper = {
     },
 
 
-    createEmptySection: function(name, callback){
+    createEmptySection: function(name){
         var user = Parse.User.current();
         var agencyId = user.get('agencyId');
         var section = new Parse.Object("Section");
@@ -1015,10 +986,7 @@ var ObjectHelper = {
         sectionACL.setRoleWriteAccess("EMT_" + agencyId, true);
         section.setACL(sectionACL);
 
-        callback(section);
-
+        return section;
     }
-
-
 
 };
