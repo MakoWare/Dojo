@@ -62,8 +62,8 @@ angular.module('dojo', [
         controller: 'ReadCtrl'
       })
       .when('/facilities/:id', {
-        templateUrl: 'partials/update.html',
-        controller: 'CreateCtrl'
+        templateUrl: 'partials/facilities/facility.html',
+        controller: 'FacilityCtrl'
       })
 //Files
       .when('/files', {
