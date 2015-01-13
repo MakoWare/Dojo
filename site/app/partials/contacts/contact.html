@@ -12,34 +12,34 @@
     <div class="row">
       <div class="form-group col-md-3" ng-class="{ 'has-error': contactForm.firstName.$invalid }">
         <label for="firstName">First Name</label>
-        <input ng-model="object.attributes.firstName" type="text" name="firstName" class="form-control" id="firstName" placeholder="First Name" required/>
+        <input ng-model="contact.attributes.firstName" type="text" name="firstName" class="form-control" id="firstName" placeholder="First Name" required/>
       </div>
 
       <div class="form-group col-md-1">
         <label for="middleInitial">M.I</label>
-        <input ng-model="object.attributes.middleInitial" type="text" class="form-control" id="middleInitial" placeholder="Middle"/>
+        <input ng-model="contact.attributes.middleInitial" type="text" class="form-control" id="middleInitial" placeholder="Middle"/>
       </div>
 
       <div class="form-group col-md-3" ng-class="{ 'has-error': contactForm.lastName.$invalid }">
         <label for="lastName">Last Name</label>
-        <input ng-model="object.attributes.lastName" name="lastName" type="text" class="form-control" id="lastName" placeholder="Last Name" required/>
+        <input ng-model="contact.attributes.lastName" name="lastName" type="text" class="form-control" id="lastName" placeholder="Last Name" required/>
       </div>
     </div>
 
     <div class="row">
       <div class="form-group col-md-3">
         <label for="phone">Phone Number</label>
-        <input ng-model="object.attributes.phone" type="text" class="form-control" id="phone" placeholder="Phone"/>
+        <input ng-model="contact.attributes.phone" type="text" class="form-control" id="phone" placeholder="Phone"/>
       </div>
 
       <div class="form-group col-md-3">
         <label for="phone">Email</label>
-        <input ng-model="object.attributes.email" type="text" class="form-control" id="email" placeholder="Email"/>
+        <input ng-model="contact.attributes.email" type="text" class="form-control" id="email" placeholder="Email"/>
       </div>
 
       <div class="form-group col-md-4" style="margin-left: 2px;">
         <label for="type">Type</label>
-        <select class="form-control" id="type" ng-model="object.attributes.type">
+        <select class="form-control" id="type" ng-model="contact.attributes.type">
           <option class="form-control" value=""></option>
           <option class="form-control" value="1101001 Administrative Assistant">Administrative Assistant</option>
           <option class="form-control" value="1101003 EMS Agency Director/Chief/Lead Administrator/CEO">EMS Agency Director/Chief/Lead Administrator/CEO</option>
@@ -57,23 +57,23 @@
     <div class="row">
       <div class="form-group col-md-4">
         <label for="address">Address</label>
-        <input ng-model="object.attributes.address" type="text" class="form-control" id="address" placeholder="Address"/>
+        <input ng-model="contact.attributes.address" type="text" class="form-control" id="address" placeholder="Address"/>
       </div>
       <div class="form-group col-md-2" style="margin-left: 2px">
         <label for="city">City</label>
-        <input ng-model="object.attributes.city" type="text" class="form-control" id="city" placeholder="City"/>
+        <input ng-model="contact.attributes.city" type="text" class="form-control" id="city" placeholder="City"/>
       </div>
       <div class="form-group col-md-1" style="margin-left: 2px">
         <label for="state">State</label>
-        <input ng-model="object.attributes.state" type="text" class="form-control" id="state" placeholder="State"/>
+        <input ng-model="contact.attributes.state" type="text" class="form-control" id="state" placeholder="State"/>
       </div>
       <div class="form-group col-md-2" style="margin-left: 2px">
         <label for="country">Country</label>
-        <input ng-model="object.attributes.country" type="text" class="form-control" id="county" placeholder="County"/>
+        <input ng-model="contact.attributes.country" type="text" class="form-control" id="county" placeholder="County"/>
       </div>
       <div class="form-group col-md-2" style="margin-left: 2px">
         <label for="zip">Zip Code</label>
-        <input ng-model="object.attributes.zip" type="text" class="form-control" id="zip" placeholder="Zip"/>
+        <input ng-model="contact.attributes.zip" type="text" class="form-control" id="zip" placeholder="Zip"/>
       </div>
     </div>
   </form>
@@ -91,7 +91,5 @@
     </div>
   </div>
   <br>
-
-
 
 </div>

@@ -1,7 +1,7 @@
 'use strict';
 
-//Contact Controller
-var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalService, $modal){
+//Patients Controller
+var PatientsCtrl = function($rootScope, $scope, $location, ParseService, GlobalService, $modal){
 
     $scope.init = function(){
         GlobalService.showSpinner();
@@ -11,62 +11,62 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
 
         if(last == "create"){
             $scope.action = "Create";
-            $scope.title = "New Contact";
-            $scope.createContact();
+            $scope.title = "New Patient";
+            $scope.createPatient();
         } else {
             $scope.action = "Update";
             $scope.title = "Update";
-            $scope.getContact(last);
+            $scope.getPatient(last);
         }
     };
 
-    //Create Contact
-    $scope.createContact = function(){
-        ParseService.createObject("Contact", function(results){
-            setTimeout(function(){
+    //Create Patient
+    $scope.createPatient = function(){
+        ParseService.createObject("Patient", function(results){
+            setTimeout(function(){  //Hack because directives need to setup listeners
                 console.log(results);
-                $scope.contact = results;
-                $scope.setUpContact();
+                $scope.patient = results;
+                $scope.setUpPatient();
             }, 500);
         });
     };
 
-    //Get Contact
-    $scope.getContact = function(id){
-        ParseService.getObjectById("Contact", id, function(results){
+    //Get Patient
+    $scope.getPatient = function(id){
+        ParseService.getObjectById("Patient", id, function(results){
             if(results.id){
                 console.log(results);
-                $scope.contact = results;
+                $scope.patient = results;
                 if(results.attributes.firstName && results.attributes.lastName){
                     $scope.fullName = results.attributes.firstName + " " + results.attributes.lastName;
                 }
-                $scope.setUpContact();
+                $scope.setUpPatient();
             } else {
-                var newPath = "/contacts";
+                var newPath = "/patients";
                 $location.path(newPath);
                 $scope.$apply();
             }
         });
     };
 
-    //Setup Contact
-    $scope.setUpContact = function(){
+    //Setup Patient
+    $scope.setUpPatient = function(){
 
 
-        $scope.$broadcast("gotContact");
+        $scope.$broadcast("gotPatient");
         GlobalService.dismissSpinner();
 
     };
 
 
 
-    //Save Contact
-    $scope.saveContact = function(){
-        console.log("saveContact()");
-        GlobalService.showSpinner();
+    //Save Patient
+    $scope.savePatient = function(){
+        console.log("savePatient()");
 
+        GlobalService.showSpinner();
         //Set EveryThing
-        var contact = $scope.contact;
+        var patient = $scope.patient;
         //user.set("firstName", user.attributes.firstName);
         //user.set("lastName", user.attributes.lastName);
 
@@ -128,15 +128,15 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
 
     };
 
-    //Delete Contact
-    $scope.deleteContact = function(){
+    //Delete Patient
+    $scope.deletePatient = function(){
         GlobalService.showSpinner();
-        ParseService.deleteObject($scope.contact, "Contact", function(results){
+        ParseService.deleteObject($scope.patient, "Patient", function(results){
             GlobalService.dismissSpinner();
             if(results.message != null){
                 alert(GlobalService.errorMessage + results.message);
             } else {
-                var newPath = "/contacts" ;
+                var newPath = "/patients" ;
                 $location.path(newPath);
                 $scope.$apply();
             }

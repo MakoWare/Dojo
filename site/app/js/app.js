@@ -48,8 +48,8 @@ angular.module('dojo', [
         controller: 'ReadCtrl'
       })
       .when('/dispatches/:id', {
-        templateUrl: 'partials/update.html',
-        controller: 'CreateCtrl'
+        templateUrl: 'partials/dispatches/dispatch.html',
+        controller: 'DispatchCtrl'
       })
 //Documentation
       .when('/documentation', {
@@ -105,8 +105,8 @@ angular.module('dojo', [
         controller: 'ReadCtrl'
       })
       .when('/patients/:id', {
-        templateUrl: 'partials/update.html',
-        controller: 'CreateCtrl'
+        templateUrl: 'partials/patients/patient.html',
+        controller: 'PatientCtrl'
       })
 //PCRs
       .when('/pcrs', {
@@ -132,8 +132,8 @@ angular.module('dojo', [
         controller: 'ReadCtrl'
       })
       .when('/vehicles/:id', {
-        templateUrl: 'partials/update.html',
-        controller: 'CreateCtrl'
+        templateUrl: 'partials/vehicles/vehicle.html',
+        controller: 'VehicleCtrl'
       })
 //Otherwise
       .otherwise({

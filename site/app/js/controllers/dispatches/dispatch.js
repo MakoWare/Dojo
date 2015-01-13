@@ -1,7 +1,7 @@
 'use strict';
 
-//Contact Controller
-var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalService, $modal){
+//Dispatch Controller
+var DispatchCtrl = function($rootScope, $scope, $location, ParseService, GlobalService, $modal){
 
     $scope.init = function(){
         GlobalService.showSpinner();
@@ -11,65 +11,57 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
 
         if(last == "create"){
             $scope.action = "Create";
-            $scope.title = "New Contact";
+            $scope.title = "New Dispatch";
             $scope.createContact();
         } else {
             $scope.action = "Update";
-            $scope.title = "Update";
+            $scope.title = "Update Dispatch";
             $scope.getContact(last);
         }
     };
 
-    //Create Contact
-    $scope.createContact = function(){
-        ParseService.createObject("Contact", function(results){
+    //Create Dispatch
+    $scope.createDispatch = function(){
+        ParseService.createObject("Dispatch", function(results){
             setTimeout(function(){
                 console.log(results);
-                $scope.contact = results;
-                $scope.setUpContact();
+                $scope.dispatch = results;
+                $scope.setUpDispatch();
             }, 500);
         });
     };
 
-    //Get Contact
-    $scope.getContact = function(id){
-        ParseService.getObjectById("Contact", id, function(results){
+    //Get Dispatch
+    $scope.getDispatch = function(id){
+        ParseService.getObjectById("Dispatch", id, function(results){
             if(results.id){
                 console.log(results);
-                $scope.contact = results;
-                if(results.attributes.firstName && results.attributes.lastName){
-                    $scope.fullName = results.attributes.firstName + " " + results.attributes.lastName;
-                }
-                $scope.setUpContact();
+                $scope.dispatch = results;
+                $scope.setUpDispatch();
             } else {
-                var newPath = "/contacts";
+                var newPath = "/dispatches";
                 $location.path(newPath);
                 $scope.$apply();
             }
         });
     };
 
-    //Setup Contact
-    $scope.setUpContact = function(){
+    //Setup Dispatch
+    $scope.setUpDispatch = function(){
 
 
-        $scope.$broadcast("gotContact");
         GlobalService.dismissSpinner();
-
     };
 
 
 
-    //Save Contact
-    $scope.saveContact = function(){
-        console.log("saveContact()");
+    //Save Dispatch
+    $scope.saveDispatch = function(){
+        console.log("saveDispatch()");
         GlobalService.showSpinner();
 
         //Set EveryThing
-        var contact = $scope.contact;
-        //user.set("firstName", user.attributes.firstName);
-        //user.set("lastName", user.attributes.lastName);
-
+        var dispatch = $scope.dispatch;
 
         //First Save Each NemsisElement in each Section
         var sectionSavePromises = [];
@@ -129,14 +121,14 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
     };
 
     //Delete Contact
-    $scope.deleteContact = function(){
+    $scope.deleteDispatch = function(){
         GlobalService.showSpinner();
-        ParseService.deleteObject($scope.contact, "Contact", function(results){
+        ParseService.deleteObject($scope.dispatch, "Dispatch", function(results){
             GlobalService.dismissSpinner();
             if(results.message != null){
                 alert(GlobalService.errorMessage + results.message);
             } else {
-                var newPath = "/contacts" ;
+                var newPath = "/dispatch" ;
                 $location.path(newPath);
                 $scope.$apply();
             }

@@ -1,7 +1,7 @@
 'use strict';
 
-//Contact Controller
-var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalService, $modal){
+//Vehicle Controller
+var VehicleCtrl = function($rootScope, $scope, $location, ParseService, GlobalService, $modal){
 
     $scope.init = function(){
         GlobalService.showSpinner();
@@ -11,64 +11,62 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
 
         if(last == "create"){
             $scope.action = "Create";
-            $scope.title = "New Contact";
-            $scope.createContact();
+            $scope.title = "New Vehicle";
+            $scope.createVehicle();
         } else {
             $scope.action = "Update";
             $scope.title = "Update";
-            $scope.getContact(last);
+            $scope.getVehicle(last);
         }
     };
 
-    //Create Contact
-    $scope.createContact = function(){
-        ParseService.createObject("Contact", function(results){
-            setTimeout(function(){
+    //Create Vehicle
+    $scope.createVehicle = function(){
+        ParseService.createObject("Vehicle", function(results){
+            setTimeout(function(){  //Hack because directives need to setup listeners
                 console.log(results);
-                $scope.contact = results;
-                $scope.setUpContact();
+                $scope.vehicle = results;
+                $scope.setUpVehicle();
             }, 500);
         });
     };
 
-    //Get Contact
-    $scope.getContact = function(id){
-        ParseService.getObjectById("Contact", id, function(results){
+    //Get Vehicle
+    $scope.getVehicle = function(id){
+        ParseService.getObjectById("Vehicle", id, function(results){
             if(results.id){
                 console.log(results);
-                $scope.contact = results;
-                if(results.attributes.firstName && results.attributes.lastName){
-                    $scope.fullName = results.attributes.firstName + " " + results.attributes.lastName;
+                $scope.vehicle = results;
+                if(results.attributes.name){
+                    $scope.fullName = results.attributes.name;
                 }
-                $scope.setUpContact();
+                $scope.setUpVehicle();
             } else {
-                var newPath = "/contacts";
+                alert(GlobalService.errorMessage + "Could not find Vehicle");
+                var newPath = "/vehicles";
                 $location.path(newPath);
                 $scope.$apply();
             }
         });
     };
 
-    //Setup Contact
-    $scope.setUpContact = function(){
+    //Setup Vehicle
+    $scope.setUpVehicle = function(){
 
 
-        $scope.$broadcast("gotContact");
+        $scope.$broadcast("gotVehicle");
         GlobalService.dismissSpinner();
-
     };
 
 
-
-    //Save Contact
-    $scope.saveContact = function(){
-        console.log("saveContact()");
+    //Save Vehicle
+    $scope.saveVehicle = function(){
         GlobalService.showSpinner();
+        console.log("saveVehicle()");
 
         //Set EveryThing
-        var contact = $scope.contact;
-        //user.set("firstName", user.attributes.firstName);
-        //user.set("lastName", user.attributes.lastName);
+        var vehicle = $scope.vehicle;
+
 
 
         //First Save Each NemsisElement in each Section
@@ -128,15 +126,15 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
 
     };
 
-    //Delete Contact
-    $scope.deleteContact = function(){
+    //Delete Vehicle
+    $scope.deleteVehicle = function(){
         GlobalService.showSpinner();
-        ParseService.deleteObject($scope.contact, "Contact", function(results){
+        ParseService.deleteObject($scope.vehicle, "Vehicle", function(results){
             GlobalService.dismissSpinner();
             if(results.message != null){
                 alert(GlobalService.errorMessage + results.message);
             } else {
-                var newPath = "/contacts" ;
+                var newPath = "/vehicles" ;
                 $location.path(newPath);
                 $scope.$apply();
             }

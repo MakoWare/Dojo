@@ -1,12 +1,20 @@
-<div style="margin-right: 30px; margin-left: 30px;">
-  <form name="form" role="form" novalidate>
+<div class="container-widescreen" style="margin-right : 5%; margin-left: 5%">
+  <div class="page-header" style="margin-top: 0px; margin-bottom: 15px;">
+    <div class="row">
+      <div class="col-sm-12">
+        <h1 style="margin-top: 10px;">{{title}}</h1>
+      </div>
+    </div>
+  </div>
+
+  <form name="dispatchForm">
     <div class="row">
       <h3 style="margin-top: 0px">Patient Information</h3>
     </div>
     <div class="row">
       <div class="form-group col-md-4">
         <label for="patient">Patient</label>
-        <input ng-model="object.attributes.patient" type="text" class="form-control" id="patient" placeholder="Patient" tooltip-trigger="focus" tooltip-placement="top" tooltip="Patient the dispatch is for, if patient is new create a patient file for them first" typeahead="patient as patient.attributes.firstName + ' ' + patient.get('lastName') + ' xxx-xx-' + patient.get('ssn').substr(patient.get('ssn').length - 4) for patient in getPatients($viewValue) | filter:$viewValue | orderBy:$viewValue" typeahead-on-select="setPatientInfo($item)" typeahead-loading="loadingLocations"/>
+        <input ng-model="dispatch.attributes.patient" type="text" class="form-control" id="patient" placeholder="Patient" tooltip-trigger="focus" tooltip-placement="top" tooltip="Patient the dispatch is for, if patient is new create a patient file for them first" typeahead="patient as patient.attributes.firstName + ' ' + patient.get('lastName') + ' xxx-xx-' + patient.get('ssn').substr(patient.get('ssn').length - 4) for patient in getPatients($viewValue) | filter:$viewValue | orderBy:$viewValue" typeahead-on-select="setPatientInfo($item)" typeahead-loading="loadingLocations"/>
         <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
       </div>
 
@@ -34,28 +42,28 @@
     <div class="row">
       <div class="form-group col-md-4">
 	<label for="patient">Complaint*</label>
-	<select class="form-control" ng-model="object.attributes.complaint" ng-options="code as code.attributes.codeDescription for code in eDispatch01 track by code.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="The complaint dispatch reported to the responding unit." required>
+	<select class="form-control" ng-model="dispatch.attributes.complaint" ng-options="code as code.attributes.codeDescription for code in eDispatch01 track by code.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="The complaint dispatch reported to the responding unit." required>
 	  <option class="form-control" value=""></option>
         </select>
       </div>
 
       <div class="form-group col-md-2">
 	<label for="emd">EMD Performed</label>
-	<select class="form-control" id="emd" ng-model="object.attributes.emd" ng-options="code as code.attributes.codeDescription for code in eDispatch02 track by code.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="Indication of whether Emergency Medical Dispatch was performed for this EMS event.">
+	<select class="form-control" id="emd" ng-model="dispatch.attributes.emd" ng-options="code as code.attributes.codeDescription for code in eDispatch02 track by code.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="Indication of whether Emergency Medical Dispatch was performed for this EMS event.">
 	  <option class="form-control" value=""></option>
         </select>
       </div>
 
       <div class="form-group col-md-2">
 	<label for="priority">Dispatch Priority</label>
-	<select class="form-control" id="priority" ng-model="object.attributes.priority" ng-options="code as code.get('codeDescription') for code in eDispatch05 track by code.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="The actual, apparent, or potential acuity of the patient's condition as determined through information obtained during the EMD process.">
+	<select class="form-control" id="priority" ng-model="dispatch.attributes.priority" ng-options="code as code.get('codeDescription') for code in eDispatch05 track by code.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="The actual, apparent, or potential acuity of the patient's condition as determined through information obtained during the EMD process.">
 	  <option class="form-control" value=""></option>
         </select>
       </div>
 
       <div class="form-group col-md-2">
 	<label for="status">Current Status</label>
-	<select class="form-control"  ng-model="object.attributes.status" tooltip-trigger="focus" tooltip-placement="top" tooltip="The current status of the dispatch">
+	<select class="form-control"  ng-model="dispatch.attributes.status" tooltip-trigger="focus" tooltip-placement="top" tooltip="The current status of the dispatch">
 	  <option class="form-control" value=""></option>
 	  <option class="form-control" value="Waiting">Waiting</option>
 	  <option class="form-control" value="Assigned">Assigned</option>
@@ -66,7 +74,7 @@
 
       <div class="form-group col-md-2">
 	<label for="color">Color</label>
-        <input id="colorPicker" type="text" value="{{object.attributes.color}}" name="ColorPicker" class="pick-a-color form-control" tooltip-trigger="focus" tooltip-placement="top" tooltip="The Color that will be displayed in the dispatch list">
+        <input id="colorPicker" type="text" value="{{dispatch.attributes.color}}" name="ColorPicker" class="pick-a-color form-control" tooltip-trigger="focus" tooltip-placement="top" tooltip="The Color that will be displayed in the dispatch list">
       </div>
     </div>
 
@@ -75,33 +83,33 @@
 
       <div class="form-group col-md-4">
 	<label for="pickUpFacility">Pick Up Facility</label>
-        <input ng-model="object.attributes.pickUpFacility" type="text" class="form-control" id="patient" placeholder="Pick Up Facility" tooltip-trigger="focus" tooltip-placement="top" tooltip="The Facility the Patient will be picked up from, if the Facility is not found create a facility file for it first" typeahead="facility as facility.attributes.name for facility in getFacilities($viewValue) | filter:$viewValue | orderBy:$viewValue" typeahead-on-select="setPickUpFacilityInfo($item)" typeahead-loading="loadingLocations" typeahead-wait-ms="100"/>
+        <input ng-model="dispatch.attributes.pickUpFacility" type="text" class="form-control" id="patient" placeholder="Pick Up Facility" tooltip-trigger="focus" tooltip-placement="top" tooltip="The Facility the Patient will be picked up from, if the Facility is not found create a facility file for it first" typeahead="facility as facility.attributes.name for facility in getFacilities($viewValue) | filter:$viewValue | orderBy:$viewValue" typeahead-on-select="setPickUpFacilityInfo($item)" typeahead-loading="loadingLocations" typeahead-wait-ms="100"/>
         <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
       </div>
 
       <div class="form-group col-md-3">
 	<label for="pickUpAddress">Pick Up Address*</label>
-	<input ng-model="object.attributes.pickUpAddress" type="text" class="form-control" placeholder="Address" tooltip-trigger="focus" tooltip-placement="top" tooltip="Address the Patient will be picked up at" typeahead="address.formatted_address for address in addressTypeAhead($viewValue)" typeahead-loading="loadingLocations"  typeahead-on-select="setPickUpAddress($item)" typeahead-wait-ms="100" required/>
+	<input ng-model="dispatch.attributes.pickUpAddress" type="text" class="form-control" placeholder="Address" tooltip-trigger="focus" tooltip-placement="top" tooltip="Address the Patient will be picked up at" typeahead="address.formatted_address for address in addressTypeAhead($viewValue)" typeahead-loading="loadingLocations"  typeahead-on-select="setPickUpAddress($item)" typeahead-wait-ms="100" required/>
       </div>
 
       <div class="form-group col-md-2">
 	<label for="pickUpCity">City*</label>
-	<input ng-model="object.attributes.pickUpCity" type="text" class="form-control" placeholder="City" tooltip-trigger="focus" tooltip-placement="top" tooltip="City the Patient will be picked up at" required/>
+	<input ng-model="dispatch.attributes.pickUpCity" type="text" class="form-control" placeholder="City" tooltip-trigger="focus" tooltip-placement="top" tooltip="City the Patient will be picked up at" required/>
       </div>
 
       <div class="form-group col-md-1">
 	<label for="pickUpZip">Zip</label>
-	<input ng-model="object.attributes.pickUpZip" type="text" class="form-control" placeholder="Zip" tooltip-trigger="focus" tooltip-placement="top" tooltip="Zip code the Patient will be picked up at"/>
+	<input ng-model="dispatch.attributes.pickUpZip" type="text" class="form-control" placeholder="Zip" tooltip-trigger="focus" tooltip-placement="top" tooltip="Zip code the Patient will be picked up at"/>
       </div>
 
       <div class="form-group col-md-1">
 	<label for="pickUpState">State</label>
-	<input ng-model="object.attributes.pickUpState" type="text" class="form-control" placeholder="State" tooltip-trigger="focus" tooltip-placement="top" tooltip="State the Patient will be picked up at"/>
+	<input ng-model="dispatch.attributes.pickUpState" type="text" class="form-control" placeholder="State" tooltip-trigger="focus" tooltip-placement="top" tooltip="State the Patient will be picked up at"/>
       </div>
 
       <div class="form-group col-md-1">
         <label for="pickUpCountry">Country</label>
-        <input ng-model="object.attributes.pickUpCountry" type="text" class="form-control" placeholder="Country" tooltip-trigger="focus" tooltip-placement="top" tooltip="Country the Patient will be picked up at"/>
+        <input ng-model="dispatch.attributes.pickUpCountry" type="text" class="form-control" placeholder="Country" tooltip-trigger="focus" tooltip-placement="top" tooltip="Country the Patient will be picked up at"/>
       </div>
     </div>
 
@@ -109,7 +117,7 @@
       <div class="col-md-3" style="margin-top: 10px">
         <p class="input-group">
 	  <label for="pickUpDate">Pick Up Date</label>
-          <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="object.attributes.pickUpDate" is-open="pickUpDateOpened" min="'1900-01-01'" datepicker-options="dateOptions"  show-weeks="false"/>
+          <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dispatch.attributes.pickUpDate" is-open="pickUpDateOpened" min="'1900-01-01'" datepicker-options="dateOptions"  show-weeks="false"/>
           <span class="input-group-btn">
             <button class="btn btn-default" ng-focus="pickUpDateOpened = true" ng-click="pickUpDateOpen($event)" style="margin-top: 25px;"><i class="glyphicon glyphicon-calendar"></i></button>
           </span>
@@ -117,12 +125,12 @@
       </div>
 
       <div class="col-md-2">
-        <div ng-model="object.attributes.pickUpDate" style="display:inline-block; margin-left: 5px;">
+        <div ng-model="dispatch.attributes.pickUpDate" style="display:inline-block; margin-left: 5px;">
           <timepicker hour-step="hstep" minute-step="mstep" show-meridian="false"></timepicker>
         </div>
       </div>
       <div class="col-md-5" style="margin-top: 10px">
-	<textarea ng-model="object.attributes.comments" class="form-control" rows="3" placeholder="Additional Information"></textarea>
+	<textarea ng-model="dispatch.attributes.comments" class="form-control" rows="3" placeholder="Additional Information"></textarea>
       </div>
     </div>
 
@@ -130,29 +138,29 @@
       <h3 style="margin-top: 0px;">Drop-Off Information</h3>
       <div class="form-group col-md-4">
 	<label for="dropOffFacility">Drop Off Facility</label>
-        <input ng-model="object.attributes.dropOffFacility" type="text" class="form-control" id="patient" placeholder="Drop Off Facility" tooltip-trigger="focus" tooltip-placement="top" tooltip="The Facility the Patient will be dropped off at, if the Facility is not found create a facility file for it first" typeahead="facility as facility.attributes.name for facility in getFacilities($viewValue) | filter:$viewValue | orderBy:$viewValue" typeahead-on-select="setDropOffFacilityInfo($item)" typeahead-loading="loadingLocations" typeahead-wait-ms="100"/>
+        <input ng-model="dispatch.attributes.dropOffFacility" type="text" class="form-control" id="patient" placeholder="Drop Off Facility" tooltip-trigger="focus" tooltip-placement="top" tooltip="The Facility the Patient will be dropped off at, if the Facility is not found create a facility file for it first" typeahead="facility as facility.attributes.name for facility in getFacilities($viewValue) | filter:$viewValue | orderBy:$viewValue" typeahead-on-select="setDropOffFacilityInfo($item)" typeahead-loading="loadingLocations" typeahead-wait-ms="100"/>
         <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
       </div>
       <div class="form-group col-md-3">
 	<label for="dropOffAddress">Drop Off Address</label>
-	<input ng-model="object.attributes.dropOffAddress" type="text" class="form-control" id="dropOffAddress" placeholder="Address" tooltip-trigger="focus" tooltip-placement="top" tooltip="Address the Patient will be dropped off at" typeahead="address.formatted_address for address in addressTypeAhead($viewValue)" typeahead-loading="loadingLocations"  typeahead-on-select="setDropOffAddress($item)" typeahead-wait-ms="100"/>
+	<input ng-model="dispatch.attributes.dropOffAddress" type="text" class="form-control" id="dropOffAddress" placeholder="Address" tooltip-trigger="focus" tooltip-placement="top" tooltip="Address the Patient will be dropped off at" typeahead="address.formatted_address for address in addressTypeAhead($viewValue)" typeahead-loading="loadingLocations"  typeahead-on-select="setDropOffAddress($item)" typeahead-wait-ms="100"/>
       </div>
       <div class="form-group col-md-2">
 	<label for="dropOffCity">City</label>
-	<input ng-model="object.attributes.dropOffCity" type="text" class="form-control" id="dropOffCity" placeholder="City" tooltip-trigger="focus" tooltip-placement="top" tooltip="City the Patient will be dropped off at"/>
+	<input ng-model="dispatch.attributes.dropOffCity" type="text" class="form-control" id="dropOffCity" placeholder="City" tooltip-trigger="focus" tooltip-placement="top" tooltip="City the Patient will be dropped off at"/>
       </div>
       <div class="form-group col-md-1">
 	<label for="dropOffZip">Zip</label>
-	<input ng-model="object.attributes.dropOffZip" type="text" class="form-control" id="dropOffZip" placeholder="Zip" tooltip-trigger="focus" tooltip-placement="top" tooltip="Zip code the Patient will be dropped off at"/>
+	<input ng-model="dispatch.attributes.dropOffZip" type="text" class="form-control" id="dropOffZip" placeholder="Zip" tooltip-trigger="focus" tooltip-placement="top" tooltip="Zip code the Patient will be dropped off at"/>
       </div>
       <div class="form-group col-md-1">
 	<label for="dropOffState">State</label>
-	<input ng-model="object.attributes.dropOffState" type="text" class="form-control" id="dropOffState" placeholder="State" tooltip-trigger="focus" tooltip-placement="top" tooltip="State the Patient will be dropped off at"/>
+	<input ng-model="dispatch.attributes.dropOffState" type="text" class="form-control" id="dropOffState" placeholder="State" tooltip-trigger="focus" tooltip-placement="top" tooltip="State the Patient will be dropped off at"/>
       </div>
 
       <div class="form-group col-md-1">
 	<label for="dropOffCountry">Country</label>
-	<input ng-model="object.attributes.dropOffCountry" type="text" class="form-control" id="dropOffCountry" placeholder="Country" tooltip-trigger="focus" tooltip-placement="top" tooltip="Country the Patient will be dropped off at"/>
+	<input ng-model="dispatch.attributes.dropOffCountry" type="text" class="form-control" id="dropOffCountry" placeholder="Country" tooltip-trigger="focus" tooltip-placement="top" tooltip="Country the Patient will be dropped off at"/>
       </div>
 
     </div>
@@ -160,28 +168,28 @@
       <div class="col-md-3" style="margin-top: 8px">
         <p class="input-group">
 	  <label for="dropOffDate">Drop Off Date</label>
-          <input  type="text" class="form-control" datepicker-popup="{{format}}" ng-model="object.attributes.dropOffDate" is-open="dropOffDateOpened" min="'1900-01-01'" datepicker-options="dateOptions"  show-weeks="false"/>
+          <input  type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dispatch.attributes.dropOffDate" is-open="dropOffDateOpened" min="'1900-01-01'" datepicker-options="dateOptions"  show-weeks="false"/>
           <span class="input-group-btn">
             <button class="btn btn-default" ng-focus="dropOffDateOpened = true" ng-click="dropOffDateOpen($event)" style="margin-top: 25px;"><i class="glyphicon glyphicon-calendar"></i></button>
           </span>
         </p>
       </div>
       <div class="col-md-2">
-        <div ng-model="object.attributes.dropOffDate">
+        <div ng-model="dispatch.attributes.dropOffDate">
           <timepicker hour-step="hstep" minute-step="mstep" show-meridian="false"></timepicker>
         </div>
       </div>
 
       <div class="form-group col-md-2" style="margin-top: 10px">
 	<label for="vehicle">Vehicle</label>
-	<select class="form-control" ng-model="object.attributes.vehicle" ng-options="vehicle as vehicle.get('name') for vehicle in vehicles track by vehicle.id">
+	<select class="form-control" ng-model="dispatch.attributes.vehicle" ng-options="vehicle as vehicle.get('name') for vehicle in vehicles track by vehicle.id">
 	  <option class="form-control" value=""></option>
 	</select>
       </div>
 
       <div class="form-group col-md-2" style="margin-top: 10px">
 	<label for="vehicleStatus">Vehicle Status</label>
-	<input ng-model="object.attributes.vehicle.attributes.status" type="text" class="form-control"  disabled/>
+	<input ng-model="dispatch.attributes.vehicle.attributes.status" type="text" class="form-control"  disabled/>
       </div>
 
       <div class="col-md-3 " style="margin-top: 32px">
@@ -190,4 +198,19 @@
 
     </div>
   </form>
+
+
+  <div class="page-header"></div>
+  <div class="row">
+    <div class="col-sm-2 col-sm-offset-8">
+      <button class="btn btn-lg btn-primary" ng-click="saveDispatch()" ng-disabled="dispatchForm.$invalid">Save Dispatch</button>
+    </div>
+    <div class="col-sm-2">
+      <button class="btn btn-lg btn-danger" ng-click="deleteDispatch()">Delete Dispatch</button>
+    </div>
+  </div>
+  <br>
+
+
+
 </div>
