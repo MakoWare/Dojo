@@ -63,6 +63,9 @@ angular.module('globalService', [])
                 };
                 var target = document.getElementById('overlay');
                 spinner = new Spinner(opts).spin(target);
+
+                var windowH = $(document).outerHeight();
+                $("#overlay").height(windowH);
                 $("#overlay").show();
 
             },

@@ -1,11 +1,12 @@
 //Section Modal
 
-var SectionModalCtrl = function($scope, $modalInstance, title, action, sectionName, ParseService, section){
+var SectionModalCtrl = function($scope, $modalInstance, title, action, sectionName, ParseService, section, delim){
 
     $scope.init = function(){
         $scope.section = section;
         $scope.title = title;
         $scope.action = action;
+        $scope.delim = delim;
 
         if(action == "Create"){
             $scope.createSection();

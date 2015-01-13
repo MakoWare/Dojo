@@ -65,7 +65,7 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
         console.log("saveContact()");
         GlobalService.showSpinner();
         //Set EveryThing
-        var user = $scope.user;
+        var contact = $scope.contact;
         //user.set("firstName", user.attributes.firstName);
         //user.set("lastName", user.attributes.lastName);
 

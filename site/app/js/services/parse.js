@@ -308,7 +308,6 @@ angular.module('parseService', [])
 
                 query.include("dContact.elements");
                 query.include("dContact.sections.elements");
-                console.log(query);
                 query.get(objectId,{
                     success: function(result){
                         callback(result);

@@ -3,6 +3,7 @@ var NemsisHeaderDirective = function($scope, $elm, $attrs){
     var init = function(){
         $scope.nemsisHeader = $scope.$parent.nemsisHeader;
         $scope.section = $scope.$parent.$parent.section;
+        $scope.delim = $scope.$parent.delim;
         $scope.determineElementType();
         $scope.fillMissingElements();
     };

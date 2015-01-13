@@ -16,6 +16,7 @@ var SectionDirective = function($scope, $elm, $attrs){
             $scope.$apply();
         });
 
+        //For Users
         $scope.$on('gotUser', function(event, args) {
             $scope.parentSection = $scope.$parent.user.attributes.dPersonnel;
             $scope.parentSection.attributes.sections.forEach(function(section){
@@ -24,6 +25,19 @@ var SectionDirective = function($scope, $elm, $attrs){
                 }
             });
         });
+
+        //For Contacts
+        $scope.$on('gotContact', function(event, args) {
+            $scope.parentSection = $scope.$parent.contact.attributes.dContact;
+            $scope.parentSection.attributes.sections.forEach(function(section){
+                if(section.attributes.name == $scope.sectionName){
+                    $scope.sections.push(section);
+                }
+            });
+        });
+
+
+
     };
 
     $scope.addSection = function(){
@@ -36,7 +50,8 @@ var SectionDirective = function($scope, $elm, $attrs){
                 action: function(){ return "Create";},
                 sectionName: function(){ return $scope.sectionName;},
                 ParseService: function(){ return $scope.ParseService;},
-                section: function(){return ;}
+                section: function(){return ;},
+                delim: function(){return $scope.delim;}
             }
         });
 
@@ -61,7 +76,8 @@ var SectionDirective = function($scope, $elm, $attrs){
                 action: function(){ return "Update";},
                 sectionName: function(){ return $scope.sectionName;},
                 ParseService: function(){ return $scope.ParseService;},
-                section: function(){return section;}
+                section: function(){return section;},
+                delim: function(){return $scope.delim;}
             }
         });
 

@@ -154,7 +154,7 @@ var ObjectHelper = {
         contact.setACL(acl);
 
         ObjectHelper.createEmptySection("dContact.ContactInfoGroup", function(dContact){
-            contact.attributes.dContat = dContact;
+            contact.attributes.dContact = dContact;
         });
 
         callback(contact);
