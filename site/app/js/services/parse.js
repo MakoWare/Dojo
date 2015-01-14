@@ -210,8 +210,7 @@ angular.module('parseService', [])
 
             //Create Object
             createObject: function(objectType, callback){
-                var currentUser = Parse.User.current();
-                ObjectHelper.createObject(objectType, currentUser.get('agencyId'), currentUser.id, callback);
+                return ObjectHelper.createObject(objectType, callback);
             },
 
 

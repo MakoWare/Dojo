@@ -22,12 +22,11 @@ var FacilityCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
 
     //Create Facility
     $scope.createFacility = function(){
+        console.log("creating");
         ParseService.createObject("Facility", function(results){
-            setTimeout(function(){
-                console.log(results);
-                $scope.facility = results;
-                $scope.setUpFacility();
-            }, 500);
+            console.log(results);
+            $scope.facility = results;
+            $scope.setUpFacility();
         });
     };
 
@@ -51,10 +50,11 @@ var FacilityCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
 
     //Setup Facility
     $scope.setUpFacility = function(){
+        GlobalService.dismissSpinner();
 
 
         $scope.$broadcast("gotFacility");
-        GlobalService.dismissSpinner();
+
     };
 
 

@@ -65,28 +65,28 @@ var ObjectHelper = {
 
     //***Generics***//
     //Create Object
-    createObject: function(objectType){
+    createObject: function(objectType, callback){
         switch (objectType) {
         case "Contact":
-            this.createContact();
+            this.createContact(callback);
             break;
         case "Dispatch":
-            this.createDispatch();
+            this.createDispatch(callback);
             break;
         case "Facility":
-            this.createFacility();
+            this.createFacility(callback);
             break;
         case "File":
-            this.createFile();
+            this.createFile(callback);
             break;
         case "Patient":
-            this.createPatient();
+            this.createPatient(callback);
             break;
         case "User":
-            this.createUser();
+            this.createUser(callback);
             break;
         case "Vehicle":
-            this.createVehicle();
+            this.createVehicle(callback);
             break;
         }
     },
@@ -128,7 +128,7 @@ var ObjectHelper = {
     //**Create**//
 
     //Contact
-    createContact: function(){
+    createContact: function(callback){
         var user = Parse.User.current();
         var agencyId = user.get('agencyId');
 
@@ -160,12 +160,12 @@ var ObjectHelper = {
         var dContact = ObjectHelper.createEmptySection("dContact.ContactInfoGroup");
         contact.attributes.dContact = dContact;
 
-        return contact;
+        callback(contact);
     },
 
 
     //Dispatch
-    createDispatch: function(){
+    createDispatch: function(callback){
         var user = Parse.User.current();
         var agencyId = user.get('agencyId');
 
@@ -199,11 +199,11 @@ var ObjectHelper = {
         var eTimes = ObjectHelper.createEmptySection("eTimes");
         dispatch.attributes.eTimes = eTimes;
 
-        return dispatch;
+        callback(dispatch);
     },
 
     //Facility
-    createFacility: function(){
+    createFacility: function(callback){
         var user = Parse.User.current();
         var agencyId = user.get('agencyId');
 
@@ -223,11 +223,11 @@ var ObjectHelper = {
         var dFacility = ObjectHelper.createEmptySection("dFacility.FacilityGroup");
         facility.attributes.dFacility = dFacility;
 
-        return facility;
+        callback(facility);
     },
 
     //Patient
-    createPatient: function(){
+    createPatient: function(callback){
         var user = Parse.User.current();
         var agencyId = user.get('agencyId');
 
@@ -265,11 +265,11 @@ var ObjectHelper = {
         ePatient.attributes.ePatient.attributes.sections.push(ageGroup);
 
         patient.attributes.ePatient = ePatient;
-        return patient;
+        callback(patient);
     },
 
     //User
-    createUser: function(){
+    createUser: function(callback){
         var user = new Parse.User();
         var rando = ObjectHelper.getRandomInt(0, 100000000);
 
@@ -289,14 +289,18 @@ var ObjectHelper = {
         var dPersonnel = ObjectHelper.createEmptySection("dPersonnel.PersonnelGroup");
         user.attributes.dPersonnel =  dPersonnel;
 
-        return user;
+        callback(user);
     },
 
     //Vehicle
-    createVehicle: function(agencyId, userId, callback){
+    createVehicle: function(callback){
+        var user = Parse.User.current();
+        var agencyId = user.get('agencyId');
+
         var vehicle = new ObjectHelper.Vehicle();
+
         vehicle.set("agencyId", agencyId);
-        vehicle.set("createdBy", Parse.User.current());
+        vehicle.set("createdBy", user);
         vehicle.set("status", "");
         vehicle.set("type", "");
         vehicle.set("name", "");
@@ -308,62 +312,25 @@ var ObjectHelper = {
         acl.setRoleWriteAccess("EMT_" + agencyId, true);
         vehicle.setACL(acl);
 
-        ObjectHelper.createSection(agencyId, "dVehicle.VehicleGroup", function(results){
-            var dVehicleGroup = results;
-            vehicle.set("dVehicle", dVehicleGroup);
+        var dVehicle = ObjectHelper.createEmptySection("dVehicle.VehicleGroup");
+        vehicle.attributes.dVehicle = dVehicle;
 
-            var query = new Parse.Query("Section");
-            query.equalTo("agencyId", agencyId);
-            query.equalTo("name", "dVehicle");
-            query.first({
-                success: function(result){
-                    return result;
-                },
-                error: function(error){
-                    console.log(error);
-                    callback(error);
-                }
-            }).then(function(result){
-                result.add("sections", dVehicleGroup);
-                result.save({
-                    success: function(result){
-                        return result;
-                    },
-                    error: function(error){
-                        console.log(error);
-                        callback(error);
-                    }
-                }).then(function(results){
-                    vehicle.save({
-                        success: function(results){
-                            callback(results);
-                        },
-                        error: function(object, error){
-                            console.log(error);
-                            callback(error);
-                        }
-                    });
-                });
-            });
-        });
+        callback(vehicle);
     },
 
     //Create File
-    createFile: function(agencyId, userId, callback){
+    createFile: function(callback){
+        var user = Parse.User.current();
+        var agencyId = user.get('agencyId');
+
         var file = new ObjectHelper.File();
         file.set("agencyId", agencyId);
-        file.set("createdBy", Parse.User.current());
+        file.set("createdBy", user);
         file.setACL(ObjectHelper.FileACL);
         file.set("name", "");
         file.set("comments", "");
-        file.save({
-            success: function(result){
-                callback(result);
-            },
-            error: function(object, error){
-                callback(error);
-            }
-        });
+
+        callback(file);
     },
 
     //Nemsis Objects
@@ -584,42 +551,6 @@ var ObjectHelper = {
                 section.destroy({
                     success: function(result){
                         callback(result);
-                    },
-                    error: function(object, error){
-                        callback(error);
-                    }
-                });
-            });
-
-        });
-    },
-
-    deleteInstallation: function(installation, callback){
-        //First Remove the dDevice Section
-        var query = new Parse.Query("Section");
-        query.equalTo("name", "dDevice");
-        query.containedIn("sections", installation.get("dDevice")); //not sure if this is right
-        query.first({
-            success: function(object){
-                return object;
-            },
-            error: function(error){
-                callback(error);
-            }
-        }).then(function(parentSection){
-            parentSection.remove("sections", installation.get("dDeviceGroup")); //not sure if this is right
-            parentSection.save({
-                success: function(object){
-                    return;
-                },
-                error: function(object, error){
-                    callback(error);
-                }
-            }).then(function(){
-                //Now Delete the Installation object
-                installation.destroy({
-                    success: function(result){
-                        callback("Successfully deleted the Installation");
                     },
                     error: function(object, error){
                         callback(error);
@@ -969,7 +900,7 @@ var ObjectHelper = {
 
     },
 
-
+    //Create Empty Section
     createEmptySection: function(name){
         var user = Parse.User.current();
         var agencyId = user.get('agencyId');
@@ -987,6 +918,31 @@ var ObjectHelper = {
         section.setACL(sectionACL);
 
         return section;
+    },
+
+
+    //Create Empty NemsisElement
+    createEmptyNemsisElement: function(elementNumber){
+        var user = Parse.User.current();
+        var agencyId = user.get('agencyId');
+
+        var element = new this.NemsisElement();
+
+        element.set("agencyId", Parse.User.current().attributes.agencyId);
+        element.set("createdBy", Parse.User.current());
+        element.set("title", elementNumber);
+        element.set("pcrId", "");
+        element.set("value", "");
+        element.set("codeString", "");
+
+        var acl = new Parse.ACL();
+        acl.setRoleReadAccess("EMT_" + agencyId, true);
+        acl.setRoleWriteAccess("EMT_" + agencyId, true);
+        element.setACL(acl);
+
+        return element;
     }
+
+
 
 };
