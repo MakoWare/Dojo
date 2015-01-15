@@ -223,6 +223,13 @@ var ObjectHelper = {
         var dFacility = ObjectHelper.createEmptySection("dFacility.FacilityGroup");
         facility.attributes.dFacility = dFacility;
 
+        var neededElements = ["dFacility.02", "dFacility.07", "dFacility.08", "dFacility.09", "dFacility.10", "dFacility.11", "dFacility.12"];
+
+        neededElements.forEach(function(title){
+            facility.attributes.dFacility.attributes.elements.push(ObjectHelper.createEmptyNemsisElement(title));
+        });
+
+
         callback(facility);
     },
 

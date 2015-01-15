@@ -39,6 +39,7 @@ var FacilityCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
                 if(results.attributes.name){
                     $scope.fullName = results.attributes.name;
                 }
+                $scope.$apply();
                 $scope.setUpFacility();
             } else {
                 var newPath = "/facilities";
@@ -50,11 +51,56 @@ var FacilityCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
 
     //Setup Facility
     $scope.setUpFacility = function(){
-        GlobalService.dismissSpinner();
 
+        $scope.addressTypeAhead = function(val){
+            return GlobalService.addressTypeAhead(val);
+        };
+
+        $scope.setAddress = function(item){
+            //First clear everything
+            $scope.facility.attributes.address = "";
+            $scope.facility.attributes.city = "";
+            $scope.facility.attributes.county = "";
+            $scope.facility.attributes.state = "";
+            $scope.facility.attributes.country = "";
+            $scope.facility.attributes.zip = "";
+
+            item.address_components.forEach(function(component){
+                switch (component.types[0]) {
+                case "street_number":
+                    $scope.facility.attributes.address = component.long_name + " ";
+                    break;
+                case "route":
+                    $scope.facility.attributes.address += component.long_name;
+                    break;
+                case "administrative_area_level_3":
+                    if($scope.facility.attributes.city == ""){
+                        $scope.facility.attributes.city = component.long_name;
+                    }
+                    break;
+                case "locality":
+                    if($scope.facility.attributes.city == ""){
+                        $scope.facility.attributes.city = component.long_name;
+                    }
+                    break;
+                case "administrative_area_level_2":
+                    $scope.facility.attributes.county = component.long_name;
+                    break;
+                case "administrative_area_level_1":
+                    $scope.facility.attributes.state = component.short_name;
+                    break;
+                case "country":
+                    $scope.facility.attributes.country = component.short_name;
+                    break;
+                case "postal_code":
+                    $scope.facility.attributes.zip = component.long_name;
+                    break;
+                }
+            });
+        };
 
         $scope.$broadcast("gotFacility");
-
+        GlobalService.dismissSpinner();
     };
 
 
@@ -62,68 +108,108 @@ var FacilityCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
     //Save Facility
     $scope.saveFacility = function(){
         GlobalService.showSpinner();
-        console.log("saveFacility()");
-
+        GlobalService.showSpinner();
 
         //Set EveryThing
         var facility = $scope.facility;
 
+        facility.set("name", facility.attributes.name);
+        facility.set("type", facility.attributes.type);
+        facility.set("address", facility.attributes.address);
+        facility.set("city", facility.attributes.city);
+        facility.set("state", facility.attributes.state);
+        facility.set("county", facility.attributes.county);
+        facility.set("zip", facility.attributes.zip);
+        facility.set("country", facility.attributes.country);
+        facility.set("comments", facility.attributes.comments);
 
+
+        //Set Nemsis Elements
+        var facilityGroup = facility.attributes.dFacility;
+        facilityGroup.attributes.elements.forEach(function(element){
+            switch (element.attributes.title){
+            case "dFacility.02":
+                element.set("value", facility.get("name"));
+                break;
+            case "dFacility.03":
+
+                break;
+            case "dFacility.04":
+
+                break;
+            case "dFacility.05":
+
+                break;
+            case "dFacility.06":
+
+                break;
+            case "dFacility.07":
+                element.set("value", facility.get("address"));
+                break;
+            case "dFacility.08":
+                element.set("value", facility.get("city"));
+                break;
+            case "dFacility.09":
+                element.set("value", facility.get("state"));
+                break;
+            case "dFacility.10":
+                element.set("value", facility.get("zip"));
+                break;
+            case "dFacility.11":
+                element.set("value", facility.get("county"));
+                break;
+            case "dFacility.12":
+                element.set("value", facility.get("country"));
+                break;
+            case "dFacility.13":
+
+                break;
+            case "dFacility.14":
+
+                break;
+
+            };
+        });
 
         //First Save Each NemsisElement in each Section
-        var sectionSavePromises = [];
         var elementSavePromises = [];
 
-        //Elements in dPersonnel.attributes.elements
-        $scope.user.attributes.dPersonnel.attributes.elements.forEach(function(element){
-            element.set("value", element.attributes.value);
-            element.set("codeString", element.attributes.codeString);
+        //Get NemsisElement save promises
+        facility.attributes.dFacility.attributes.elements.forEach(function(element){
             elementSavePromises.push(element.save());
         });
 
-        //Elements in dPersonnel.attributes.sections.attributes.elements
-        $scope.user.attributes.dPersonnel.attributes.sections.forEach(function(section){
-            section.attributes.elements.forEach(function(element){
-                element.set("value", element.attributes.value);
-                element.set("codeString", element.attributes.codeString);
-                elementSavePromises.push(element.save());
-            });
-        });
-
-        //After each NemsisElement has been saved, save Each Section
+        //After each NemsisElement has been saved
         Parse.Promise.when(elementSavePromises).then(function(){
-            $scope.user.attributes.dPersonnel.attributes.sections.forEach(function(section){
-                section.set("elements", section.attributes.elements);
-                sectionSavePromises.push(section.save());
-            });
+            facility.attributes.dFacility.save({
+                success: function(dFacility){
 
-            //After each Section has been saved, save dPersonnel Section
-            Parse.Promise.when(sectionSavePromises).then(function(){
-                $scope.user.attributes.dPersonnel.set("sections", $scope.user.attributes.dPersonnel.attributes.sections);
-                $scope.user.attributes.dPersonnel.set("elements", $scope.user.attributes.dPersonnel.attributes.elements);
-                $scope.user.attributes.dPersonnel.save({
-                    success: function(dPersonnel){
-                        //Now Save the User
-                        $scope.user.set("dPersonnel", dPersonnel);
-                        $scope.user.save({
-                            success: function(user){
-                                GlobalService.showSpinner();
-                                console.log(user);
-
-                            },
-                            errror: function(object, error){
-                                console.log(error);
-                                alert(GlobalService.errorMessage + error.message);
-                            }
-                        });
-                    },
-                    error: function(object, error){
-                        console.log(error);
-                        alert(GlobalService.errorMessage + error.message);
-                    }
-                });
+                    //Now Save the Facility
+                    facility.set("dFacility", dFacility);
+                    facility.save({
+                        success: function(facility){
+                            GlobalService.dismissSpinner();
+                            var newPath = "/facilities" ;
+                            $location.path(newPath);
+                            $scope.$apply();
+                        },
+                        error: function(object, error){
+                            GlobalService.dismissSpinner();
+                            alert(GlobalService.errorMessage + error.message);
+                            console.log(error);
+                        }
+                    });
+                },
+                error: function(object, error){
+                    GlobalService.dismissSpinner();
+                    alert(GlobalService.errorMessage + error.message);
+                    console.log(error);
+                }
             });
         });
+
+
+        GlobalService.dismissSpinner();
 
     };
 

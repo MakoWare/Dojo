@@ -66,13 +66,13 @@ angular.module('globalService', [])
 
                 var windowH = $(document).outerHeight();
                 $("#overlay").height(windowH);
-                $("#overlay").show();
+                $("#overlay").toggle();
 
             },
 
             dismissSpinner: function(){
                 spinner.stop();
-                $("#overlay").hide();
+                $("#overlay").toggle();
             },
 
 
