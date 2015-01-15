@@ -52,10 +52,45 @@ var VehicleCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
 
     //Setup Vehicle
     $scope.setUpVehicle = function(){
+        //get all Users
+        var query = new Parse.Query("User");
+        query.equalTo("agencyId", Parse.User.current().attributes.agencyId);
+        query.find({
+            success: function(results){
+                GlobalService.dismissSpinner();
+                $scope.fullUsers = results;
+                $scope.users = [];
+                results.forEach(function(user){
+                    var userObject = {};
+                    userObject.ticked = false;
+                    userObject.id = user.id;
+                    if(user.attributes.firstName){
+                        userObject.fullName = user.attributes.firstName;
+                    }
+                    if(user.attributes.lastName){
+                        userObject.fullName = userObject.fullName + " " + user.attributes.lastName;
+                    }
+
+                    if($scope.vehicle.attributes.crew){
+                        $scope.vehicle.attributes.crew.forEach(function(crewMember){
+                            if(user.id == crewMember.id){
+                                userObject.ticked = true;
+                            }
+                        });
+                    }
+                    $scope.users.push(userObject);
+                });
+
+                $scope.$apply();
+            },
+            error: function(error){
+                alert(GlobalService.errorMessage + error.message);
+            }
+        });
 
 
         $scope.$broadcast("gotVehicle");
-        GlobalService.dismissSpinner();
+
     };
 
 

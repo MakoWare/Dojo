@@ -36,6 +36,16 @@ var SectionDirective = function($scope, $elm, $attrs){
             });
         });
 
+        //For Vehicles
+        $scope.$on('gotVehicle', function(event, args) {
+            $scope.parentSection = $scope.$parent.vehicle.attributes.dVehicle;
+            $scope.parentSection.attributes.sections.forEach(function(section){
+                if(section.attributes.name == $scope.sectionName){
+                    $scope.sections.push(section);
+                }
+            });
+        });
+
 
 
     };
@@ -126,7 +136,7 @@ var SectionDirective = function($scope, $elm, $attrs){
             $scope.parentSection.remove("sections", section);
             var index = $scope.sections.indexOf(section);
             $scope.sections.splice(index, 1);
-            $scope.$apply();
+            //$scope.$apply();
         }
     };
 

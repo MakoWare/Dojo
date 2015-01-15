@@ -291,6 +291,8 @@ var ObjectHelper = {
     //User
     createUser: function(callback){
         var user = new Parse.User();
+        var agencyId = user.get('agencyId');
+
         var rando = ObjectHelper.getRandomInt(0, 100000000);
 
         user.set("agencyId", agencyId);

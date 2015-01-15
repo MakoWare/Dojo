@@ -20,7 +20,10 @@ var SectionModalCtrl = function($scope, $modalInstance, title, action, sectionNa
     $scope.createSection = function(){
         ParseService.constructNemsisSection(sectionName, function(results){
             $scope.nemsisSection = results;
+            console.log("got nemsissection");
             ParseService.createEmptySection(sectionName, function(results){
+                console.log("got section");
+                console.log(results);
                 $scope.section = results;
                 $scope.$apply();
             });

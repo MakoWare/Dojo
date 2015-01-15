@@ -491,7 +491,7 @@ angular.module('parseService', [])
 
             //Create Empty Section
             createEmptySection: function(name, callback){
-                ObjectHelper.createEmptySection(name, callback);
+                callback(ObjectHelper.createEmptySection(name));
             },
 
             //Create Empty NemsisElement

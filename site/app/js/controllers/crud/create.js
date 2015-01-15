@@ -1048,8 +1048,8 @@ var CreateCtrl = function($scope, $location, ParseService, GlobalService){
     //Patient Setup
     $scope.patientSetup = function(){
         //Date Picker setup
-        if(!$scope.object.attributes.dob){
-            $scope.object.attributes.dob = new Date();
+        if(!$scope.patient.attributes.dob){
+            $scope.patient.attributes.dob = new Date();
         }
         $scope.format = 'MM/dd/yyyy';
         $scope.dateOptions = {

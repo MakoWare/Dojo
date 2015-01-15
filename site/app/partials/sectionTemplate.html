@@ -2,7 +2,11 @@
   <thead>
     <tr>
       <th>#</th>
-        <th ng-repeat="header in nemsisSection.attributes.headers">{{header.attributes.ElementName.split(delim)[1]}}</th>
+
+        <th ng-if="delim == '*'" ng-repeat="header in nemsisSection.attributes.headers">{{header.attributes.ElementName}}</th>
+
+        <th  ng-if="delim != '*'" ng-repeat="header in nemsisSection.attributes.headers">{{header.attributes.ElementName.split(delim)[1]}}</th>
+
       </div>
       <th>Edit</th>
       <th>Delete</th>
