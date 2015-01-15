@@ -494,6 +494,13 @@ angular.module('parseService', [])
                 ObjectHelper.createEmptySection(name, callback);
             },
 
+            //Create Empty NemsisElement
+            createEmptyNemsisElement: function(name, callback){
+                ObjectHelper.createEmptyNemsisElement(name, callback);
+            },
+
+
+
             //ConstructNemsisSection
             constructNemsisSection: function(name, callback){
                 var query = new Parse.Query("NemsisSection");

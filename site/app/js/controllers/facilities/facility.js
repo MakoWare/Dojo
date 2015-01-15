@@ -99,7 +99,6 @@ var FacilityCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
             });
         };
 
-        $scope.$broadcast("gotFacility");
         GlobalService.dismissSpinner();
     };
 

@@ -258,6 +258,7 @@ var ObjectHelper = {
         patient.set("ssn", "");
         patient.set("state", "");
         patient.set("zip", "");
+        patient.attributes.dob = "";
 
         var acl = new Parse.ACL();
         acl.setRoleReadAccess("EMT_" + agencyId, true);
@@ -265,11 +266,23 @@ var ObjectHelper = {
         patient.setACL(acl);
 
         var ePatient = ObjectHelper.createEmptySection("ePatient");
-        var nameGroup = ObjectHelper.createEmptySection("ePatient.PatientNameGroup");
-        var ageGroup = ObjectHelper.createEmptySection("ePatient.PatientAgeGroup");
 
-        ePatient.attributes.ePatient.attributes.sections.push(nameGroup);
-        ePatient.attributes.ePatient.attributes.sections.push(ageGroup);
+        var nameGroup = ObjectHelper.createEmptySection("ePatient.PatientNameGroup");
+        var nameGroupRequired = ["ePatient.02", "ePatient.03"];
+
+        nameGroupRequired.forEach(function(title){
+            nameGroup.attributes.elements.push(ObjectHelper.createEmptyNemsisElement(title));
+        });
+
+        var ageGroup = ObjectHelper.createEmptySection("ePatient.PatientAgeGroup");
+        var ageGroupRequired = ["ePatient.15", "ePatient.16"];
+
+        ageGroupRequired.forEach(function(title){
+            ageGroup.attributes.elements.push(ObjectHelper.createEmptyNemsisElement(title));
+        });
+
+        ePatient.attributes.sections.push(nameGroup);
+        ePatient.attributes.sections.push(ageGroup);
 
         patient.attributes.ePatient = ePatient;
         callback(patient);
