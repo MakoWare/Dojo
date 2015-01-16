@@ -1,5 +1,5 @@
 'use strict';
-//Map Controller
+//User Controller
 var UserCtrl = function($rootScope, $scope, $location, ParseService, GlobalService, $modal){
 
     $scope.init = function(){

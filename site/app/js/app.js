@@ -18,6 +18,11 @@ angular.module('dojo', [
         templateUrl: 'partials/admin.html',
         controller: 'AdminCtrl'
       })
+//Agency
+      .when('/agencies/:id', {
+        templateUrl: 'partials/agencies/agency.html',
+        controller: 'AgencyCtrl'
+      })
 //Configurations
       .when('/configurations', {
         templateUrl: 'partials/configurations.html',

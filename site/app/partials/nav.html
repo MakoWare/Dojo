@@ -29,6 +29,7 @@
           <li class="dropdown" ng-if="role == 'Manager' || role == 'Admin'">
             <a  class="dropdown-toggle" data-toggle="dropdown">Management<span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
+              <li ng-class="{active: (dir === 'agencies')}"><a ng-href="#/agencies/{{currentUser.get('agencyId')}}">Agency</a></li>
               <li ng-class="{active: (dir === 'configurations')}"><a href="#/configurations">Configurations</a></li>
               <li ng-class="{active: (dir === 'users')}"><a href="#/users">Users</a></li>
 
