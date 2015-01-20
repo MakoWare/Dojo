@@ -52,6 +52,23 @@ var VehicleCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
 
     //Setup Vehicle
     $scope.setUpVehicle = function(){
+        //get Vehicle Types
+        var query = new Parse.Query("NemsisElementCode");
+        query.equalTo("elementNumber", "dVehicle.04");
+        query.find({
+            success: function(results){
+                $scope.vehicleTypeCodes = results;
+                results.forEach(function(code){
+                    if(code.attributes.codeDescription == $scope.vehicle.attributes.type){
+                        $scope.vehicle.attributes.type = code.attributes.code + " " + $scope.vehicle.attributes.type;
+                    }
+                });
+            },
+            error: function(error){
+                alert(GlobalService.errorMessage + error.message);
+            }
+        });
+
         //get all Users
         var query = new Parse.Query("User");
         query.equalTo("agencyId", Parse.User.current().attributes.agencyId);
@@ -88,9 +105,7 @@ var VehicleCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
             }
         });
 
-
         $scope.$broadcast("gotVehicle");
-
     };
 
 
@@ -103,20 +118,54 @@ var VehicleCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
         var vehicle = $scope.vehicle;
 
 
+        //Set dVehicle Elements
+        vehicle.attributes.dVehicle.attributes.elements.forEach(function(element){
+            switch (element.attributes.title){
+            case "dVehicle.01":
+                element.set("value", vehicle.attributes.number);
+                break;
+            case "dVehicle.02":
+                element.set("value", vehicle.attributes.vin);
+                break;
+            case "dVehicle.03":
+                element.set("value", vehicle.attributes.name);
+                break;
+            case "dVehicle.04":
+                element.set("value", vehicle.attributes.type.split(" ")[0]);
+                element.set("codeString", vehicle.attributes.type.split(" ")[1]);
+                break;
+            case "dVehicle.09":
+
+                break;
+            case "dVehicle.10":
+                element.set("value", vehicle.attributes.year);
+                break;
+            }
+        });
+
+        //Set Vehicle Attributes
+        vehicle.set("name", vehicle.attributes.name);
+        vehicle.set("number", vehicle.attributes.number);
+        vehicle.set("vin", vehicle.attributes.vin);
+        vehicle.set("status", vehicle.attributes.status);
+        vehicle.set("year", vehicle.attributes.year);
+        vehicle.set("type", vehicle.attributes.type.split(" ")[1]);
+
+
 
         //First Save Each NemsisElement in each Section
         var sectionSavePromises = [];
         var elementSavePromises = [];
 
-        //Elements in dPersonnel.attributes.elements
-        $scope.user.attributes.dPersonnel.attributes.elements.forEach(function(element){
+        //Elements in dVehicle.attributes.elements
+        vehicle.attributes.dVehicle.attributes.elements.forEach(function(element){
             element.set("value", element.attributes.value);
             element.set("codeString", element.attributes.codeString);
             elementSavePromises.push(element.save());
         });
 
-        //Elements in dPersonnel.attributes.sections.attributes.elements
-        $scope.user.attributes.dPersonnel.attributes.sections.forEach(function(section){
+        //Elements in dVehicle.attributes.sections.attributes.elements
+        vehicle.attributes.dVehicle.attributes.sections.forEach(function(section){
             section.attributes.elements.forEach(function(element){
                 element.set("value", element.attributes.value);
                 element.set("codeString", element.attributes.codeString);
@@ -126,26 +175,27 @@ var VehicleCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
 
         //After each NemsisElement has been saved, save Each Section
         Parse.Promise.when(elementSavePromises).then(function(){
-            $scope.user.attributes.dPersonnel.attributes.sections.forEach(function(section){
+            vehicle.attributes.dVehicle.attributes.sections.forEach(function(section){
                 section.set("elements", section.attributes.elements);
                 sectionSavePromises.push(section.save());
             });
 
-            //After each Section has been saved, save dPersonnel Section
+            //After each Section has been saved, save dVehicle Section
             Parse.Promise.when(sectionSavePromises).then(function(){
-                $scope.user.attributes.dPersonnel.set("sections", $scope.user.attributes.dPersonnel.attributes.sections);
-                $scope.user.attributes.dPersonnel.set("elements", $scope.user.attributes.dPersonnel.attributes.elements);
-                $scope.user.attributes.dPersonnel.save({
-                    success: function(dPersonnel){
+                vehicle.attributes.dVehicle.set("sections", vehicle.attributes.dVehicle.attributes.sections);
+                vehicle.attributes.dVehicle.set("elements", vehicle.attributes.dVehicle.attributes.elements);
+                vehicle.attributes.dVehicle.save({
+                    success: function(dVehicle){
                         //Now Save the User
-                        $scope.user.set("dPersonnel", dPersonnel);
-                        $scope.user.save({
-                            success: function(user){
-                                GlobalService.showSpinner();
-                                console.log(user);
-
+                        vehicle.set("dVehicle", dVehicle);
+                        vehicle.save({
+                            success: function(vehicle){
+                                GlobalService.dismissSpinner();
+                                console.log(vehicle);
+                                $location.path("/vehicles");
+                                $scope.$apply();
                             },
-                            errror: function(object, error){
+                            error: function(object, error){
                                 console.log(error);
                                 alert(GlobalService.errorMessage + error.message);
                             }
@@ -163,17 +213,22 @@ var VehicleCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
 
     //Delete Vehicle
     $scope.deleteVehicle = function(){
-        GlobalService.showSpinner();
-        ParseService.deleteObject($scope.vehicle, "Vehicle", function(results){
-            GlobalService.dismissSpinner();
-            if(results.message != null){
-                alert(GlobalService.errorMessage + results.message);
-            } else {
-                var newPath = "/vehicles" ;
-                $location.path(newPath);
-                $scope.$apply();
-            }
-        });
+        if($scope.vehicle.id){
+            GlobalService.showSpinner();
+            ParseService.deleteObject($scope.vehicle, "Vehicle", function(results){
+                GlobalService.dismissSpinner();
+                if(results.message != null){
+                    alert(GlobalService.errorMessage + results.message);
+                } else {
+                    var newPath = "/vehicles" ;
+                    $location.path(newPath);
+                    $scope.$apply();
+                }
+            });
+        } else {
+            var newPath = "/vehicles" ;
+            $location.path(newPath);
+        }
     };
 
 

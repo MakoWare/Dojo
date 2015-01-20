@@ -326,6 +326,7 @@ var ObjectHelper = {
         vehicle.set("status", "");
         vehicle.set("type", "");
         vehicle.set("name", "");
+        vehicle.set("crew", []);
         vehicle.set("active", false);
         vehicle.set("currentPersonnel", []);
 
@@ -335,8 +336,16 @@ var ObjectHelper = {
         vehicle.setACL(acl);
 
         var dVehicle = ObjectHelper.createEmptySection("dVehicle.VehicleGroup");
-        vehicle.attributes.dVehicle = dVehicle;
 
+
+        var vehicleGroupRequired = ["dVehicle.01", "dVehicle.02", "dVehicle.03", "dVehicle.04"];
+
+        vehicleGroupRequired.forEach(function(title){
+            dVehicle.attributes.elements.push(ObjectHelper.createEmptyNemsisElement(title));
+        });
+
+
+        vehicle.attributes.dVehicle = dVehicle;
         callback(vehicle);
     },
 
@@ -737,10 +746,11 @@ var ObjectHelper = {
     },
 
     deleteVehicle: function(vehicle, callback){
-        //First Remove the dVehicle Section
+        console.log(vehicle);
+        //First Remove vehicle.dVehicle from agency.dVehicle
         var query = new Parse.Query("Section");
         query.equalTo("name", "dVehicle");
-        query.equalTo("sections", vehicle.get("dVehicleGroup")); //not sure if this is right
+        query.equalTo("sections", vehicle.get("dVehicleGroup"));
         query.first({
             success: function(results){
                 return results;
@@ -751,8 +761,9 @@ var ObjectHelper = {
                 callback(error.message);
             }
         }).then(function(parentSection){
+            //Remove Section from agency.dVehicle
             console.log(parentSection);
-            parentSection.remove("sections", vehicle.get("dVehicle")); //not sure if this is right
+            parentSection.remove("sections", vehicle.get("dVehicle"));
             parentSection.save({
                 success: function(object){
                     return;
@@ -761,14 +772,30 @@ var ObjectHelper = {
                     callback(error.message);
                 }
             }).then(function(){
-                //Now Delete the Device object
-                vehicle.destroy({
-                    success: function(result){
-                        callback("Successfully deleted the Vehicle");
-                    },
-                    error: function(object, error){
-                        callback(error.message);
-                    }
+                //Now Delete the sections in vehicle.dVehicle
+                var deletePromises = [];
+                vehicle.attributes.dVehicle.attributes.sections.forEach(function(section){
+                    deletePromises.push(section.destroy());
+                });
+
+                Parse.Promise.when(deletePromises).then(function(){
+                    //Now Delete vehicle.dVehicle
+                    vehicle.attributes.dVehicle.destroy({
+                        success: function(result){
+                            //Now Delete the Vehicle
+                            vehicle.destroy({
+                                success: function(result){
+                                    callback("Successfully deleted the Vehicle");
+                                },
+                                error: function(object, error){
+                                    callback(error.message);
+                                }
+                            });
+                        },
+                        error: function(object, error){
+
+                        }
+                    });
                 });
             });
 

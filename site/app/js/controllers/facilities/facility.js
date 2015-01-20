@@ -103,7 +103,6 @@ var FacilityCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
     };
 
 
-
     //Save Facility
     $scope.saveFacility = function(){
         GlobalService.showSpinner();

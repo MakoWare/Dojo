@@ -7,16 +7,21 @@
     </div>
   </div>
 
-
   <form name="vehicleForm">
     <div class="row">
       <div class="form-group col-md-3" ng-class="{ 'has-error': vehicleForm.name.$invalid }">
         <label for="name">Name</label>
         <input ng-model="vehicle.attributes.name" type="text" class="form-control" name="name" id="name" placeholder="Name" required/>
       </div>
-      <div class="form-group col-md-3">
+
+      <div class="form-group col-md-2" ng-class="{ 'has-error': vehicleForm.number.$invalid }">
+        <label for="name">Vehicle Number</label>
+        <input ng-model="vehicle.attributes.number" type="text" class="form-control" name="number" id="number" placeholder="Vehicle Number" tooltip="The unique ID number for the unit which is specific for each vehicle. This ID number may be the state's vehicle's permit number." required/>
+      </div>
+
+      <div class="form-group col-md-2" ng-class="{ 'has-error': vehicleForm.vin.$invalid }">
         <label for="vin">VIN Number</label>
-        <input ng-model="vehicle.attributes.vin" type="text" class="form-control" name="vin" id="vin" placeholder="VIN Number"/>
+        <input ng-model="vehicle.attributes.vin" type="text" class="form-control" name="vin" id="vin" placeholder="VIN Number" tooltip="The manufacturer's VIN associated with the vehicle." required/>
       </div>
       <div class="form-group col-md-4">
         <label for="currentLocation">Current Location</label>
@@ -34,15 +39,15 @@
         </select>
       </div>
 
-      <div class="form-group col-md-3">
+      <div class="form-group col-md-3" ng-class="{ 'has-error': vehicleForm.year.$invalid }">
         <label for="year">Year Made</label>
-        <input ng-model="vehicle.attributes.year" type="text" class="form-control" name="year" id="year" placeholder="Year"/>
+        <input ng-model="vehicle.attributes.year" type="text" class="form-control" name="year" id="year" placeholder="Year" required/>
       </div>
 
 
-      <div class="form-group col-md-2">
+      <div class="form-group col-md-2" ng-class="{ 'has-error': vehicleForm.type.$invalid }">
         <label for="type">Type</label>
-        <select class="form-control" id="type" ng-model="vehicle.attributes.type">
+        <select class="form-control" id="type" ng-model="vehicle.attributes.type" name="type" required>
           <option class="form-control" value=""></option>
           <option class="form-control" value="1404001 Ambulance">Ambulance</option>
           <option class="form-control" value="1404003 ATV">ATV</option>
