@@ -306,8 +306,7 @@ var PatientCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
             if(results.message != null){
                 alert(GlobalService.errorMessage + results.message);
             } else {
-                var newPath = "/patients" ;
-                $location.path(newPath);
+                $location.path("/patients");
                 $scope.$apply();
             }
         });

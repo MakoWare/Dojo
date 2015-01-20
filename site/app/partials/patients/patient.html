@@ -35,10 +35,10 @@
         <label for="ssn">Social Security Number</label>
         <input ng-model="patient.attributes.ssn" type="text" class="form-control" id="ssn" placeholder="SSN"/>
       </div>
-      <div class="col-md-2">
+      <div class="col-md-2" ng-class="{ 'has-error': patientForm.dob.$invalid }">
         <p class="input-group">
-          <label for="dob">Date of Birth*</label>
-          <input id="dob" type="text" class="form-control" datepicker-popup="{{format}}" ng-model="patient.attributes.dob" is-open="opened" min="'1900-01-01'" max="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" show-weeks="false"/>
+          <label for="dob">Date of Birth</label>
+          <input id="dob" type="text" class="form-control" datepicker-popup="{{format}}" ng-model="patient.attributes.dob" is-open="opened" name="dob" min="'1900-01-01'" max="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" show-weeks="false"/>
           <span class="input-group-btn">
             <button class="btn btn-default" ng-focus="opened = true" ng-click="open($event)" style="margin-top: 25px;"><i class="glyphicon glyphicon-calendar"></i></button>
           </span>

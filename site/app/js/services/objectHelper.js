@@ -692,7 +692,7 @@ var ObjectHelper = {
                 //Now Delete the Facility object
                 contact.destroy({
                     success: function(result){
-                        callback("Successfully deleted the Contact");
+                        callback("success");
                     },
                     error: function(object, error){
                         callback(error);
@@ -704,13 +704,31 @@ var ObjectHelper = {
 
 
     deletePatient: function(patient, callback){
-        patient.destroy({
-            success: function(result){
-                callback("Successfully deleted the Patient");
-            },
-            error: function(object, error){
-                callback(error);
-            }
+        //Destroy the Sections in patient.attributes.ePatient.attributes.sections
+        var ePatient = patient.attributes.ePatient;
+        var sectionPromises = [];
+        ePatient.attributes.sections.forEach(function(section){
+            sectionPromises.push(section.destroy());
+        });
+
+        Parse.Promise.when(sectionPromises).then(function(){
+            //Destroy ePatient
+            ePatient.destroy({
+                success: function(result){
+                    //Destroy Patient
+                    patient.destroy({
+                        success: function(result){
+                            callback("success");
+                        },
+                        error: function(object, error){
+                            callback(error);
+                        }
+                    });
+                },
+                error: function(object, error){
+                    callback(error);
+                }
+            });
         });
     },
 
