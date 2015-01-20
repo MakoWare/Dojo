@@ -87,7 +87,6 @@ var VehicleCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
                     if(user.attributes.lastName){
                         userObject.fullName = userObject.fullName + " " + user.attributes.lastName;
                     }
-
                     if($scope.vehicle.attributes.crew){
                         $scope.vehicle.attributes.crew.forEach(function(crewMember){
                             if(user.id == crewMember.id){
@@ -104,7 +103,6 @@ var VehicleCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
                 alert(GlobalService.errorMessage + error.message);
             }
         });
-
         $scope.$broadcast("gotVehicle");
     };
 
@@ -116,7 +114,6 @@ var VehicleCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
 
         //Set EveryThing
         var vehicle = $scope.vehicle;
-
 
         //Set dVehicle Elements
         vehicle.attributes.dVehicle.attributes.elements.forEach(function(element){

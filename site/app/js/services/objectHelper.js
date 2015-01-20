@@ -151,15 +151,19 @@ var ObjectHelper = {
         contact.set("country", "");
         contact.set("county", "");
 
-
         var acl = new Parse.ACL();
         acl.setRoleReadAccess("EMT_" + agencyId, true);
         acl.setRoleWriteAccess("EMT_" + agencyId, true);
         contact.setACL(acl);
 
         var dContact = ObjectHelper.createEmptySection("dContact.ContactInfoGroup");
-        contact.attributes.dContact = dContact;
+        var neededElements = ["dContact.01", "dContact.02", "dContact.03", "dContact.04", "dContact.05", "dContact.06", "dContact.07", "dContact.08", "dContact.09", "dContact.10", "dContact.11", "dContact.12"];
 
+        neededElements.forEach(function(title){
+            dContact.attributes.elements.push(ObjectHelper.createEmptyNemsisElement(title));
+        });
+
+        contact.attributes.dContact = dContact;
         callback(contact);
     },
 
@@ -698,9 +702,14 @@ var ObjectHelper = {
 
     //Delete Contact
     deleteContact: function(contact, callback){
+        // **********TODO****************
+        //Remove contact.dContact to agency.dContact
+
+        var dContact = contact.attributes.dContact;
+        /*
         var query = new Parse.Query("Section");
         query.equalTo("name", "dContact");
-        query.equalTo("sections", contact.get("dContact"));
+        query.equalTo("sections", dContact);
         query.first({
             success: function(object){
                 return object;
@@ -709,7 +718,7 @@ var ObjectHelper = {
                 callback(error);
             }
         }).then(function(parentSection){
-            parentSection.remove("sections", contact.get("dContact"));
+            parentSection.remove("sections", dContact);
             return parentSection.save({
                 success: function(object){
                     return;
@@ -718,16 +727,22 @@ var ObjectHelper = {
                     callback(error);
                 }
             }).then(function(){
-                //Now Delete the Contact object
-                contact.destroy({
-                    success: function(result){
-                        callback("success");
-                    },
-                    error: function(object, error){
-                        callback(error);
-                    }
-                });
-            });
+         */
+
+        //Delete Sections in dContact
+        var sectionPromises = [];
+        dContact.attributes.sections.forEach(function(section){
+            sectionPromises.push();
+        });
+
+        //Now Delete the Contact object
+        contact.destroy({
+            success: function(result){
+                callback("success");
+            },
+            error: function(object, error){
+                callback(error);
+            }
         });
     },
 

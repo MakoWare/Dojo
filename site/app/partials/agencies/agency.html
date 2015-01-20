@@ -1,0 +1,111 @@
+<div class="container-widescreen" style="margin-right : 5%; margin-left: 5%">
+
+  <div class="page-header" style="margin-top: 0px; margin-bottom: 15px;">
+    <div class="row">
+      <div class="col-sm-12">
+        <h1 style="margin-top: 10px;">{{title}} {{fullName}}</h1>
+      </div>
+    </div>
+  </div>
+
+  <form name="agencyForm">
+    <div class="row">
+      <div class="form-group col-md-3" ng-class="{ 'has-error': agencyForm.name.$invalid }">
+        <label for="name">Name</label>
+        <input ng-model="agency.attributes.name" type="text" class="form-control" id="name" placeholder="Agency Name" name="name" required/>
+      </div>
+
+      <div class="form-group col-md-3" ng-class="{ 'has-error': agencyForm.number.$invalid }">
+        <label for="number">Agency Number</label>
+        <input ng-model="agency.attributes.number" type="text" class="form-control" id="number" placeholder="Agency Number" name="number" tooltip="The state-assigned provider number of the responding agency." required/>
+      </div>
+
+      <div class="form-group col-md-3" ng-class="{ 'has-error': agencyForm.stateId.$invalid }">
+        <label for="stateId">State ID</label>
+        <input ng-model="agency.attributes.stateId" type="text" class="form-control" id="stateId" placeholder="State ID #" name="stateId" tooltip="The unique ID assigned to the EMS Agency which is associated with all state licensure numbers and information." required/>
+      </div>
+
+      <div class="form-group col-md-2" ng-class="{ 'has-error': agencyForm.state.$invalid }">
+        <label for="state">State</label>
+        <input ng-model="agency.attributes.state" type="text" class="form-control" id="state" placeholder="State" name="state" tooltip="" required/>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-2">
+        <label for="phone">Phone Number</label>
+        <input ng-model="user.attributes.phone" type="text" class="form-control" id="phone" placeholder="Phone"/>
+      </div>
+
+      <div class="form-group col-md-2">
+        <label for="phone">Email</label>
+        <input ng-model="user.attributes.email" type="text" class="form-control" id="email" placeholder="Email"/>
+      </div>
+
+      <div class="form-group col-md-2">
+	<label for="patient">Role</label>
+	<select class="form-control" ng-model="user.attributes.role" ng-options="role.value as role.name for role in roles">
+        </select>
+      </div>
+
+      <div class="form-group col-md-2" style="margin-left: 2px;">
+        <p style="margin-bottom: 5px"><b>Active</b></p>
+        <div class="btn-group">
+          <label class="btn btn-default" ng-model="user.attributes.active" btn-radio="{{true}}">Yes</label>
+          <label class="btn btn-default" ng-model="user.attributes.active" btn-radio="{{false}}">No</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-4">
+        <label for="address">Address</label>
+        <input ng-model="user.attributes.address" type="text" class="form-control" id="address" placeholder="Address"/>
+      </div>
+
+      <div class="form-group col-md-2">
+        <label for="city">City</label>
+        <input ng-model="user.attributes.city" type="text" class="form-control" id="city" placeholder="City"/>
+      </div>
+
+      <div class="col-md-2">
+        <label for="state">State</label>
+	<select class="form-control" ng-model="user.attributes.state" ng-options="state.attributes.numericCode as state.attributes.Name for state in states">
+        </select>
+      </div>
+
+      <div class="form-group col-md-2">
+        <label for="zip">Zip</label>
+        <input ng-model="user.attributes.zip" type="text" class="form-control" id="zip" placeholder="Zip"/>
+      </div>
+
+      <div class="form-group col-md-2">
+        <label for="country">Country</label>
+	<select class="form-control" ng-model="user.attributes.country">
+          <option class="form-control" value=""></option>
+          <option class="form-control" value="CA">Canada</option>
+          <option class="form-control" value="US">United States</option>
+          <option class="form-control" value="MX">Mexico</option>
+        </select>
+      </div>
+    </div>
+  </form>
+
+  <br>
+  <div section delim="EMS Agency" header="Service Information Groups" sectionName="dAgency.AgencyServiceGroup"></div>
+  <br>
+  <div section delim="*" header="Yearly Information Groups" sectionName="dAgency.AgencyYearGroup"></div>
+
+  <div class="page-header"></div>
+  <div class="row">
+    <div class="col-sm-2 col-sm-offset-10">
+      <button class="btn btn-lg btn-primary" ng-click="saveAgency()" ng-disabled="agencyForm.$invalid">Save</button>
+    </div>
+    <div class="col-sm-2" ng-if="false">
+      <button class="btn btn-lg btn-danger"  ng-click="deleteAgency()">Delete</button>
+    </div>
+  </div>
+  <br>
+
+
+</div>

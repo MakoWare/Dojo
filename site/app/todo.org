@@ -1,0 +1,68 @@
+* Tasks
+
+//Vehicles
+** DONE Vehicle Create
+   CLOSED: [2015-01-19 Mon 15:56]
+** TODO Add dVehicleGroup to dVehicle
+** DONE Vehicle Read
+   CLOSED: [2015-01-19 Mon 15:56]
+** DONE Vehicle Update
+   CLOSED: [2015-01-19 Mon 15:56]
+** DONE Vehicle Delete
+   CLOSED: [2015-01-19 Mon 16:14]
+** TODO Remove dVehicleGroup from dVehicle
+
+//Patients
+** DONE Patient Create
+   CLOSED: [2015-01-19 Mon 16:30]
+** DONE Patient Read
+   CLOSED: [2015-01-19 Mon 16:30]
+** DONE Patient Update
+   CLOSED: [2015-01-19 Mon 16:30]
+** DONE Patient Delete
+   CLOSED: [2015-01-19 Mon 20:01]
+
+//Facilities
+** DONE Facility Create
+   CLOSED: [2015-01-19 Mon 20:05]
+** TODO Figure out saving dFacility.FacilityGroup to dFacilityGroup
+** DONE Facility Read
+   CLOSED: [2015-01-19 Mon 20:05]
+** DONE Facility Update
+   CLOSED: [2015-01-19 Mon 20:05]
+** DONE Facility Delete
+   CLOSED: [2015-01-19 Mon 20:25]
+** TODO Figure out deleting dFacility.FacilityGroup to dFacilityGroup
+
+//Contacts
+** DONE Contacts Create
+   CLOSED: [2015-01-19 Mon 20:56]
+** TODO Add dContactInfoGroup to dContact
+** DONE Contacts Read
+   CLOSED: [2015-01-19 Mon 20:56]
+** DONE Contacts Update
+   CLOSED: [2015-01-19 Mon 20:56]
+** TODO Contacts Delete
+
+//Dispatches
+** TODO Dispatch Create
+** TODO Dispatch Read
+** TODO Dispatch Update
+** TODO Dispatch Delete
+
+//Users
+** TODO User Create
+** TODO User Read
+** TODO User Update
+** TODO User Delete
+
+//Agencies
+** TODO Agency Create
+** TODO Agency Read
+** TODO Agency Update
+** TODO Agency Delete
+
+
+* Org Mode Cheat Sheet
+
+** C-c C-t: mark TODO as DONE

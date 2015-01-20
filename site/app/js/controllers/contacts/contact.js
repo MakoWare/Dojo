@@ -51,13 +51,26 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
 
     //Setup Contact
     $scope.setUpContact = function(){
-
-
+        //get Contact Types
+        var query = new Parse.Query("NemsisElementCode");
+        query.equalTo("elementNumber", "dContact.01");
+        query.find({
+            success: function(results){
+                $scope.contactTypeCodes = results;
+                results.forEach(function(code){
+                    if(code.attributes.codeDescription == $scope.contact.attributes.type){
+                        $scope.contact.attributes.type = code.attributes.code + " " + $scope.contact.attributes.type;
+                        $scope.$apply();
+                    }
+                });
+            },
+            error: function(error){
+                alert(GlobalService.errorMessage + error.message);
+            }
+        });
         $scope.$broadcast("gotContact");
         GlobalService.dismissSpinner();
-
     };
-
 
 
     //Save Contact
@@ -65,25 +78,77 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
         console.log("saveContact()");
         GlobalService.showSpinner();
 
-        //Set EveryThing
         var contact = $scope.contact;
-        //user.set("firstName", user.attributes.firstName);
-        //user.set("lastName", user.attributes.lastName);
+
+        //Set EveryThing in dContact
+        contact.attributes.dContact.attributes.elements.forEach(function(element){
+            switch(element.attributes.title){
+            case "dContact.01":
+                element.set("value", contact.attributes.type);
+                break;
+            case "dContact.02":
+                element.set("value", contact.attributes.lastName);
+                break;
+            case "dContact.03":
+                element.set("value", contact.attributes.firstName);
+                break;
+            case "dContact.04":
+                element.set("value", contact.attributes.middleInitial);
+                break;
+            case "dContact.05":
+                element.set("value", contact.attributes.address);
+                break;
+            case "dContact.06":
+                element.set("value", contact.attributes.city);
+                break;
+            case "dContact.07":
+                element.set("value", contact.attributes.state);
+                break;
+            case "dContact.08":
+                element.set("value", contact.attributes.zip);
+                break;
+            case "dContact.09":
+                element.set("value", contact.attributes.country);
+                break;
+            case "dContact.10":
+                element.set("value", contact.attributes.phone);
+                break;
+            case "dContact.11":
+                element.set("value", contact.attributes.email);
+                break;
+            case "dContact.12":
+                element.set("value", contact.attributes.web);
+                break;
+            }
+        });
+
+        //Set Everything in contact
+        contact.set("firstName", contact.attributes.firstName);
+        contact.set("middleInitial", contact.attributes.middleInitial);
+        contact.set("lastName", contact.attributes.lastName);
+        contact.set("phone", contact.attributes.phone);
+        contact.set("email", contact.attributes.email);
+        contact.set("type", contact.attributes.type.substr(contact.attributes.type.indexOf(" ") + 1));
+        contact.set("address", contact.attributes.address);
+        contact.set("city", contact.attributes.city);
+        contact.set("state", contact.attributes.state);
+        contact.set("country", contact.attributes.country);
+        contact.set("zip", contact.attributes.zip);
 
 
         //First Save Each NemsisElement in each Section
         var sectionSavePromises = [];
         var elementSavePromises = [];
 
-        //Elements in dPersonnel.attributes.elements
-        $scope.user.attributes.dPersonnel.attributes.elements.forEach(function(element){
+        //Elements in dContact.attributes.elements
+        contact.attributes.dContact.attributes.elements.forEach(function(element){
             element.set("value", element.attributes.value);
             element.set("codeString", element.attributes.codeString);
             elementSavePromises.push(element.save());
         });
 
-        //Elements in dPersonnel.attributes.sections.attributes.elements
-        $scope.user.attributes.dPersonnel.attributes.sections.forEach(function(section){
+        //Elements in dContact.attributes.sections.attributes.elements
+        contact.attributes.dContact.attributes.sections.forEach(function(section){
             section.attributes.elements.forEach(function(element){
                 element.set("value", element.attributes.value);
                 element.set("codeString", element.attributes.codeString);
@@ -93,26 +158,27 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
 
         //After each NemsisElement has been saved, save Each Section
         Parse.Promise.when(elementSavePromises).then(function(){
-            $scope.user.attributes.dPersonnel.attributes.sections.forEach(function(section){
+            contact.attributes.dContact.attributes.sections.forEach(function(section){
                 section.set("elements", section.attributes.elements);
                 sectionSavePromises.push(section.save());
             });
 
-            //After each Section has been saved, save dPersonnel Section
+            //After each Section has been saved, save dContact Section
             Parse.Promise.when(sectionSavePromises).then(function(){
-                $scope.user.attributes.dPersonnel.set("sections", $scope.user.attributes.dPersonnel.attributes.sections);
-                $scope.user.attributes.dPersonnel.set("elements", $scope.user.attributes.dPersonnel.attributes.elements);
-                $scope.user.attributes.dPersonnel.save({
-                    success: function(dPersonnel){
-                        //Now Save the User
-                        $scope.user.set("dPersonnel", dPersonnel);
-                        $scope.user.save({
-                            success: function(user){
+                contact.attributes.dContact.set("sections", contact.attributes.dContact.attributes.sections);
+                contact.attributes.dContact.set("elements", contact.attributes.dContact.attributes.elements);
+                contact.attributes.dContact.save({
+                    success: function(dContact){
+                        //Now Save the Contact
+                        contact.set("dContact", dContact);
+                        contact.save({
+                            success: function(contact){
                                 GlobalService.showSpinner();
-                                console.log(user);
-
+                                console.log(contact);
+                                $location.path("/contacts");
+                                $scope.$apply();
                             },
-                            errror: function(object, error){
+                            error: function(object, error){
                                 console.log(error);
                                 alert(GlobalService.errorMessage + error.message);
                             }
