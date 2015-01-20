@@ -631,13 +631,13 @@ var ObjectHelper = {
 
     //Delete Facility
     deleteFacility: function(facility, callback){
-        var query = new Parse.Query("Section");
         console.log(facility);
-        query.equalTo("name", "dFacility");
-        console.log(facility.get("dFacility"));
-        query.equalTo("sections", facility.get("dFacility"));
-        console.log(query);
-        query.first({
+        //Remove facility.dFacilityGroup from agency.FacilityGroup   ***TODO*** TEST
+        var dFacilityGroup = facility.attributes.dFacility;
+        var query = new Parse.Query("Section");
+        query.equalTo("name", "dFacilityGroup");
+        query.equalTo("sections", dFacilityGroup);
+        return query.first({
             success: function(object){
                 return object;
             },
@@ -645,26 +645,55 @@ var ObjectHelper = {
                 callback(error);
             }
         }).then(function(parentSection){
-            parentSection.remove("sections", facility.get("dFacility")); //not sure if this is right
-            parentSection.save({
-                success: function(object){
-                    return;
-                },
-                error: function(object, error){
-                    callback(error);
-                }
-            }).then(function(){
-                //Now Delete the Facility object
-                facility.destroy({
-                    success: function(result){
-                        callback("Successfully deleted the Facility");
+            if(parentSection){
+                parentSection.remove("sections", dFacilityGroup);
+                return parentSection.save({
+                    success: function(object){
+                        return;
+                    },
+                    error: function(object, error){
+                        callback(error);
+                    }
+                }).then(function(){
+                    //Delete facility.dFacility
+                    dFacilityGroup.destroy({
+                        success: function(object){
+                            //Delete the Facility
+                            facility.destory({
+                                success: function(object){
+                                    callback("success");
+                                },
+                                error: function(object, error){
+                                    callback(error);
+                                }
+                            });
+                        },
+                        error: function(object, error){
+                            callback(error);
+                        }
+                    });
+                });
+            } else {
+                //Delete facility.dFacility
+                dFacilityGroup.destroy({
+                    success: function(object){
+                        //Delete the Facility
+                        facility.destroy({
+                            success: function(object){
+                                callback("success");
+                            },
+                            error: function(object, error){
+                                callback(error);
+                            }
+                        });
                     },
                     error: function(object, error){
                         callback(error);
                     }
                 });
-            });
+            }
         });
+
     },
 
     //Delete Contact
@@ -681,7 +710,7 @@ var ObjectHelper = {
             }
         }).then(function(parentSection){
             parentSection.remove("sections", contact.get("dContact"));
-            parentSection.save({
+            return parentSection.save({
                 success: function(object){
                     return;
                 },
@@ -689,7 +718,7 @@ var ObjectHelper = {
                     callback(error);
                 }
             }).then(function(){
-                //Now Delete the Facility object
+                //Now Delete the Contact object
                 contact.destroy({
                     success: function(result){
                         callback("success");

@@ -22,9 +22,7 @@ var FacilityCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
 
     //Create Facility
     $scope.createFacility = function(){
-        console.log("creating");
         ParseService.createObject("Facility", function(results){
-            console.log(results);
             $scope.facility = results;
             $scope.setUpFacility();
         });
@@ -34,7 +32,6 @@ var FacilityCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
     $scope.getFacility = function(id){
         ParseService.getObjectById("Facility", id, function(results){
             if(results.id){
-                console.log(results);
                 $scope.facility = results;
                 if(results.attributes.name){
                     $scope.fullName = results.attributes.name;
@@ -181,6 +178,8 @@ var FacilityCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
         Parse.Promise.when(elementSavePromises).then(function(){
             facility.attributes.dFacility.save({
                 success: function(dFacility){
+                    //Add dFacility to it's parent  ****TODO****
+
 
                     //Now Save the Facility
                     facility.set("dFacility", dFacility);
