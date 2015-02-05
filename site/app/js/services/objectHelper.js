@@ -155,6 +155,48 @@ var ObjectHelper = {
 
 
     /***** Create *****/
+    //Create Empty Section
+    createEmptySection: function(name){
+        var user = Parse.User.current();
+        var agencyId = user.get('agencyId');
+        var section = new Parse.Object("Section");
+        section.set("agencyId", agencyId);
+        section.set("createdBy", user);
+        section.set("name", name);
+        section.set("pcrId", "");
+        section.set("elements", []);
+        section.set("sections", []);
+
+        var sectionACL = new Parse.ACL();
+        sectionACL.setRoleReadAccess("EMT_" + agencyId, true);
+        sectionACL.setRoleWriteAccess("EMT_" + agencyId, true);
+        section.setACL(sectionACL);
+
+        return section;
+    },
+
+    //Create Empty NemsisElement
+    createEmptyNemsisElement: function(elementNumber){
+        var user = Parse.User.current();
+        var agencyId = user.get('agencyId');
+
+        var element = new this.NemsisElement();
+
+        element.set("agencyId", Parse.User.current().attributes.agencyId);
+        element.set("createdBy", Parse.User.current());
+        element.set("title", elementNumber);
+        element.set("pcrId", "");
+        element.set("value", "");
+        element.set("codeString", "");
+
+        var acl = new Parse.ACL();
+        acl.setRoleReadAccess("EMT_" + agencyId, true);
+        acl.setRoleWriteAccess("EMT_" + agencyId, true);
+        element.setACL(acl);
+
+        return element;
+    },
+
     //Contact
     createContact: function(callback){
         var user = Parse.User.current();
@@ -621,7 +663,6 @@ var ObjectHelper = {
 
 
     /***** Delete *****/
-
     //Recursive Delete Section - also Removes Section from parent  #Not Tested
     deleteSection: function(section, callback){
         //First Recursively Delete Sub Sections
@@ -699,7 +740,7 @@ var ObjectHelper = {
 
     //Delete Dispatch
     deleteDispatch: function(dispatch, callback){
-        dispatch.destroy({
+        return dispatch.destroy({
             success: function(result){
                 callback("Successfully deleted the Disptach");
             },
@@ -712,7 +753,7 @@ var ObjectHelper = {
 
     //Delete File
     deleteFile: function(file, callback){
-        file.destroy({
+        return file.destroy({
             success: function(result){
                 callback("Successfully deleted the File");
             },
@@ -736,10 +777,10 @@ var ObjectHelper = {
 
     //Delete Facility #Not Tested
     deleteFacility: function(facility, callback){
-        //1.  Delete dFacility
+        //1. Delete dFacility
         var dFacility = facility.attributes.dFacility;
-        ObjectHelper.deleteSection(dFacility, function(result){
-            //Delete the Facility
+        return ObjectHelper.deleteSection(dFacility, function(result){
+            //2. Delete the Facility
             facility.destory({
                 success: function(object){
                     callback("success");
@@ -753,9 +794,9 @@ var ObjectHelper = {
 
     //Delete Contact #Tested
     deleteContact: function(contact, callback){
-        //Destroy dContact
+        //Delete dContact
         var dContact = contact.attributes.dContact;
-        ObjectHelper.deleteSection(dContact, function(result){
+        return ObjectHelper.deleteSection(dContact, function(result){
             //Now Delete the Contact object
             contact.destroy({
                 success: function(result){
@@ -771,26 +812,13 @@ var ObjectHelper = {
 
     //Delete Patient #Not Tested
     deletePatient: function(patient, callback){
-        //Destroy the Sections in patient.attributes.ePatient.attributes.sections
+        //1. Delete ePatient
         var ePatient = patient.attributes.ePatient;
-        var sectionPromises = [];
-        ePatient.attributes.sections.forEach(function(section){
-            sectionPromises.push(section.destroy());
-        });
-
-        Parse.Promise.when(sectionPromises).then(function(){
-            //Destroy ePatient
-            ePatient.destroy({
+        return ObjectHelper.deleteSection(ePatient, function(results){
+            //2. Delete the Patient
+            patient.destroy({
                 success: function(result){
-                    //Destroy Patient
-                    patient.destroy({
-                        success: function(result){
-                            callback("success");
-                        },
-                        error: function(object, error){
-                            callback(error);
-                        }
-                    });
+                    callback("success");
                 },
                 error: function(object, error){
                     callback(error);
@@ -836,9 +864,9 @@ var ObjectHelper = {
     deleteVehicle: function(vehicle, callback){
         //1. Delete  dVehicleGroup
         var dVehicleGroup = vehicle.attributes.dVehicleGroup;
-        ObjectHelper.deleteSection(dVehicleGroup, function(result){
-            //Now Delete the Contact object
-            vehicle.destroy({
+        return ObjectHelper.deleteSection(dVehicleGroup, function(result){
+            //2. Delete the Vehicle
+            return vehicle.destroy({
                 success: function(result){
                     callback("success");
                 },
@@ -848,8 +876,6 @@ var ObjectHelper = {
             });
         });
     },
-
-
 
 
     //Init Ipad Configuration
@@ -991,52 +1017,5 @@ var ObjectHelper = {
                 callback(error);
             }
         });
-
-    },
-
-    //Create Empty Section
-    createEmptySection: function(name){
-        var user = Parse.User.current();
-        var agencyId = user.get('agencyId');
-        var section = new Parse.Object("Section");
-        section.set("agencyId", agencyId);
-        section.set("createdBy", user);
-        section.set("name", name);
-        section.set("pcrId", "");
-        section.set("elements", []);
-        section.set("sections", []);
-
-        var sectionACL = new Parse.ACL();
-        sectionACL.setRoleReadAccess("EMT_" + agencyId, true);
-        sectionACL.setRoleWriteAccess("EMT_" + agencyId, true);
-        section.setACL(sectionACL);
-
-        return section;
-    },
-
-
-    //Create Empty NemsisElement
-    createEmptyNemsisElement: function(elementNumber){
-        var user = Parse.User.current();
-        var agencyId = user.get('agencyId');
-
-        var element = new this.NemsisElement();
-
-        element.set("agencyId", Parse.User.current().attributes.agencyId);
-        element.set("createdBy", Parse.User.current());
-        element.set("title", elementNumber);
-        element.set("pcrId", "");
-        element.set("value", "");
-        element.set("codeString", "");
-
-        var acl = new Parse.ACL();
-        acl.setRoleReadAccess("EMT_" + agencyId, true);
-        acl.setRoleWriteAccess("EMT_" + agencyId, true);
-        element.setACL(acl);
-
-        return element;
     }
-
-
-
 };

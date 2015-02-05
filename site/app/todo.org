@@ -46,7 +46,8 @@ List of Sh!t that needs to get done
 ** TODO Dispatch Create
 ** TODO Dispatch Read
 ** TODO Dispatch Update
-** TODO Dispatch Delete
+** DONE Dispatch Delete
+   CLOSED: [2015-02-04 Wed 23:13]
 
 
 * Users
