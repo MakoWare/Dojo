@@ -322,6 +322,9 @@ var ObjectHelper = {
 
     //User
     createUser: function(callback){
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        };
         var user = new Parse.User();
         var agencyId = user.get('agencyId');
 
@@ -524,35 +527,114 @@ var ObjectHelper = {
         });
     },
 
-
-
     //Recursive Save Section - also Adds to Parent Section if needed #Not Tested
     saveSection: function(section, parentSection, callback){
+        console.log("Saving Section: " + section.attributes.name);
 
+        //1. Recursivly Save The Sub Sections
+        var subSectionSavePromises = [];
+        if(section.attributes.sections){
+            section.attributes.sections.forEach(function(section){
+                var promise = ObjectHelper.saveSection(section, "", function(result){
+                    return result;
+                });
+                subSectionSavePromises.push(promise);
+            });
+        }
 
+        //After All SubSections have been Deleted
+        return Parse.Promise.when(subSectionSavePromises).then(function(results){
+            //2. Save The NemsisElements in Section
+            var elementSavePromises = [];
+            if(section.attributes.elements){
+                section.attributes.elements.forEach(function(element){
+                    element.set("value", element.attributes.value);
+                    element.set("code", element.attributes.code); //When We Switch to Codes
+                    elementSavePromises.push(element.save);
+                });
+            }
+
+            //After All of the Nemsis Elements Have Been Saved
+            return Parse.Promise.when(elementSavePromises).then(function(){
+                //Now Check if the Section needs to be added to a Parent Section
+                if(parentSection != ""){
+                    return ObjectHelper.addToParentSection(section, parentSection, function(results){
+                        //Now Save The section
+                        return section.save({
+                            success: function(result){
+                                callback(result);
+                            },
+                            error: function(object, error){
+                                callback(error);
+                            }
+                        });
+                    });
+                } else {
+                    return section.save({
+                        success: function(result){
+                            callback(result);
+                        },
+                        error: function(object, error){
+                            callback(error);
+                        }
+                    });
+                }
+            });
+        });
     },
 
+    //Save Section Helper  #Not Tested
+    addToParentSection: function(section, parentSection, callback){
+        //Get The Parent Section
+        var query = new Parse.Query("Section");
+        query.equalTo("name", parentSection);
+        return query.first({
+            success: function(parentSection){
+                if(parentSection){
+                    if(parentSection.attributes.sections){
+                        var inParent = false;
+                        parentSection.attributes.section.forEach(function(childSection){
+                            //If the Section is already in the Parent Section, don't add it
+                            if(childSection.id == section.id){
+                                callback("already in parent");
+                            }
+                        });
+                        if(!inParent){
+                            parentSection.add("sections", section);
+                            return parentSection.save();
+                        }
+                    } else {
+                        console.log("parentSection.attributes.sections null?");
+                        callback("parentSection.attributes.sections null?");
+                    }
+                } else {
+                    console.log("no parent found");
+                    callback("no parent found");
+                }
+            },
+            error: function(error){
+                callback(error);
+                return;
+            }
+        });
+    },
 
 
     /***** Delete *****/
 
-    //Recursive Delete Section - also Removes Section from parent  #Tested
+    //Recursive Delete Section - also Removes Section from parent  #Not Tested
     deleteSection: function(section, callback){
-        console.log("deleting Section: " + section.attributes.name);
-
         //First Recursively Delete Sub Sections
         var subSectionDeletePromises = [];
 
         if(section.attributes.sections){
             section.attributes.sections.forEach(function(section){
                 var promise = ObjectHelper.deleteSection(section, function(result){
-                    console.log("done deleting subSection");
                     return result;
                 });
                 subSectionDeletePromises.push(promise);
             });
         }
-
 
         //After All SubSections have been Deleted
         return Parse.Promise.when(subSectionDeletePromises).then(function(results){
@@ -578,24 +660,37 @@ var ObjectHelper = {
                             callback(error);
                         }
                     }).then(function(result){
+                        //Now Delete all of the Nemsis Elements in the Section
+                        var elementPromises = [];
+                        section.attributes.elements.forEach(function(element){
+                            elementPromises.push(element.delete);
+                        });
+                        return Parse.Promise.when(elementPromises).then(function(){
+                            return section.destroy({
+                                success: function(result){
+                                    callback(result);
+                                },
+                                error: function(object, error){
+                                    callback(error);
+                                }
+                            });
+                        });
+                    });
+                } else {  //If Section did not have a parent
+                    //Now Delete all of the Nemsis Elements in the Section
+                    var elementPromises = [];
+                    section.attributes.elements.forEach(function(element){
+                        elementPromises.push(element.delete);
+                    });
+                    return Parse.Promise.when(elementPromises).then(function(){
                         return section.destroy({
                             success: function(result){
                                 callback(result);
                             },
-                            errro: function(object, error){
+                            error: function(object, error){
                                 callback(error);
                             }
                         });
-                    });
-                } else {  //If Section did not have a parent
-                    return section.destroy({
-                        success: function(result){
-                            console.log("done deleting Section");
-                            callback(result);
-                        },
-                        errro: function(object, error){
-                            callback(error);
-                        }
                     });
                 }
             });
@@ -639,79 +734,28 @@ var ObjectHelper = {
         });
     },
 
-    //Delete Facility
+    //Delete Facility #Not Tested
     deleteFacility: function(facility, callback){
-        console.log(facility);
-        //Remove facility.dFacilityGroup from agency.FacilityGroup   ***TODO*** TEST
-        var dFacilityGroup = facility.attributes.dFacility;
-        var query = new Parse.Query("Section");
-        query.equalTo("name", "dFacilityGroup");
-        query.equalTo("sections", dFacilityGroup);
-        return query.first({
-            success: function(object){
-                return object;
-            },
-            error: function(error){
-                callback(error);
-            }
-        }).then(function(parentSection){
-            if(parentSection){
-                parentSection.remove("sections", dFacilityGroup);
-                return parentSection.save({
-                    success: function(object){
-                        return;
-                    },
-                    error: function(object, error){
-                        callback(error);
-                    }
-                }).then(function(){
-                    //Delete facility.dFacility
-                    dFacilityGroup.destroy({
-                        success: function(object){
-                            //Delete the Facility
-                            facility.destory({
-                                success: function(object){
-                                    callback("success");
-                                },
-                                error: function(object, error){
-                                    callback(error);
-                                }
-                            });
-                        },
-                        error: function(object, error){
-                            callback(error);
-                        }
-                    });
-                });
-            } else {
-                //Delete facility.dFacility
-                dFacilityGroup.destroy({
-                    success: function(object){
-                        //Delete the Facility
-                        facility.destroy({
-                            success: function(object){
-                                callback("success");
-                            },
-                            error: function(object, error){
-                                callback(error);
-                            }
-                        });
-                    },
-                    error: function(object, error){
-                        callback(error);
-                    }
-                });
-            }
+        //1.  Delete dFacility
+        var dFacility = facility.attributes.dFacility;
+        ObjectHelper.deleteSection(dFacility, function(result){
+            //Delete the Facility
+            facility.destory({
+                success: function(object){
+                    callback("success");
+                },
+                error: function(object, error){
+                    callback(error);
+                }
+            });
         });
     },
 
-    //Delete Contact
+    //Delete Contact #Tested
     deleteContact: function(contact, callback){
-        console.log("deleteContact()");
         //Destroy dContact
         var dContact = contact.attributes.dContact;
         ObjectHelper.deleteSection(dContact, function(result){
-            console.log("done deleting dContact");
             //Now Delete the Contact object
             contact.destroy({
                 success: function(result){
@@ -725,6 +769,7 @@ var ObjectHelper = {
     },
 
 
+    //Delete Patient #Not Tested
     deletePatient: function(patient, callback){
         //Destroy the Sections in patient.attributes.ePatient.attributes.sections
         var ePatient = patient.attributes.ePatient;
@@ -754,6 +799,7 @@ var ObjectHelper = {
         });
     },
 
+    //Delete User #Not Tested
     deleteUser: function(user, callback){
         //First Remove the PersonnelGroup from dPersonnel
         var query = new Parse.Query("Section");
@@ -785,66 +831,25 @@ var ObjectHelper = {
         });
     },
 
+
+    //Delete Vehicle #Not Tested
     deleteVehicle: function(vehicle, callback){
-        console.log(vehicle);
-        //First Remove vehicle.dVehicle from agency.dVehicle
-        var query = new Parse.Query("Section");
-        query.equalTo("name", "dVehicle");
-        query.equalTo("sections", vehicle.get("dVehicleGroup"));
-        query.first({
-            success: function(results){
-                return results;
-                console.log(results);
-            },
-            error: function(error){
-                console.log(error);
-                callback(error.message);
-            }
-        }).then(function(parentSection){
-            //Remove Section from agency.dVehicle
-            console.log(parentSection);
-            parentSection.remove("sections", vehicle.get("dVehicle"));
-            parentSection.save({
-                success: function(object){
-                    return;
+        //1. Delete  dVehicleGroup
+        var dVehicleGroup = vehicle.attributes.dVehicleGroup;
+        ObjectHelper.deleteSection(dVehicleGroup, function(result){
+            //Now Delete the Contact object
+            vehicle.destroy({
+                success: function(result){
+                    callback("success");
                 },
                 error: function(object, error){
-                    callback(error.message);
+                    callback(error);
                 }
-            }).then(function(){
-                //Now Delete the sections in vehicle.dVehicle
-                var deletePromises = [];
-                vehicle.attributes.dVehicle.attributes.sections.forEach(function(section){
-                    deletePromises.push(section.destroy());
-                });
-
-                Parse.Promise.when(deletePromises).then(function(){
-                    //Now Delete vehicle.dVehicle
-                    vehicle.attributes.dVehicle.destroy({
-                        success: function(result){
-                            //Now Delete the Vehicle
-                            vehicle.destroy({
-                                success: function(result){
-                                    callback("Successfully deleted the Vehicle");
-                                },
-                                error: function(object, error){
-                                    callback(error.message);
-                                }
-                            });
-                        },
-                        error: function(object, error){
-
-                        }
-                    });
-                });
             });
-
         });
     },
 
-    getRandomInt: function(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    },
+
 
 
     //Init Ipad Configuration

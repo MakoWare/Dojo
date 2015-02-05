@@ -2,17 +2,12 @@ List of Sh!t that needs to get done
 
 * Vehicles
 ** DONE Vehicle Create
-   CLOSED: [2015-01-19 Mon 15:56]
-** TODO Add dVehicleGroup to dVehicle
+   CLOSED: [2015-02-04 Wed 23:11]
 ** DONE Vehicle Read
    CLOSED: [2015-01-19 Mon 15:56]
-** DONE Vehicle Update
-   CLOSED: [2015-01-19 Mon 15:56]
+** TODO Vehicle Update
 ** DONE Vehicle Delete
-   CLOSED: [2015-01-19 Mon 16:14]
-** TODO Remove dVehicleGroup from dVehicle
-
-//Patients
+   CLOSED: [2015-02-04 Wed 23:10]
 
 
 * Patients
@@ -25,31 +20,24 @@ List of Sh!t that needs to get done
 ** DONE Patient Delete
    CLOSED: [2015-01-19 Mon 20:01]
 
-//Facilities
-
 
 * Facilities
 ** DONE Facility Create
-   CLOSED: [2015-01-19 Mon 20:05]
-** TODO Figure out saving dFacility.FacilityGroup to dFacilityGroup
+   CLOSED: [2015-02-04 Wed 23:11]
 ** DONE Facility Read
    CLOSED: [2015-01-19 Mon 20:05]
-** DONE Facility Update
-   CLOSED: [2015-01-19 Mon 20:05]
+** TODO Facility Update
 ** DONE Facility Delete
    CLOSED: [2015-01-19 Mon 20:25]
-** TODO Figure out deleting dFacility.FacilityGroup to dFacilityGroup
-
-//Contacts
 
 
 * Contacts
 
-** TODO Contacts Create
+** DONE Contacts Create
+   CLOSED: [2015-02-04 Wed 23:11]
 ** DONE Contacts Read
    CLOSED: [2015-01-19 Mon 20:56]
-** DONE Contacts Update
-   CLOSED: [2015-01-19 Mon 20:56]
+** TODO Contacts Update
 ** DONE Contacts Delete
    CLOSED: [2015-02-04 Wed 22:17]
 
@@ -60,8 +48,6 @@ List of Sh!t that needs to get done
 ** TODO Dispatch Update
 ** TODO Dispatch Delete
 
-//Users
-
 
 * Users
 ** TODO User Create
@@ -69,14 +55,13 @@ List of Sh!t that needs to get done
 ** TODO User Update
 ** TODO User Delete
 
-//Agencies
-
 
 * Agencies
 ** TODO Agency Create
 ** TODO Agency Read
 ** TODO Agency Update
 ** TODO Agency Delete
+
 
 * Sections
 ** DONE Section Create
