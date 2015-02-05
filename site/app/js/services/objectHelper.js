@@ -560,39 +560,70 @@ var ObjectHelper = {
 
 
     //***Delete****
-    //TODO ***Check for cross matches between things like Vehicle on a deleted Dispatch
+
+    //Recursive Delete Section - also Removes Section from parent  #Tested
     deleteSection: function(section, callback){
-        //First Remove from Parent Section
-        var query = new Parse.Query("Section");
-        query.equalTo("sections", section); //not sure if this is right
-        query.first({
-            success: function(object){
-                return object;
-            },
-            error: function(error){
-                callback(error);
-            }
-        }).then(function(parentSection){
-            parentSection.remove("sections", section); //not sure if this is right
-            parentSection.save({
+        console.log("deleting Section: " + section.attributes.name);
+
+        //First Recursively Delete Sub Sections
+        var subSectionDeletePromises = [];
+
+        if(section.attributes.sections){
+            section.attributes.sections.forEach(function(section){
+                var promise = ObjectHelper.deleteSection(section, function(result){
+                    console.log("done deleting subSection");
+                    return result;
+                });
+                subSectionDeletePromises.push(promise);
+            });
+        }
+
+
+        //After All SubSections have been Deleted
+        return Parse.Promise.when(subSectionDeletePromises).then(function(results){
+            //Check if the Section has a Parent Section
+            var query = new Parse.Query("Section");
+            query.equalTo("sections", section);
+            return query.first({
                 success: function(object){
-                    return;
+                    return object;
                 },
-                error: function(object, error){
+                error: function(error){
                     callback(error);
                 }
-            }).then(function(){
-                //Now Delete the Section object
-                section.destroy({
-                    success: function(result){
-                        callback(result);
-                    },
-                    error: function(object, error){
-                        callback(error);
-                    }
-                });
+            }).then(function(parentSection){
+                //If Section Had a Parent
+                if(parentSection){
+                    parentSection.remove("sections", section);
+                    return parentSection.save({
+                        success: function(parentSection){
+                            return parentSection;
+                        },
+                        error: function(error){
+                            callback(error);
+                        }
+                    }).then(function(result){
+                        return section.destroy({
+                            success: function(result){
+                                callback(result);
+                            },
+                            errro: function(object, error){
+                                callback(error);
+                            }
+                        });
+                    });
+                } else {  //If Section did not have a parent
+                    return section.destroy({
+                        success: function(result){
+                            console.log("done deleting Section");
+                            callback(result);
+                        },
+                        errro: function(object, error){
+                            callback(error);
+                        }
+                    });
+                }
             });
-
         });
     },
 
@@ -697,52 +728,24 @@ var ObjectHelper = {
                 });
             }
         });
-
     },
 
     //Delete Contact
     deleteContact: function(contact, callback){
-        // **********TODO****************
-        //Remove contact.dContact to agency.dContact
-
+        console.log("deleteContact()");
+        //Destroy dContact
         var dContact = contact.attributes.dContact;
-        /*
-        var query = new Parse.Query("Section");
-        query.equalTo("name", "dContact");
-        query.equalTo("sections", dContact);
-        query.first({
-            success: function(object){
-                return object;
-            },
-            error: function(error){
-                callback(error);
-            }
-        }).then(function(parentSection){
-            parentSection.remove("sections", dContact);
-            return parentSection.save({
-                success: function(object){
-                    return;
+        ObjectHelper.deleteSection(dContact, function(result){
+            console.log("done deleting dContact");
+            //Now Delete the Contact object
+            contact.destroy({
+                success: function(result){
+                    callback("success");
                 },
                 error: function(object, error){
                     callback(error);
                 }
-            }).then(function(){
-         */
-
-        //Delete Sections in dContact
-        var sectionPromises = [];
-        dContact.attributes.sections.forEach(function(section){
-            sectionPromises.push();
-        });
-
-        //Now Delete the Contact object
-        contact.destroy({
-            success: function(result){
-                callback("success");
-            },
-            error: function(object, error){
-                callback(error);
-            }
+            });
         });
     },
 

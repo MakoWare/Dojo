@@ -61,8 +61,3 @@
 ** TODO Agency Read
 ** TODO Agency Update
 ** TODO Agency Delete
-
-
-* Org Mode Cheat Sheet
-
-** C-c C-t: mark TODO as DONE
