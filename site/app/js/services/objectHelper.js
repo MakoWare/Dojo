@@ -64,6 +64,8 @@ var ObjectHelper = {
     },
 
     //***Generics***//
+
+
     //Create Object
     createObject: function(objectType, callback){
         switch (objectType) {
@@ -124,9 +126,35 @@ var ObjectHelper = {
         }
     },
 
+    //Save Object
+    saveObject: function(objectType, callback){
+        switch (objectType) {
+        case "Contact":
+            this.saveContact(callback);
+            break;
+        case "Dispatch":
+            this.saveDispatch(callback);
+            break;
+        case "Facility":
+            this.saveFacility(callback);
+            break;
+        case "File":
+            this.saveFile(callback);
+            break;
+        case "Patient":
+            this.savePatient(callback);
+            break;
+        case "User":
+            this.saveUser(callback);
+            break;
+        case "Vehicle":
+            this.saveVehicle(callback);
+            break;
+        }
+    },
 
-    //**Create**//
 
+    /***** Create *****/
     //Contact
     createContact: function(callback){
         var user = Parse.User.current();
@@ -368,136 +396,8 @@ var ObjectHelper = {
         callback(file);
     },
 
-    //Nemsis Objects
-    //Create Section   *Think I got it, boss ass async function
-    createSection: function(agencyId,  sectionName, callback){
-        var section = new this.Section();
-        section.set("agencyId", agencyId);
-        section.set("createdBy", Parse.User.current());
-        section.set("name", sectionName);
-        section.set("pcrId", "");
-        section.set("elements", []);
-        section.set("sections", []);
 
-        var sectionACL = new Parse.ACL();
-        sectionACL.setRoleReadAccess("EMT_" + agencyId, true);
-        sectionACL.setRoleWriteAccess("EMT_" + agencyId, true);
-        section.setACL(sectionACL);
-
-        var subSections = [];
-        var subSectionPromises = [];
-        var finalPromise;
-
-        //Get NemsisSection
-        var query = new Parse.Query("NemsisSection");
-        query.equalTo("name", sectionName);
-        query.include("headers");
-        query.include("sections");
-        return query.first({
-            success: function(results){
-                return results;
-            },
-            error: function(error){
-                console.log(error);
-            }
-        }).then(function(results){
-            section.set("nemsisSection", results);
-
-            //create NemsisElements for each of the headers
-            var elementHeaders =  results.get('headers') || [];
-            var nemsisElements = [];
-            var promises = [];
-
-            elementHeaders.forEach(function(elementHeader){
-                var promise = ObjectHelper.createNemsisElement(agencyId,  elementHeader.get('ElementNumber'), elementHeader, function(results){
-                    section.add('elements', results);
-                });
-                promises.push(promise);
-            });
-
-            return Parse.Promise.when(promises).then(function(){
-                return;
-            });
-        }).then(function(){
-            //Check if sub Sections are required
-            var requiredSubSectionNames = [];
-            if(section.get('nemsisSection').get('sections')){
-                section.get('nemsisSection').get('sections').forEach(function(section){
-                    if(section.get('min')  == 1){
-                        requiredSubSectionNames.push(section.get('name'));
-                    }
-                });
-            }
-            //Create required sub Sections Recursively
-            requiredSubSectionNames.forEach(function(sectionName){
-                subSectionPromises.push(ObjectHelper.createSection(agencyId, sectionName, function(result){
-                    console.log("subSection created: " + sectionName);
-                    subSections.push(result);
-                }));
-            });
-        }).then(function(){
-            return Parse.Promise.when(subSectionPromises).then(function(){
-                return;
-            });
-        }).then(function(){
-            console.log("all subsections created for: " + sectionName);
-            section.set('sections', subSections);
-            return section.save({
-                success: function(result){
-                    return (result);
-                },
-                error: function(object, error){
-                    callback(error);
-                }
-            }).then(function(result){
-                callback(result);
-            });
-        });
-    },
-
-    //Create NemsisElement
-    createNemsisElement: function(agencyId, elementNumber, header, callback){
-        var element = new this.NemsisElement();
-        element.set("agencyId", Parse.User.current().attributes.agencyId);
-        element.set("createdBy", Parse.User.current());
-        element.set("title", elementNumber);
-        element.set("pcrId", "");
-        element.set("value", "");
-
-        var acl = new Parse.ACL();
-        acl.setRoleReadAccess("EMT_" + agencyId, true);
-        acl.setRoleWriteAccess("EMT_" + agencyId, true);
-        element.setACL(acl);
-
-        //All elements are need references to their NemsisHeaders
-        if(header != ""){ //May have broke everything
-            element.set('header', header);
-            element.save({
-                success: function(result){
-                    callback(element);
-                },
-                error: function(object, error){
-                    callback(error);
-                }
-            });
-        } else {
-            console.log("getting header for element");
-            var query = new Parse.Query("NemsisHeader");
-            query.equalTo("ElementNumber", elementNumber);
-            query.first({
-                success: function(result){
-                    element.set(header, result);
-                    callback(element);
-                },
-                error: function(error){
-                    console.log(error);
-                    callback(error);
-                }
-            });
-        }
-    },
-
-    //Create Agency ***Wow, look how much code this is, fucking awesome, and easy to extend
+    //Create Agency **TODO
     createAgency: function(name, callback){
         var agency = new ObjectHelper.Agency();
         agency.set("createdBy", Parse.User.current());
@@ -559,7 +459,82 @@ var ObjectHelper = {
     },
 
 
-    //***Delete****
+    /***** Save *****/
+    saveContact: function(contact, callback){
+        //First Set The Elements in dContact
+        contact.attributes.dContact.attributes.elements.forEach(function(element){
+            switch(element.attributes.title){
+            case "dContact.01":
+                element.set("value", contact.attributes.type);
+                break;
+            case "dContact.02":
+                element.set("value", contact.attributes.lastName);
+                break;
+            case "dContact.03":
+                element.set("value", contact.attributes.firstName);
+                break;
+            case "dContact.04":
+                element.set("value", contact.attributes.middleInitial);
+                break;
+            case "dContact.05":
+                element.set("value", contact.attributes.address);
+                break;
+            case "dContact.06":
+                element.set("value", contact.attributes.city);
+                break;
+            case "dContact.07":
+                element.set("value", contact.attributes.state);
+                break;
+            case "dContact.08":
+                element.set("value", contact.attributes.zip);
+                break;
+            case "dContact.09":
+                element.set("value", contact.attributes.country);
+                break;
+            case "dContact.10":
+                element.set("value", contact.attributes.phone);
+                break;
+            case "dContact.11":
+                element.set("value", contact.attributes.email);
+                break;
+            case "dContact.12":
+                element.set("value", contact.attributes.web);
+                break;
+            }
+        });
+
+        //Set Everything in dContact
+        for(var attr in contact.attributes){
+            contact.set(attr, contact.attributes[attr]);
+        }
+
+        //Save dContact
+        var dContact = contact.attributes.dContact;
+        return ObjectHelper.saveSection(dContact, "dContact", function(results){
+            console.log("done saving dContact");
+            //Now Save contact
+            return contact.save({
+                success: function(result){
+                    callback(result);
+                },
+                error: function(object, error){
+                    callback(error);
+                }
+            });
+        });
+    },
+
+
+
+    //Recursive Save Section - also Adds to Parent Section if needed #Not Tested
+    saveSection: function(section, parentSection, callback){
+
+
+    },
+
+
+
+    /***** Delete *****/
 
     //Recursive Delete Section - also Removes Section from parent  #Tested
     deleteSection: function(section, callback){

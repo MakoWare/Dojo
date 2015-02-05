@@ -551,10 +551,17 @@ angular.module('parseService', [])
                 });
             },
 
+            /** Save Object **/
+            saveObject: function(object, objectType, callback){
+                ObjectHelper.deleteObject(objectType, object, callback);
+            },
+
+
             //Delete Object
             deleteObject: function(object, objectType, callback){
                 ObjectHelper.deleteObject(objectType, object, callback);
             },
+
 
 
             deleteSection: function(section, callback){
