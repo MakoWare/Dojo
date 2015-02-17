@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" class="no-js" data-ng-app="dojo">
+  <head data-template-set="html5-reset">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta charset="utf-8">
+    <title>Dojo</title>
+    <meta name="viewport" content="width=device-width">
+
+    <!--Style-->
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="css/angular-multi-select.css"/>
+    <link rel="stylesheet" href="libs/colorPicker/colorPicker.min.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
+
+    <!--Libs-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="libs/lodash.underscore.min.js"></script>
+    <script src="libs/angular/angular.min.js"></script>
+    <script src="libs/angular/angular-route.min.js"></script>
+    <script src="libs/angular/angular-multi-select.js"></script>
+    <script src="libs/angular/angular-google-maps.min.js"></script>
+    <script src="libs/bootstrap.min.js"></script>
+    <script src="libs/ui-bootstrap-tpls.min.js"></script>
+    <script src="libs/spin.min.js"></script>
+    <script src="libs/colorPicker/colorPicker.min.js"></script>
+    <script src="libs/colorPicker/tinycolor.min.js"></script>
+
+    <!--Scripts-->
+    <script src="https://www.parse.com/downloads/javascript/parse-1.2.19.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/controllers/run.js"></script>
+    <script src="js/services/objectHelper.js"></script>
+    <script src="js/services/parse.js"></script>
+    <script src="js/services/global.js"></script>
+    <script src="js/controllers/admin.js"></script>
+    <script src="js/controllers/config.js"></script>
+    <script src="js/controllers/ipadConfig.js"></script>
+    <script src="js/controllers/login.js"></script>
+    <script src="js/controllers/contact.js"></script>
+    <script src="js/controllers/documentation.js"></script>
+    <script src="js/controllers/nav.js"></script>
+    <script src="js/controllers/map.js"></script>
+    <script src="js/controllers/window.js"></script>
+    <script src="js/controllers/crud/create.js"></script>
+    <script src="js/controllers/crud/read.js"></script>
+    <script src="js/controllers/nemsis/nemsisCreate.js"></script>
+    <script src="js/controllers/nemsis/nemsisRead.js"></script>
+    <script src="js/controllers/nemsis/sectionDirective.js"></script>
+    <script src="js/controllers/nemsis/nemsisHeaderDirective.js"></script>
+    <script src="js/controllers/nemsis/sectionModal.js"></script>
+
+    <script src="js/controllers/agencies/agency.js"></script>
+    <script src="js/controllers/contacts/contact.js"></script>
+    <script src="js/controllers/dispatches/dispatch.js"></script>
+    <script src="js/controllers/facilities/facility.js"></script>
+    <script src="js/controllers/patients/patient.js"></script>
+    <script src="js/controllers/vehicles/vehicle.js"></script>
+    <script src="js/controllers/users/user.js"></script>
+
+    <script src="tests/nemsisSectionsInit.js"></script>
+    <script src="js/tools/initRoles.js"></script>
+  </head>
+  <body  style="padding: 0px;">
+    <div id="overlay"></div>
+
+    <div class="navigation" data-navigation=""></div>
+    <div ng-view=""></div>
+
+  </body>
+</html>

@@ -1,0 +1,95 @@
+<div class="container-widescreen" style="margin-right : 5%; margin-left: 5%">
+  <div class="page-header" style="margin-top: 0px; margin-bottom: 15px;">
+    <div class="row">
+      <div class="col-sm-12">
+        <h1 style="margin-top: 10px;">{{title}} {{fullName}}</h1>
+      </div>
+    </div>
+  </div>
+
+
+  <form name="contactForm">
+    <div class="row">
+      <div class="form-group col-md-3" ng-class="{ 'has-error': contactForm.firstName.$invalid }">
+        <label for="firstName">First Name</label>
+        <input ng-model="contact.attributes.firstName" type="text" name="firstName" class="form-control" id="firstName" placeholder="First Name" required/>
+      </div>
+
+      <div class="form-group col-md-1">
+        <label for="middleInitial">M.I</label>
+        <input ng-model="contact.attributes.middleInitial" type="text" class="form-control" id="middleInitial" placeholder="Middle"/>
+      </div>
+
+      <div class="form-group col-md-3" ng-class="{ 'has-error': contactForm.lastName.$invalid }">
+        <label for="lastName">Last Name</label>
+        <input ng-model="contact.attributes.lastName" name="lastName" type="text" class="form-control" id="lastName" placeholder="Last Name" required/>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-3">
+        <label for="phone">Phone Number</label>
+        <input ng-model="contact.attributes.phone" type="text" class="form-control" id="phone" placeholder="Phone"/>
+      </div>
+
+      <div class="form-group col-md-3">
+        <label for="phone">Email</label>
+        <input ng-model="contact.attributes.email" type="text" class="form-control" id="email" placeholder="Email"/>
+      </div>
+
+      <div class="form-group col-md-4" style="margin-left: 2px;">
+        <label for="type">Type</label>
+        <select class="form-control" id="type" ng-model="contact.attributes.type">
+          <option class="form-control" value=""></option>
+          <option class="form-control" value="1101001 Administrative Assistant">Administrative Assistant</option>
+          <option class="form-control" value="1101003 EMS Agency Director/Chief/Lead Administrator/CEO">EMS Agency Director/Chief/Lead Administrator/CEO</option>
+          <option class="form-control" value="1101005 EMS Assistant Agency Director/Chief/Administrator/CEO">EMS Assistant Agency Director/Chief/Administrator/CEO</option>
+          <option class="form-control" value="1101007 EMS Assistant Medical Director">EMS Assistant Medical Director</option>
+          <option class="form-control" value="1101009 EMS IT/Data Specialist">EMS IT/Data Specialist</option>
+          <option class="form-control" value="1101011 EMS Medical Director">EMS Medical Director</option>
+          <option class="form-control" value="1101013 EMS Quality/Performance Improvement Specialist">EMS Quality/Performance Improvement Specialist</option>
+          <option class="form-control" value="1101015 EMS Training/Education Specialist">EMS Training/Education Specialist</option>
+          <option class="form-control" value="1101017 Other (Not Listed)">Other (Not Listed)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-4">
+        <label for="address">Address</label>
+        <input ng-model="contact.attributes.address" type="text" class="form-control" id="address" placeholder="Address"/>
+      </div>
+      <div class="form-group col-md-2" style="margin-left: 2px">
+        <label for="city">City</label>
+        <input ng-model="contact.attributes.city" type="text" class="form-control" id="city" placeholder="City"/>
+      </div>
+      <div class="form-group col-md-1" style="margin-left: 2px">
+        <label for="state">State</label>
+        <input ng-model="contact.attributes.state" type="text" class="form-control" id="state" placeholder="State"/>
+      </div>
+      <div class="form-group col-md-2" style="margin-left: 2px">
+        <label for="country">Country</label>
+        <input ng-model="contact.attributes.country" type="text" class="form-control" id="county" placeholder="County"/>
+      </div>
+      <div class="form-group col-md-2" style="margin-left: 2px">
+        <label for="zip">Zip Code</label>
+        <input ng-model="contact.attributes.zip" type="text" class="form-control" id="zip" placeholder="Zip"/>
+      </div>
+    </div>
+  </form>
+
+  <br>
+  <div section delim="Medical Director" header="Medical Director Information" sectionName="dContact.EMSMedicalDirectorGroup"></div>
+
+  <div class="page-header"></div>
+  <div class="row">
+    <div class="col-sm-2 col-sm-offset-8">
+      <button class="btn btn-lg btn-primary" ng-click="saveContact()" ng-disabled="contactForm.$invalid">Save Contact</button>
+    </div>
+    <div class="col-sm-2">
+      <button class="btn btn-lg btn-danger" ng-click="deleteContact()">Delete Contact</button>
+    </div>
+  </div>
+  <br>
+
+</div>

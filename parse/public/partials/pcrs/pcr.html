@@ -1,0 +1,40 @@
+<div style="margin-right: 30px; margin-left: 30px;">
+  <div id="fileForm">
+    <form name="form" role="form">
+
+      <div class="row">
+        <div class="form-group col-sm-3">
+          <label for="fileName">PCR Name</label>
+          <input ng-model="object.attributes.name" type="text" class="form-control" id="name" placeholder="PCR Name"/>
+        </div>
+
+        <div class="form-group col-sm-4">
+          <label for="fileName">Created On</label>
+          <input ng-model="object.createdAt" type="text" class="form-control" id="name" placeholder="PCR Name" disabled/>
+        </div>
+
+        <div class="form-group col-sm-2">
+          <label for="fileName">Created By</label>
+          <a ng-href="{{'#/users/' + object.attributes.user.id}}"><input type="button" class="btn btn-success form-control" value="{{object.attributes.user.id}}"/></a>
+
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-sm-5">
+          <label for="fileInfo">PCR comments</label>
+          <textarea ng-model="object.attributes.comments" class="form-control" rows="3" placeholder="Additional Information"></textarea>
+        </div>
+      </div>
+
+      <div class="row" style="margin-left: 38px; margin-top: 14px;">
+        <div class="form-group">
+	  <label for="upload">Download PDF</label>
+          <button class="btn btn-lg btn-info">Download</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
