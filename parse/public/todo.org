@@ -1,53 +1,39 @@
 List of Sh!t that needs to get done
 
 * Vehicles
-** DONE Vehicle Create
-   CLOSED: [2015-02-04 Wed 23:11]
-** DONE Vehicle Read
-   CLOSED: [2015-01-19 Mon 15:56]
+** TODO Vehicle Create
+** TODO Vehicle Read
 ** TODO Vehicle Update
-** DONE Vehicle Delete
-   CLOSED: [2015-02-04 Wed 23:10]
+** TODO Vehicle Delete
 
 
 * Patients
-** DONE Patient Create
-   CLOSED: [2015-01-19 Mon 16:30]
-** DONE Patient Read
-   CLOSED: [2015-01-19 Mon 16:30]
-** DONE Patient Update
-   CLOSED: [2015-01-19 Mon 16:30]
-** DONE Patient Delete
-   CLOSED: [2015-01-19 Mon 20:01]
+** TODO Patient Create
+** TODO Patient Read
+** TODO Patient Update
+** TODO Patient Delete
 
 
 * Facilities
-** DONE Facility Create
-   CLOSED: [2015-02-04 Wed 23:11]
-** DONE Facility Read
-   CLOSED: [2015-01-19 Mon 20:05]
+** TODO Facility Create
+** TODO Facility Read
 ** TODO Facility Update
-** DONE Facility Delete
-   CLOSED: [2015-01-19 Mon 20:25]
+** TODO Facility Delete
 
 
 * Contacts
 
-** DONE Contacts Create
-   CLOSED: [2015-02-04 Wed 23:11]
-** DONE Contacts Read
-   CLOSED: [2015-01-19 Mon 20:56]
+** TODO Contacts Create
+** TODO Contacts Read
 ** TODO Contacts Update
-** DONE Contacts Delete
-   CLOSED: [2015-02-04 Wed 22:17]
+** TODO Contacts Delete
 
 
 * Dispatches
 ** TODO Dispatch Create
 ** TODO Dispatch Read
 ** TODO Dispatch Update
-** DONE Dispatch Delete
-   CLOSED: [2015-02-04 Wed 23:13]
+** TODO Dispatch Delete
 
 
 * Users
@@ -62,14 +48,3 @@ List of Sh!t that needs to get done
 ** TODO Agency Read
 ** TODO Agency Update
 ** TODO Agency Delete
-
-
-* Sections
-** DONE Section Create
-   CLOSED: [2015-02-04 Wed 22:31]
-
-** DONE Section Read
-   CLOSED: [2015-02-04 Wed 22:31]
-** TODO Section Update
-** DONE Section Delete
-   CLOSED: [2015-02-04 Wed 22:32]
