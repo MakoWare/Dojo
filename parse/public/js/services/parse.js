@@ -209,8 +209,8 @@ angular.module('parseService', [])
             },
 
             //Create Object
-            createObject: function(objectType, callback){
-                return ObjectHelper.createObject(objectType, callback);
+            createObject: function(objectType){
+                return ObjectHelper.createObject(objectType);
             },
 
 
@@ -552,8 +552,8 @@ angular.module('parseService', [])
             },
 
             /** Save Object **/
-            saveObject: function(object, objectType, callback){
-                ObjectHelper.deleteObject(objectType, object, callback);
+            saveObject: function(objectType, object, callback){
+                return ObjectHelper.deleteObject(objectType, object, callback);
             },
 
 

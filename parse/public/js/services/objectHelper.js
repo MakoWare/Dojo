@@ -20,6 +20,8 @@ var ObjectHelper = {
     NemsisElementCode: Parse.Object.extend("NemsisElementCode"),
     NemsisHeader: Parse.Object.extend("NemsisHeader"),
     IpadConfiguration: Parse.Object.extend("IpadConfiguration"),
+    ThePerson: Parse.Object.extend("ThePerson"),
+
 
     //Declare ACLs for all Objects Here
     init: function(){
@@ -67,28 +69,28 @@ var ObjectHelper = {
 
 
     //Create Object
-    createObject: function(objectType, callback){
+    createObject: function(objectType){
         switch (objectType) {
         case "Contact":
-            this.createContact(callback);
+            return this.createContact();
             break;
         case "Dispatch":
-            this.createDispatch(callback);
+            return this.createDispatch();
             break;
         case "Facility":
-            this.createFacility(callback);
+            return this.createFacility();
             break;
         case "File":
-            this.createFile(callback);
+            return this.createFile();
             break;
         case "Patient":
-            this.createPatient(callback);
+            return this.createPatient();
             break;
         case "User":
-            this.createUser(callback);
+            return this.createUser();
             break;
         case "Vehicle":
-            this.createVehicle(callback);
+            return this.createVehicle();
             break;
         }
     },
@@ -127,10 +129,10 @@ var ObjectHelper = {
     },
 
     //Save Object
-    saveObject: function(objectType, callback){
+    saveObject: function(objectType, object, callback){
         switch (objectType) {
         case "Contact":
-            this.saveContact(callback);
+            return this.saveContact(object, callback);
             break;
         case "Dispatch":
             this.saveDispatch(callback);
@@ -198,7 +200,7 @@ var ObjectHelper = {
     },
 
     //Contact
-    createContact: function(callback){
+    createContact: function(){
         var user = Parse.User.current();
         var agencyId = user.get('agencyId');
 
@@ -211,9 +213,9 @@ var ObjectHelper = {
         contact.set("firstName", "");
         contact.set("lastName", "");
         contact.set("middleInitial", "");
-        contact.set("type", "");
-        contact.set("phone", "");
-        contact.set("email", "");
+        contact.set("type", {});
+        contact.set("phoneNumbers", []);
+        contact.set("emails", []);
         contact.set("address", "");
         contact.set("city", "");
         contact.set("state", "");
@@ -226,15 +228,7 @@ var ObjectHelper = {
         acl.setRoleWriteAccess("EMT_" + agencyId, true);
         contact.setACL(acl);
 
-        var dContact = ObjectHelper.createEmptySection("dContact.ContactInfoGroup");
-        var neededElements = ["dContact.01", "dContact.02", "dContact.03", "dContact.04", "dContact.05", "dContact.06", "dContact.07", "dContact.08", "dContact.09", "dContact.10", "dContact.11", "dContact.12"];
-
-        neededElements.forEach(function(title){
-            dContact.attributes.elements.push(ObjectHelper.createEmptyNemsisElement(title));
-        });
-
-        contact.attributes.dContact = dContact;
-        callback(contact);
+        return contact;
     },
 
 
@@ -506,68 +500,81 @@ var ObjectHelper = {
 
     /***** Save *****/
     saveContact: function(contact, callback){
-        //First Set The Elements in dContact
-        contact.attributes.dContact.attributes.elements.forEach(function(element){
-            switch(element.attributes.title){
-            case "dContact.01":
-                element.set("value", contact.attributes.type);
-                break;
-            case "dContact.02":
-                element.set("value", contact.attributes.lastName);
-                break;
-            case "dContact.03":
-                element.set("value", contact.attributes.firstName);
-                break;
-            case "dContact.04":
-                element.set("value", contact.attributes.middleInitial);
-                break;
-            case "dContact.05":
-                element.set("value", contact.attributes.address);
-                break;
-            case "dContact.06":
-                element.set("value", contact.attributes.city);
-                break;
-            case "dContact.07":
-                element.set("value", contact.attributes.state);
-                break;
-            case "dContact.08":
-                element.set("value", contact.attributes.zip);
-                break;
-            case "dContact.09":
-                element.set("value", contact.attributes.country);
-                break;
-            case "dContact.10":
-                element.set("value", contact.attributes.phone);
-                break;
-            case "dContact.11":
-                element.set("value", contact.attributes.email);
-                break;
-            case "dContact.12":
-                element.set("value", contact.attributes.web);
-                break;
-            }
-        });
-
-        //Set Everything in dContact
+        //1. Set() Everything
         for(var attr in contact.attributes){
             contact.set(attr, contact.attributes[attr]);
         }
 
-        //Save dContact
-        var dContact = contact.attributes.dContact;
-        return ObjectHelper.saveSection(dContact, "dContact", function(results){
-            console.log("done saving dContact");
-            //Now Save contact
-            return contact.save({
-                success: function(result){
-                    callback(result);
-                },
-                error: function(object, error){
-                    callback(error);
-                }
+        //2. Save The Contact
+        return contact.save({
+            success: function(contact){
+                return contact;
+            },
+            error: function(contact, error){
+                callback(error);
+            }
+        }).then(function(contact){
+            //3. Update the Enterprise Object
+            return ObjectHelper.updateEnterprise("Contact", "ThePerson", contact, function(result){
+                return result;
             });
         });
     },
+
+    //Update The Enterprise, Engage motherfucker!
+    updateEnterprise: function(objectType, enterpriseType, object, callback){
+        //1. Get the enterprise object corresponding with the regular object
+        var query = new Parse.Query(enterpriseType);
+        query.equalTo("refId", object.id);
+
+        return query.first({
+            success: function(enterprise){
+                return enterprise;
+            },
+            error: function(error){
+                callback(error);
+            }
+        }).then(function(enterprise){
+            var now = new Date();
+            var state = object.attributes;
+            state.effectiveFrom = now;
+
+            //2a If the Enterprise Object Exists
+            if(enterprise){
+                enterprise.attributes.states[0].effectiveTo = now;
+                enterprise.attributes.states.push(state);
+                return enterprise.save({
+                    success: function(enterprise){
+                        callback();
+                    },
+                    error: function(enterprise, error){
+                        callback(error);
+                    }
+                });
+            }
+
+            //2b. If the Enterprise Object does not Exist fuckin create one bitch
+            else {
+                var Enterprise = Parse.Object.extend("enterpriseType");
+                enterprise = new Enterprise();
+                enterprise.set("refId", object.id);
+                var states = [];
+                states.push(state);
+                enterprise.set("states", states);
+                enterprise.attributes.states.push(state);
+                return enterprise.save({
+                    success: function(enterprise){
+                        callback();
+                    },
+                    error: function(enterprise, error){
+                        callback(error);
+                    }
+                });
+            }
+
+        });
+    },
+
 
     //Recursive Save Section - also Adds to Parent Section if needed #Not Tested
     saveSection: function(section, parentSection, callback){

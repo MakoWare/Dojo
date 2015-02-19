@@ -22,13 +22,9 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
 
     //Create Contact
     $scope.createContact = function(){
-        ParseService.createObject("Contact", function(results){
-            setTimeout(function(){
-                console.log(results);
-                $scope.contact = results;
-                $scope.setUpContact();
-            }, 500);
-        });
+        $scope.contact = ParseService.createObject("Contact");
+        console.log($scope.contact);
+        $scope.setUpContact();
     };
 
     //Get Contact
@@ -51,147 +47,60 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
 
     //Setup Contact
     $scope.setUpContact = function(){
-        //get Contact Types
-        var query = new Parse.Query("NemsisElementCode");
-        query.equalTo("elementNumber", "dContact.01");
-        query.find({
-            success: function(results){
-                $scope.contactTypeCodes = results;
-                results.forEach(function(code){
-                    if(code.attributes.codeDescription == $scope.contact.attributes.type){
-                        $scope.contact.attributes.type = code.attributes.code + " " + $scope.contact.attributes.type;
-                        $scope.$apply();
-                    }
-                });
-            },
-            error: function(error){
-                alert(GlobalService.errorMessage + error.message);
-            }
+        //get Codes for Contact Type
+        ParseService.findNemsisElementCodes("dContact.01", function(results){
+            $scope.contactTypes = results;
         });
+
         $scope.$broadcast("gotContact");
         GlobalService.dismissSpinner();
     };
+
+    //Add Phone
+    $scope.addPhone = function(){
+        var phone = {};
+        phone.type = "Work";
+        $scope.contact.attributes.phoneNumbers.push(phone);
+    },
+
+    //Add Email
+    $scope.addEmail = function(){
+        var email = {};
+        email.type = "Work";
+        $scope.contact.attributes.emails.push(email);
+    },
+
+    //Remove Phone
+    $scope.removePhone = function(phone){
+        for(var i = 0; i < $scope.contact.attributes.phoneNumbers.length; i++){
+            if(phone == $scope.contact.attributes.phoneNumbers[i]){
+                $scope.contact.attributes.phoneNumbers.splice(i, 1);
+            }
+        }
+    },
+
+    //Remove Email
+    $scope.removeEmail = function(email){
+        for(var i = 0; i < $scope.contact.attributes.emails.length; i++){
+            if(email == $scope.contact.attributes.emails[i]){
+                $scope.contact.attributes.emails.splice(i, 1);
+            }
+        }
+    },
+
 
 
     //Save Contact
     $scope.saveContact = function(){
         console.log("saveContact()");
+        console.log($scope.contact);
+        /*
         GlobalService.showSpinner();
-
-        var contact = $scope.contact;
-
-        //Set EveryThing in dContact
-        contact.attributes.dContact.attributes.elements.forEach(function(element){
-            switch(element.attributes.title){
-            case "dContact.01":
-                element.set("value", contact.attributes.type);
-                break;
-            case "dContact.02":
-                element.set("value", contact.attributes.lastName);
-                break;
-            case "dContact.03":
-                element.set("value", contact.attributes.firstName);
-                break;
-            case "dContact.04":
-                element.set("value", contact.attributes.middleInitial);
-                break;
-            case "dContact.05":
-                element.set("value", contact.attributes.address);
-                break;
-            case "dContact.06":
-                element.set("value", contact.attributes.city);
-                break;
-            case "dContact.07":
-                element.set("value", contact.attributes.state);
-                break;
-            case "dContact.08":
-                element.set("value", contact.attributes.zip);
-                break;
-            case "dContact.09":
-                element.set("value", contact.attributes.country);
-                break;
-            case "dContact.10":
-                element.set("value", contact.attributes.phone);
-                break;
-            case "dContact.11":
-                element.set("value", contact.attributes.email);
-                break;
-            case "dContact.12":
-                element.set("value", contact.attributes.web);
-                break;
-            }
+        ParseService.saveObject("Contact", $scope.contact, function(result){
+            GlobalService.dismissSpinner();
+            console.log(result);
         });
-
-        //Set Everything in contact
-        contact.set("firstName", contact.attributes.firstName);
-        contact.set("middleInitial", contact.attributes.middleInitial);
-        contact.set("lastName", contact.attributes.lastName);
-        contact.set("phone", contact.attributes.phone);
-        contact.set("email", contact.attributes.email);
-        contact.set("type", contact.attributes.type.substr(contact.attributes.type.indexOf(" ") + 1));
-        contact.set("address", contact.attributes.address);
-        contact.set("city", contact.attributes.city);
-        contact.set("state", contact.attributes.state);
-        contact.set("country", contact.attributes.country);
-        contact.set("zip", contact.attributes.zip);
-
-
-        //First Save Each NemsisElement in each Section
-        var sectionSavePromises = [];
-        var elementSavePromises = [];
-
-        //Elements in dContact.attributes.elements
-        contact.attributes.dContact.attributes.elements.forEach(function(element){
-            element.set("value", element.attributes.value);
-            element.set("codeString", element.attributes.codeString);
-            elementSavePromises.push(element.save());
-        });
-
-        //Elements in dContact.attributes.sections.attributes.elements
-        contact.attributes.dContact.attributes.sections.forEach(function(section){
-            section.attributes.elements.forEach(function(element){
-                element.set("value", element.attributes.value);
-                element.set("codeString", element.attributes.codeString);
-                elementSavePromises.push(element.save());
-            });
-        });
-
-        //After each NemsisElement has been saved, save Each Section
-        Parse.Promise.when(elementSavePromises).then(function(){
-            contact.attributes.dContact.attributes.sections.forEach(function(section){
-                section.set("elements", section.attributes.elements);
-                sectionSavePromises.push(section.save());
-            });
-
-            //After each Section has been saved, save dContact Section
-            Parse.Promise.when(sectionSavePromises).then(function(){
-                contact.attributes.dContact.set("sections", contact.attributes.dContact.attributes.sections);
-                contact.attributes.dContact.set("elements", contact.attributes.dContact.attributes.elements);
-                contact.attributes.dContact.save({
-                    success: function(dContact){
-                        //Now Save the Contact
-                        contact.set("dContact", dContact);
-                        contact.save({
-                            success: function(contact){
-                                GlobalService.showSpinner();
-                                console.log(contact);
-                                $location.path("/contacts");
-                                $scope.$apply();
-                            },
-                            error: function(object, error){
-                                console.log(error);
-                                alert(GlobalService.errorMessage + error.message);
-                            }
-                        });
-                    },
-                    error: function(object, error){
-                        console.log(error);
-                        alert(GlobalService.errorMessage + error.message);
-                    }
-                });
-            });
-        });
-
+         */
     };
 
     //Delete Contact
