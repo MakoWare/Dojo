@@ -22,10 +22,9 @@ var FacilityCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
 
     //Create Facility
     $scope.createFacility = function(){
-        ParseService.createObject("Facility", function(results){
-            $scope.facility = results;
-            $scope.setUpFacility();
-        });
+        $scope.facility = ParseService.createObject("Facility");
+        console.log($scope.facility);
+        $scope.setUpFacility();
     };
 
     //Get Facility
@@ -96,118 +95,33 @@ var FacilityCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
             });
         };
 
-        GlobalService.dismissSpinner();
+        var codePromises = [];
+        codePromises.push(ParseService.findNemsisElementCodes("dFacility.01", function(results){
+            $scope.facilityTypes = results;
+        }));
+
+        codePromises.push(ParseService.findNemsisElementCodes("dFacility.04", function(results){
+            $scope.hospitalDesignations = results;
+        }));
+
+        Parse.Promise.when(codePromises).then(function(){
+            GlobalService.dismissSpinner();
+        });
     };
 
 
     //Save Facility
     $scope.saveFacility = function(){
+        console.log("saveFacility");
+        console.log($scope.facility);
+        /*
         GlobalService.showSpinner();
-        GlobalService.showSpinner();
+        ParseService.saveObject("Facility", $scope.facility, function(result){
+         GlobalService.dismissSpinner();
+         console.log(result);
+         });
 
-        //Set EveryThing
-        var facility = $scope.facility;
-
-        facility.set("name", facility.attributes.name);
-        facility.set("type", facility.attributes.type);
-        facility.set("address", facility.attributes.address);
-        facility.set("city", facility.attributes.city);
-        facility.set("state", facility.attributes.state);
-        facility.set("county", facility.attributes.county);
-        facility.set("zip", facility.attributes.zip);
-        facility.set("country", facility.attributes.country);
-        facility.set("comments", facility.attributes.comments);
-
-
-        //Set Nemsis Elements
-        var facilityGroup = facility.attributes.dFacility;
-        facilityGroup.attributes.elements.forEach(function(element){
-            switch (element.attributes.title){
-            case "dFacility.02":
-                element.set("value", facility.get("name"));
-                break;
-            case "dFacility.03":
-
-                break;
-            case "dFacility.04":
-
-                break;
-            case "dFacility.05":
-
-                break;
-            case "dFacility.06":
-
-                break;
-            case "dFacility.07":
-                element.set("value", facility.get("address"));
-                break;
-            case "dFacility.08":
-                element.set("value", facility.get("city"));
-                break;
-            case "dFacility.09":
-                element.set("value", facility.get("state"));
-                break;
-            case "dFacility.10":
-                element.set("value", facility.get("zip"));
-                break;
-            case "dFacility.11":
-                element.set("value", facility.get("county"));
-                break;
-            case "dFacility.12":
-                element.set("value", facility.get("country"));
-                break;
-            case "dFacility.13":
-
-                break;
-            case "dFacility.14":
-
-                break;
-
-            };
-        });
-
-        //First Save Each NemsisElement in each Section
-        var elementSavePromises = [];
-
-        //Get NemsisElement save promises
-        facility.attributes.dFacility.attributes.elements.forEach(function(element){
-            elementSavePromises.push(element.save());
-        });
-
-        //After each NemsisElement has been saved
-        Parse.Promise.when(elementSavePromises).then(function(){
-            facility.attributes.dFacility.save({
-                success: function(dFacility){
-                    //Add dFacility to it's parent  ****TODO****
-
-
-                    //Now Save the Facility
-                    facility.set("dFacility", dFacility);
-                    facility.save({
-                        success: function(facility){
-                            GlobalService.dismissSpinner();
-                            var newPath = "/facilities" ;
-                            $location.path(newPath);
-                            $scope.$apply();
-                        },
-                        error: function(object, error){
-                            GlobalService.dismissSpinner();
-                            alert(GlobalService.errorMessage + error.message);
-                            console.log(error);
-                        }
-                    });
-                },
-                error: function(object, error){
-                    GlobalService.dismissSpinner();
-                    alert(GlobalService.errorMessage + error.message);
-                    console.log(error);
-                }
-            });
-        });
-
-
-        GlobalService.dismissSpinner();
-
+         */
     };
 
     //Delete Facility

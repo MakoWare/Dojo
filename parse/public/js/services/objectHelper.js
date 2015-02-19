@@ -135,22 +135,22 @@ var ObjectHelper = {
             return this.saveContact(object, callback);
             break;
         case "Dispatch":
-            this.saveDispatch(callback);
+            return this.saveDispatch(object, callback);
             break;
         case "Facility":
-            this.saveFacility(callback);
+            return this.saveFacility(object, callback);
             break;
         case "File":
-            this.saveFile(callback);
+            return this.saveFile(object, callback);
             break;
         case "Patient":
-            this.savePatient(callback);
+            return this.savePatient(object, callback);
             break;
         case "User":
-            this.saveUser(callback);
+            return this.saveUser(object, callback);
             break;
         case "Vehicle":
-            this.saveVehicle(callback);
+            return this.saveVehicle(object, callback);
             break;
         }
     },
@@ -209,6 +209,7 @@ var ObjectHelper = {
         contact.setACL(ObjectHelper.DispatchACL);
         contact.set("agencyId", agencyId);
         contact.set("createdBy", user);
+        contact.set("lastUpdatedBy", user);
         contact.set("comments", "");
         contact.set("firstName", "");
         contact.set("lastName", "");
@@ -242,6 +243,7 @@ var ObjectHelper = {
         dispatch.setACL(ObjectHelper.DispatchACL);
         dispatch.set("agencyId", agencyId);
         dispatch.set("createdBy", user);
+        dispatch.set("lastUpdatedBy", user);
         dispatch.set("comments", "");
         dispatch.set("dropOffAddress", "");
         dispatch.set("dropOffCity", "");
@@ -279,6 +281,7 @@ var ObjectHelper = {
 
         facility.set("agencyId", agencyId);
         facility.set("createdBy", user);
+        facility.set("lastUpdatedBy", user);
         facility.set("comments", "");
         facility.set("name", "");
         facility.set("address", "");
@@ -286,19 +289,12 @@ var ObjectHelper = {
         facility.set("county", "");
         facility.set("state", "");
         facility.set("zip", "");
-        facility.set("type", "");
+        facility.set("type", {});
+        facility.set("hospitalDesignations", []);
+        facility.set("locationCode", "");
+        facility.set("nationalProviderIdentifier", "");
 
-        var dFacility = ObjectHelper.createEmptySection("dFacility.FacilityGroup");
-        facility.attributes.dFacility = dFacility;
-
-        var neededElements = ["dFacility.02", "dFacility.07", "dFacility.08", "dFacility.09", "dFacility.10", "dFacility.11", "dFacility.12"];
-
-        neededElements.forEach(function(title){
-            facility.attributes.dFacility.attributes.elements.push(ObjectHelper.createEmptyNemsisElement(title));
-        });
-
-
-        callback(facility);
+        return facility;
     },
 
     //Patient
@@ -310,6 +306,7 @@ var ObjectHelper = {
 
         patient.set("agencyId", agencyId);
         patient.set("createdBy", user);
+        patient.set("lastUpdatedBy", user);
         patient.set("address", "");
         patient.set("age", "");
         patient.set("city", "");
@@ -368,6 +365,7 @@ var ObjectHelper = {
 
         user.set("agencyId", agencyId);
         user.set("createdBy", Parse.User.current());
+        user.set("lastUpdatedBy", Parse.User.current());
         user.set("username", "user" + rando);
         user.set("password", "password");
         user.set("active", false);
@@ -394,6 +392,7 @@ var ObjectHelper = {
 
         vehicle.set("agencyId", agencyId);
         vehicle.set("createdBy", user);
+        vehicle.set("lastUpdatedBy", user);
         vehicle.set("status", "");
         vehicle.set("type", "");
         vehicle.set("name", "");
@@ -440,6 +439,7 @@ var ObjectHelper = {
     createAgency: function(name, callback){
         var agency = new ObjectHelper.Agency();
         agency.set("createdBy", Parse.User.current());
+        agency.set("lastUpdatedBy", Parse.User.current());
         agency.set("name", name);
 
         //Save the new agency to give it an id
@@ -499,8 +499,10 @@ var ObjectHelper = {
 
 
     /***** Save *****/
+    //Contact
     saveContact: function(contact, callback){
         //1. Set() Everything
+        contact.set("lastUpdatedBy", Parse.User.current());
         for(var attr in contact.attributes){
             contact.set(attr, contact.attributes[attr]);
         }
@@ -516,6 +518,31 @@ var ObjectHelper = {
         }).then(function(contact){
             //3. Update the Enterprise Object
             return ObjectHelper.updateEnterprise("Contact", "ThePerson", contact, function(result){
+                return result;
+            });
+        });
+    },
+
+    //Facility
+    saveFacility: function(facility, callback){
+        //1. Set() Everything and set lastUpdatedBy
+        facility.set("lastUpdatedBy", Parse.User.current());
+        for(var attr in facility.attributes){
+            facility.set(attr, facility.attributes[attr]);
+        }
+
+
+        //2. Save The Facility
+        return facility.save({
+            success: function(facility){
+                return facility;
+            },
+            error: function(facility, error){
+                callback(error);
+            }
+        }).then(function(facility){
+            //3. Update the Enterprise Object
+            return ObjectHelper.updateEnterprise("Facility", "TheFacility", facility, function(result){
                 return result;
             });
         });

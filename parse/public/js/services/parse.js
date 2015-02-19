@@ -794,7 +794,7 @@ angular.module('parseService', [])
             findNemsisElementCodes: function(sectionName, callback){
                 var query = new Parse.Query(NemsisElementCode);
                 query.startsWith("elementNumber", sectionName);
-                query.find({
+                return query.find({
                     success: function(results){
                         callback(results);
                     },

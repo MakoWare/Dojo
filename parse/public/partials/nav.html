@@ -38,7 +38,14 @@
             </ul>
           </li>
 
-          <li ng-if="role == 'Admin'" ng-class="{active: (dir === 'admin')}"><a href="#/admin">Admin</a></li>
+          <li class="dropdown" ng-if="role == 'Admin'">
+            <a  class="dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li ng-class="{active: (dir === 'agencies')}"><a ng-href="#/agencies">Agencies</a></li>
+              <li ng-class="{active: (dir === 'users')}"><a href="#/users">Users</a></li>
+            </ul>
+          </li>
+
           <li ng-class="{active: (dir === 'documentation')}"><a href="#/documentation">Documentation</a></li>
           <li ng-class="{active: (dir === 'contact')}"><a href="#/contact">Contact</a></li>
           <li><a ng-click="logout()">Logout</a></li>
