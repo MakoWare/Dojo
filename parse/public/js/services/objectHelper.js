@@ -223,6 +223,7 @@ var ObjectHelper = {
         contact.set("zip", "");
         contact.set("country", "");
         contact.set("county", "");
+        contact.set("states", []);
 
         var acl = new Parse.ACL();
         acl.setRoleReadAccess("EMT_" + agencyId, true);
@@ -290,6 +291,7 @@ var ObjectHelper = {
         facility.set("state", "");
         facility.set("zip", "");
         facility.set("type", {});
+        facility.set("states", []);
         facility.set("hospitalDesignations", []);
         facility.set("locationCode", "");
         facility.set("nationalProviderIdentifier", "");
@@ -502,106 +504,87 @@ var ObjectHelper = {
     //Contact
     saveContact: function(contact, callback){
         //1. Set() Everything
+        var now = new Date();
+        contact.set("effectiveFrom", now);
         contact.set("lastUpdatedBy", Parse.User.current());
+
+        //2a. Update the State, if we have one
+        var numberOfStates = contact.attributes.states.length;
+        var currentState  = contact.attributes;
+        var newState      = {};
+        for(var attr in currentState){
+            if(attr != "states" && attr.substr(1,1) != "$"){
+                newState[attr] = currentState[attr];
+            }
+        }
+
+        if(numberOfStates > 0){
+            contact.attributes.states[numberOfStates -1].effectiveTo = now;
+            contact.attributes.states.push(newState);
+        }
+        //2b. If we don't create the first one
+        else {
+            contact.attributes.states.push(newState);
+        }
+
+        //3. Set everything
         for(var attr in contact.attributes){
             contact.set(attr, contact.attributes[attr]);
         }
 
-        //2. Save The Contact
+
+        //4. Save the Contact
         return contact.save({
             success: function(contact){
-                return contact;
+                callback(contact);
             },
             error: function(contact, error){
                 callback(error);
             }
-        }).then(function(contact){
-            //3. Update the Enterprise Object
-            return ObjectHelper.updateEnterprise("Contact", "ThePerson", contact, function(result){
-                return result;
-            });
         });
     },
 
     //Facility
     saveFacility: function(facility, callback){
-        //1. Set() Everything and set lastUpdatedBy
+        //1. Set current state
+        var now = new Date();
+        facility.set("effectiveFrom", now);
         facility.set("lastUpdatedBy", Parse.User.current());
+
+        //2a. Update the State, if we have one
+        var numberOfStates = facility.attributes.states.length;
+        var currentState  = facility.attributes;
+        var newState      = {};
+        for(var attr in currentState){
+            if(attr != "states" && attr.substr(1,1) != "$"){
+                newState[attr] = currentState[attr];
+            }
+        }
+
+        if(numberOfStates > 0){
+            facility.attributes.states[numberOfStates -1].effectiveTo = now;
+            facility.attributes.states.push(newState);
+        }
+        //2b. If we don't create the first one
+        else {
+            facility.attributes.states.push(newState);
+        }
+
+        //3. Set() everything
         for(var attr in facility.attributes){
             facility.set(attr, facility.attributes[attr]);
         }
 
-
-        //2. Save The Facility
+        //4. Save the Facility
         return facility.save({
             success: function(facility){
-                return facility;
+                callback(facility);
             },
-            error: function(facility, error){
+            error: function(contact, error){
                 callback(error);
             }
-        }).then(function(facility){
-            //3. Update the Enterprise Object
-            return ObjectHelper.updateEnterprise("Facility", "TheFacility", facility, function(result){
-                return result;
-            });
         });
     },
-
-    //Update The Enterprise, Engage motherfucker!
-    updateEnterprise: function(objectType, enterpriseType, object, callback){
-        //1. Get the enterprise object corresponding with the regular object
-        var query = new Parse.Query(enterpriseType);
-        query.equalTo("refId", object.id);
-
-        return query.first({
-            success: function(enterprise){
-                return enterprise;
-            },
-            error: function(error){
-                callback(error);
-            }
-        }).then(function(enterprise){
-            var now = new Date();
-            var state = object.attributes;
-            state.effectiveFrom = now;
-
-            //2a If the Enterprise Object Exists
-            if(enterprise){
-                enterprise.attributes.states[0].effectiveTo = now;
-                enterprise.attributes.states.push(state);
-                return enterprise.save({
-                    success: function(enterprise){
-                        callback();
-                    },
-                    error: function(enterprise, error){
-                        callback(error);
-                    }
-                });
-            }
-
-            //2b. If the Enterprise Object does not Exist fuckin create one bitch
-            else {
-                var Enterprise = Parse.Object.extend("enterpriseType");
-                enterprise = new Enterprise();
-                enterprise.set("refId", object.id);
-                var states = [];
-                states.push(state);
-                enterprise.set("states", states);
-                enterprise.attributes.states.push(state);
-                return enterprise.save({
-                    success: function(enterprise){
-                        callback();
-                    },
-                    error: function(enterprise, error){
-                        callback(error);
-                    }
-                });
-            }
-
-        });
-    },
-
 
     //Recursive Save Section - also Adds to Parent Section if needed #Not Tested
     saveSection: function(section, parentSection, callback){

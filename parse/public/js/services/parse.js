@@ -304,9 +304,7 @@ angular.module('parseService', [])
 
             getContactById: function(objectId, callback){
                 var query = new Parse.Query(Contact);
-
-                query.include("dContact.elements");
-                query.include("dContact.sections.elements");
+                query.include("type");
                 query.get(objectId,{
                     success: function(result){
                         callback(result);
@@ -356,8 +354,7 @@ angular.module('parseService', [])
 
             getFacilityById: function(objectId, callback){
                 var query = new Parse.Query(Facility);
-                query.include("dFacility.elements");
-                query.include("dFacility.sections.elements");
+                query.include("type");
                 query.get(objectId,{
                     success: function(result){
                         callback(result);
@@ -553,7 +550,7 @@ angular.module('parseService', [])
 
             /** Save Object **/
             saveObject: function(objectType, object, callback){
-                return ObjectHelper.deleteObject(objectType, object, callback);
+                return ObjectHelper.saveObject(objectType, object, callback);
             },
 
 
@@ -637,6 +634,7 @@ angular.module('parseService', [])
             findFacilitiesByAgency: function(callback){
                 var query = new Parse.Query(Facility);
                 query.equalTo("agencyId", Parse.User.current().get("agencyId"));
+                query.include("type");
                 query.find({
                     success: function(results){
                         callback(results);
@@ -702,8 +700,7 @@ angular.module('parseService', [])
             findContactsByAgency: function(callback){
                 var query = new Parse.Query(Contact);
                 query.equalTo("agencyId", Parse.User.current().get("agencyId"));
-                query.include("dContact.elements");
-                query.include("dContact.sections.elements");
+                query.include("type");
                 query.find({
                     success: function(results){
                         callback(results);

@@ -106,6 +106,7 @@ var FacilityCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
 
         Parse.Promise.when(codePromises).then(function(){
             GlobalService.dismissSpinner();
+            $scope.$apply();
         });
     };
 
@@ -114,14 +115,11 @@ var FacilityCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
     $scope.saveFacility = function(){
         console.log("saveFacility");
         console.log($scope.facility);
-        /*
         GlobalService.showSpinner();
         ParseService.saveObject("Facility", $scope.facility, function(result){
-         GlobalService.dismissSpinner();
-         console.log(result);
-         });
-
-         */
+            GlobalService.dismissSpinner();
+            console.log(result);
+        });
     };
 
     //Delete Facility

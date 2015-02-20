@@ -26,7 +26,7 @@
 
       <div class="form-group col-md-4">
         <label for="type">Type</label>
-        <select class="form-control" id="type" ng-model="contact.attributes.type" ng-options="type as type.attributes.codeDescription for type in contactTypes">
+        <select class="form-control" id="type" ng-model="contact.attributes.type" ng-options="type as type.attributes.codeDescription for type in contactTypes track by type.id">
         </select>
       </div>
     </div>
@@ -64,7 +64,7 @@
             <button class="btn btn-success" ng-click="addPhone()">Add Number</button>
           </div>
         </div>
-        <div class="row" ng-repeat="phone in contact.attributes.phoneNumbers" style="margin-top: 1rem;">
+        <div class="row" ng-repeat="phone in contact.attributes.phoneNumbers track by phone.value" style="margin-top: 1rem;">
           <div class="col-md-6">
             <input ng-model="phone.value" type="text" class="form-control" placeholder="Number"/>
           </div>
@@ -91,7 +91,7 @@
             <button class="btn btn-success" ng-click="addEmail()">Add Email</button>
           </div>
         </div>
-        <div class="row" ng-repeat="email in contact.attributes.emails" style="margin-top: 1rem;">
+        <div class="row" ng-repeat="email in contact.attributes.emails track by email.value" style="margin-top: 1rem;">
           <div class="col-md-6">
             <input ng-model="email.value" type="text" class="form-control" placeholder="Email"/>
           </div>

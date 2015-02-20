@@ -49,10 +49,9 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
         //get Codes for Contact Type
         ParseService.findNemsisElementCodes("dContact.01", function(results){
             $scope.contactTypes = results;
+            $scope.$apply();
+            GlobalService.dismissSpinner();
         });
-
-        $scope.$broadcast("gotContact");
-        GlobalService.dismissSpinner();
     };
 
     //Add Phone
@@ -92,13 +91,13 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
     $scope.saveContact = function(){
         console.log("saveContact()");
         console.log($scope.contact);
-        /*
+
         GlobalService.showSpinner();
         ParseService.saveObject("Contact", $scope.contact, function(result){
             GlobalService.dismissSpinner();
+            console.log(JSON.stringify(result));
             console.log(result);
         });
-         */
     };
 
     //Delete Contact
