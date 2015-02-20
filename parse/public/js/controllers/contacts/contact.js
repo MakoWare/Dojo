@@ -37,6 +37,7 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
                 }
                 $scope.setUpContact();
             } else {
+                alert(GlobalService.errorMessage + "Could not find Contact");
                 var newPath = "/contacts";
                 $location.path(newPath);
                 $scope.$apply();
@@ -85,7 +86,6 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
             }
         }
     },
-
 
     //Save Contact
     $scope.saveContact = function(){

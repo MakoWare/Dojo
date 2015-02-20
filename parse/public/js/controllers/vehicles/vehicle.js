@@ -22,13 +22,9 @@ var VehicleCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
 
     //Create Vehicle
     $scope.createVehicle = function(){
-        ParseService.createObject("Vehicle", function(results){
-            setTimeout(function(){  //Hack because directives need to setup listeners
-                console.log(results);
-                $scope.vehicle = results;
-                $scope.setUpVehicle();
-            }, 500);
-        });
+        $scope.vehicle =  ParseService.createObject("Vehicle");
+        console.log($scope.vehicle);
+        $scope.setUpVehicle();
     };
 
     //Get Vehicle
@@ -52,160 +48,58 @@ var VehicleCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
 
     //Setup Vehicle
     $scope.setUpVehicle = function(){
-        //get Vehicle Types
-        var query = new Parse.Query("NemsisElementCode");
-        query.equalTo("elementNumber", "dVehicle.04");
-        query.find({
-            success: function(results){
-                $scope.vehicleTypeCodes = results;
-                results.forEach(function(code){
-                    if(code.attributes.codeDescription == $scope.vehicle.attributes.type){
-                        $scope.vehicle.attributes.type = code.attributes.code + " " + $scope.vehicle.attributes.type;
+        //get Codes for Vehicle Type
+        var promises = [];
+        promises.push(ParseService.findNemsisElementCodes("dVehicle.04", function(results){
+            $scope.vehicleTypes = results;
+            return;
+        }));
+
+        //get all Users in the Agency
+        promises.push(ParseService.findUsersByAgency(function(results){
+            console.log(results);
+            results.forEach(function(user){
+                user.ticked = false;
+                user.fullName = user.attributes.firstName + " " + user.attributes.lastName;
+                $scope.vehicle.attributes.crew.forEach(function(crewMember){
+                    if(crewMember.id == user.id){
+                        user.ticked = true;
                     }
                 });
-            },
-            error: function(error){
-                alert(GlobalService.errorMessage + error.message);
-            }
-        });
+            });
+            $scope.users = results;
+            return;
+        }));
 
-        //get all Users
-        var query = new Parse.Query("User");
-        query.equalTo("agencyId", Parse.User.current().attributes.agencyId);
-        query.find({
-            success: function(results){
-                GlobalService.dismissSpinner();
-                $scope.fullUsers = results;
-                $scope.users = [];
-                results.forEach(function(user){
-                    var userObject = {};
-                    userObject.ticked = false;
-                    userObject.id = user.id;
-                    if(user.attributes.firstName){
-                        userObject.fullName = user.attributes.firstName;
-                    }
-                    if(user.attributes.lastName){
-                        userObject.fullName = userObject.fullName + " " + user.attributes.lastName;
-                    }
-                    if($scope.vehicle.attributes.crew){
-                        $scope.vehicle.attributes.crew.forEach(function(crewMember){
-                            if(user.id == crewMember.id){
-                                userObject.ticked = true;
-                            }
-                        });
-                    }
-                    $scope.users.push(userObject);
-                });
-
-                $scope.$apply();
-            },
-            error: function(error){
-                alert(GlobalService.errorMessage + error.message);
-            }
+        Parse.Promise.when(promises).then(function(){
+            GlobalService.dismissSpinner();
+            $scope.$apply();
         });
-        $scope.$broadcast("gotVehicle");
     };
 
 
     //Save Vehicle
     $scope.saveVehicle = function(){
-        GlobalService.showSpinner();
         console.log("saveVehicle()");
+        console.log($scope.vehicle);
 
-        //Set EveryThing
-        var vehicle = $scope.vehicle;
+        /*
+        GlobalService.showSpinner();
 
-        //Set dVehicle Elements
-        vehicle.attributes.dVehicle.attributes.elements.forEach(function(element){
-            switch (element.attributes.title){
-            case "dVehicle.01":
-                element.set("value", vehicle.attributes.number);
-                break;
-            case "dVehicle.02":
-                element.set("value", vehicle.attributes.vin);
-                break;
-            case "dVehicle.03":
-                element.set("value", vehicle.attributes.name);
-                break;
-            case "dVehicle.04":
-                element.set("value", vehicle.attributes.type.split(" ")[0]);
-                element.set("codeString", vehicle.attributes.type.split(" ")[1]);
-                break;
-            case "dVehicle.09":
-
-                break;
-            case "dVehicle.10":
-                element.set("value", vehicle.attributes.year);
-                break;
+        $scope.vehicle.attributes.crew = [];
+        angular.forEach( $scope.users, function(user) {
+            if (user.ticked === true) {
+                $scope.vehicle.attributes.crew.push(user);
             }
         });
 
-        //Set Vehicle Attributes
-        vehicle.set("name", vehicle.attributes.name);
-        vehicle.set("number", vehicle.attributes.number);
-        vehicle.set("vin", vehicle.attributes.vin);
-        vehicle.set("status", vehicle.attributes.status);
-        vehicle.set("year", vehicle.attributes.year);
-        vehicle.set("type", vehicle.attributes.type.split(" ")[1]);
-
-
-
-        //First Save Each NemsisElement in each Section
-        var sectionSavePromises = [];
-        var elementSavePromises = [];
-
-        //Elements in dVehicle.attributes.elements
-        vehicle.attributes.dVehicle.attributes.elements.forEach(function(element){
-            element.set("value", element.attributes.value);
-            element.set("codeString", element.attributes.codeString);
-            elementSavePromises.push(element.save());
+        ParseService.saveObject("Vehicle", $scope.vehicle, function(result){
+            GlobalService.dismissSpinner();
+            console.log(JSON.stringify(result));
+            console.log(result);
         });
 
-        //Elements in dVehicle.attributes.sections.attributes.elements
-        vehicle.attributes.dVehicle.attributes.sections.forEach(function(section){
-            section.attributes.elements.forEach(function(element){
-                element.set("value", element.attributes.value);
-                element.set("codeString", element.attributes.codeString);
-                elementSavePromises.push(element.save());
-            });
-        });
-
-        //After each NemsisElement has been saved, save Each Section
-        Parse.Promise.when(elementSavePromises).then(function(){
-            vehicle.attributes.dVehicle.attributes.sections.forEach(function(section){
-                section.set("elements", section.attributes.elements);
-                sectionSavePromises.push(section.save());
-            });
-
-            //After each Section has been saved, save dVehicle Section
-            Parse.Promise.when(sectionSavePromises).then(function(){
-                vehicle.attributes.dVehicle.set("sections", vehicle.attributes.dVehicle.attributes.sections);
-                vehicle.attributes.dVehicle.set("elements", vehicle.attributes.dVehicle.attributes.elements);
-                vehicle.attributes.dVehicle.save({
-                    success: function(dVehicle){
-                        //Now Save the User
-                        vehicle.set("dVehicle", dVehicle);
-                        vehicle.save({
-                            success: function(vehicle){
-                                GlobalService.dismissSpinner();
-                                console.log(vehicle);
-                                $location.path("/vehicles");
-                                $scope.$apply();
-                            },
-                            error: function(object, error){
-                                console.log(error);
-                                alert(GlobalService.errorMessage + error.message);
-                            }
-                        });
-                    },
-                    error: function(object, error){
-                        console.log(error);
-                        alert(GlobalService.errorMessage + error.message);
-                    }
-                });
-            });
-        });
-
+         */
     };
 
     //Delete Vehicle

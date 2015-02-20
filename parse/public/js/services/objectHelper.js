@@ -92,6 +92,8 @@ var ObjectHelper = {
         case "Vehicle":
             return this.createVehicle();
             break;
+        default:
+            break;
         }
     },
 
@@ -99,31 +101,33 @@ var ObjectHelper = {
     deleteObject: function(objectType, object, callback){
         switch (objectType) {
         case "Contact":
-            this.deleteContact(object, callback);
+            return this.deleteContact(object, callback);
             break;
         case "Device":
-            this.deleteDevice(object, callback);
+            return this.deleteDevice(object, callback);
             break;
         case "Dispatch":
-            this.deleteDispatch(object, callback);
+            return this.deleteDispatch(object, callback);
             break;
         case "Facility":
-            this.deleteFacility(object, callback);
+            return this.deleteFacility(object, callback);
             break;
         case "Patient":
-            this.deletePatient(object, callback);
+            return this.deletePatient(object, callback);
             break;
         case "User":
-            this.deleteUser(object, callback);
+            return this.deleteUser(object, callback);
             break;
         case "Vehicle":
-            this.deleteVehicle(object, callback);
+            return this.deleteVehicle(object, callback);
             break;
         case "File":
-            this.deleteFile(object, callback);
+            return this.deleteFile(object, callback);
             break;
         case "PCR":
-            this.deletePCR(object, callback);
+            return this.deletePCR(object, callback);
+            break;
+        default:
             break;
         }
     },
@@ -151,6 +155,8 @@ var ObjectHelper = {
             break;
         case "Vehicle":
             return this.saveVehicle(object, callback);
+            break;
+        default:
             break;
         }
     },
@@ -401,24 +407,14 @@ var ObjectHelper = {
         vehicle.set("crew", []);
         vehicle.set("active", false);
         vehicle.set("currentPersonnel", []);
+        vehicle.set("states", []);
 
         var acl = new Parse.ACL();
         acl.setRoleReadAccess("EMT_" + agencyId, true);
         acl.setRoleWriteAccess("EMT_" + agencyId, true);
         vehicle.setACL(acl);
 
-        var dVehicle = ObjectHelper.createEmptySection("dVehicle.VehicleGroup");
-
-
-        var vehicleGroupRequired = ["dVehicle.01", "dVehicle.02", "dVehicle.03", "dVehicle.04"];
-
-        vehicleGroupRequired.forEach(function(title){
-            dVehicle.attributes.elements.push(ObjectHelper.createEmptyNemsisElement(title));
-        });
-
-
-        vehicle.attributes.dVehicle = dVehicle;
-        callback(vehicle);
+        return vehicle;
     },
 
     //Create File
@@ -534,7 +530,7 @@ var ObjectHelper = {
 
 
         //4. Save the Contact
-        return contact.save({
+        return contact.save(null, {
             success: function(contact){
                 callback(contact);
             },
@@ -576,11 +572,54 @@ var ObjectHelper = {
         }
 
         //4. Save the Facility
-        return facility.save({
+        return facility.save(null, {
             success: function(facility){
                 callback(facility);
             },
             error: function(contact, error){
+                callback(error);
+            }
+        });
+    },
+
+    //Vehicle
+    saveVehicle: function(vehicle, callback){
+        //1. Set() Everything
+        var now = new Date();
+        vehicle.set("effectiveFrom", now);
+        vehicle.set("lastUpdatedBy", Parse.User.current());
+
+        //2a. Update the State, if we have one
+        var numberOfStates = vehicle.attributes.states.length;
+        var currentState  = vehicle.attributes;
+        var newState      = {};
+        for(var attr in currentState){
+            if(attr != "states" && attr.substr(1,1) != "$"){
+                newState[attr] = currentState[attr];
+            }
+        }
+
+        if(numberOfStates > 0){
+            vehicle.attributes.states[numberOfStates -1].effectiveTo = now;
+            vehicle.attributes.states.push(newState);
+        }
+        //2b. If we don't create the first one
+        else {
+            vehicle.attributes.states.push(newState);
+        }
+
+        //3. Set everything
+        for(var attr in vehicle.attributes){
+            vehicle.set(attr, vehicle.attributes[attr]);
+        }
+
+
+        //4. Save the Vehicle
+        return vehicle.save(null, {
+            success: function(vehicle){
+                callback(vehicle);
+            },
+            error: function(vehicle, error){
                 callback(error);
             }
         });
@@ -794,35 +833,41 @@ var ObjectHelper = {
 
     //Delete Facility #Not Tested
     deleteFacility: function(facility, callback){
-        //1. Delete dFacility
-        var dFacility = facility.attributes.dFacility;
-        return ObjectHelper.deleteSection(dFacility, function(result){
-            //2. Delete the Facility
-            facility.destory({
-                success: function(object){
-                    callback("success");
-                },
-                error: function(object, error){
-                    callback(error);
-                }
-            });
+        //Set effectiveTo on contact and current state
+        var now = new Date();
+        var states = facility.attributes.states;
+
+        facility.set("effectiveTo", now);
+        states[states.length - 1].effectiveTo = now;
+        facility.set("states", states);
+
+        return facility.save(null, {
+            success: function(facility){
+                callback(facility);
+            },
+            error: function(facility, error){
+                callback(error);
+            }
         });
     },
 
-    //Delete Contact #Tested
+    //Delete Contact #Not Tested
     deleteContact: function(contact, callback){
-        //Delete dContact
-        var dContact = contact.attributes.dContact;
-        return ObjectHelper.deleteSection(dContact, function(result){
-            //Now Delete the Contact object
-            contact.destroy({
-                success: function(result){
-                    callback("success");
-                },
-                error: function(object, error){
-                    callback(error);
-                }
-            });
+        //Set effectiveTo on contact and current state
+        var now = new Date();
+        var states = contact.attributes.states;
+
+        contact.set("effectiveTo", now);
+        states[states.length - 1].effectiveTo = now;
+        contact.set("states", states);
+
+        return contact.save(null, {
+            success: function(contact){
+                callback(contact);
+            },
+            error: function(contact, error){
+                callback(error);
+            }
         });
     },
 
@@ -879,18 +924,21 @@ var ObjectHelper = {
 
     //Delete Vehicle #Not Tested
     deleteVehicle: function(vehicle, callback){
-        //1. Delete  dVehicleGroup
-        var dVehicleGroup = vehicle.attributes.dVehicleGroup;
-        return ObjectHelper.deleteSection(dVehicleGroup, function(result){
-            //2. Delete the Vehicle
-            return vehicle.destroy({
-                success: function(result){
-                    callback("success");
-                },
-                error: function(object, error){
-                    callback(error);
-                }
-            });
+        //Set effectiveTo on contact and current state
+        var now = new Date();
+        var states = vehicle.attributes.states;
+
+        vehicle.set("effectiveTo", now);
+        states[states.length - 1].effectiveTo = now;
+        vehicle.set("states", states);
+
+        return vehicle.save(null, {
+            success: function(vehicle){
+                callback(vehicle);
+            },
+            error: function(vehicle, error){
+                callback(error);
+            }
         });
     },
 

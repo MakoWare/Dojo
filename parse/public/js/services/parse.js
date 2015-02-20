@@ -715,8 +715,6 @@ angular.module('parseService', [])
             findUsersByAgency: function(callback){
                 var query = new Parse.Query(User);
                 query.equalTo("agencyId", Parse.User.current().get("agencyId"));
-                query.include("dPersonnel.elements");
-                query.include("dPersonnel.sections.elements");
                 query.find({
                     success: function(results){
                         callback(results);

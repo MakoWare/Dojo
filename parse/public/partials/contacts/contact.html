@@ -24,11 +24,11 @@
         <input ng-model="contact.attributes.lastName" name="lastName" type="text" class="form-control" id="lastName" placeholder="Last Name" required/>
       </div>
 
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-4" ng-class="{ 'has-error': contactForm.type.$invalid }">
         <label for="type">Type</label>
-        <select class="form-control" id="type" ng-model="contact.attributes.type" ng-options="type as type.attributes.codeDescription for type in contactTypes track by type.id">
+         <select class="form-control" id="type" ng-model="contact.attributes.type" ng-options="type as type.attributes.codeDescription for type in contactTypes track by type.id" name="type" required>
         </select>
-      </div>
+       </div>
     </div>
 
     <div class="row">
