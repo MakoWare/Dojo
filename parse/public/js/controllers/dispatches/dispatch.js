@@ -12,23 +12,18 @@ var DispatchCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
         if(last == "create"){
             $scope.action = "Create";
             $scope.title = "New Dispatch";
-            $scope.createContact();
+            $scope.createDispatch();
         } else {
             $scope.action = "Update";
             $scope.title = "Update Dispatch";
-            $scope.getContact(last);
+            $scope.getDispatch(last);
         }
     };
 
     //Create Dispatch
     $scope.createDispatch = function(){
-        ParseService.createObject("Dispatch", function(results){
-            setTimeout(function(){
-                console.log(results);
-                $scope.dispatch = results;
-                $scope.setUpDispatch();
-            }, 500);
-        });
+        $scope.dispatch = ParseService.createObject("Dispatch");
+        $scope.setUpDispatch();
     };
 
     //Get Dispatch
@@ -48,9 +43,72 @@ var DispatchCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
 
     //Setup Dispatch
     $scope.setUpDispatch = function(){
+        //Get Codes for Selects
+        var promises = [];
+        promises.push(ParseService.findNemsisElementCodes("eDispatch.01", function(results){
+            $scope.complaints = results;
+        }));
 
+        promises.push(ParseService.findNemsisElementCodes("eDispatch.02", function(results){
+            $scope.emds = results;
+        }));
 
-        GlobalService.dismissSpinner();
+        promises.push(ParseService.findNemsisElementCodes("eDispatch.05", function(results){
+            $scope.priorities = results;
+        }));
+
+        //Set up type Aheads
+        $scope.addressTypeAhead = function(val){
+            return GlobalService.addressTypeAhead(val);
+        };
+
+        $scope.setAddress = function(item){
+            //First clear everything
+            $scope.contact.attributes.address = "";
+            $scope.contact.attributes.city = "";
+            $scope.contact.attributes.county = "";
+            $scope.contact.attributes.state = "";
+            $scope.contact.attributes.country = "";
+            $scope.contact.attributes.zip = "";
+
+            item.address_components.forEach(function(component){
+                switch (component.types[0]) {
+                case "street_number":
+                    $scope.contact.attributes.address = component.long_name + " ";
+                    break;
+                case "route":
+                    $scope.contact.attributes.address += component.long_name;
+                    break;
+                case "administrative_area_level_3":
+                    if($scope.contact.attributes.city == ""){
+                        $scope.contact.attributes.city = component.long_name;
+                    }
+                    break;
+                case "locality":
+                    if($scope.contact.attributes.city == ""){
+                        $scope.contact.attributes.city = component.long_name;
+                    }
+                    break;
+                case "administrative_area_level_2":
+                    $scope.contact.attributes.county = component.long_name;
+                    break;
+                case "administrative_area_level_1":
+                    $scope.contact.attributes.state = component.short_name;
+                    break;
+                case "country":
+                    $scope.contact.attributes.country = component.short_name;
+                    break;
+                case "postal_code":
+                    $scope.contact.attributes.zip = component.long_name;
+                    break;
+                }
+            });
+        };
+
+        Parse.Promise.when(promises).then(function(){
+            $scope.$apply();
+            GlobalService.dismissSpinner();
+        });
     };
 
 
@@ -58,70 +116,25 @@ var DispatchCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
     //Save Dispatch
     $scope.saveDispatch = function(){
         console.log("saveDispatch()");
+        console.log($scope.dispatch);
+
+
+        /*
         GlobalService.showSpinner();
-
-        //Set EveryThing
-        var dispatch = $scope.dispatch;
-
-        //First Save Each NemsisElement in each Section
-        var sectionSavePromises = [];
-        var elementSavePromises = [];
-
-        //Elements in dPersonnel.attributes.elements
-        $scope.user.attributes.dPersonnel.attributes.elements.forEach(function(element){
-            element.set("value", element.attributes.value);
-            element.set("codeString", element.attributes.codeString);
-            elementSavePromises.push(element.save());
+        ParseService.saveObject("Dispatch", $scope.dispatch, function(result){
+            GlobalService.dismissSpinner();
+            console.log(JSON.stringify(result));
+            console.log(result);
+            $location.path("/dispatch");
+            $scope.$apply();
         });
-
-        //Elements in dPersonnel.attributes.sections.attributes.elements
-        $scope.user.attributes.dPersonnel.attributes.sections.forEach(function(section){
-            section.attributes.elements.forEach(function(element){
-                element.set("value", element.attributes.value);
-                element.set("codeString", element.attributes.codeString);
-                elementSavePromises.push(element.save());
-            });
-        });
-
-        //After each NemsisElement has been saved, save Each Section
-        Parse.Promise.when(elementSavePromises).then(function(){
-            $scope.user.attributes.dPersonnel.attributes.sections.forEach(function(section){
-                section.set("elements", section.attributes.elements);
-                sectionSavePromises.push(section.save());
-            });
-
-            //After each Section has been saved, save dPersonnel Section
-            Parse.Promise.when(sectionSavePromises).then(function(){
-                $scope.user.attributes.dPersonnel.set("sections", $scope.user.attributes.dPersonnel.attributes.sections);
-                $scope.user.attributes.dPersonnel.set("elements", $scope.user.attributes.dPersonnel.attributes.elements);
-                $scope.user.attributes.dPersonnel.save({
-                    success: function(dPersonnel){
-                        //Now Save the User
-                        $scope.user.set("dPersonnel", dPersonnel);
-                        $scope.user.save({
-                            success: function(user){
-                                GlobalService.showSpinner();
-                                console.log(user);
-
-                            },
-                            errror: function(object, error){
-                                console.log(error);
-                                alert(GlobalService.errorMessage + error.message);
-                            }
-                        });
-                    },
-                    error: function(object, error){
-                        console.log(error);
-                        alert(GlobalService.errorMessage + error.message);
-                    }
-                });
-            });
-        });
+         */
 
     };
 
     //Delete Contact
     $scope.deleteDispatch = function(){
+        /*
         GlobalService.showSpinner();
         ParseService.deleteObject($scope.dispatch, "Dispatch", function(results){
             GlobalService.dismissSpinner();
@@ -133,6 +146,7 @@ var DispatchCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
                 $scope.$apply();
             }
         });
+         */
     };
 
 

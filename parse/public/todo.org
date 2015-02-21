@@ -1,5 +1,7 @@
 List of Sh!t that needs to get done
 
+Do I dare make any of these done before Making Neil say thats exactly what he wants?
+
 * Vehicles
 ** TODO Vehicle Create
 ** TODO Vehicle Read
@@ -24,9 +26,12 @@ List of Sh!t that needs to get done
 * Contacts
 
 ** TODO Contacts Create
-** TODO Contacts Read
-** TODO Contacts Update
-** TODO Contacts Delete
+** DONE Contacts Read
+   CLOSED: [2015-02-20 Fri 15:57]
+** DONE Contacts Update
+   CLOSED: [2015-02-20 Fri 15:57]
+** DONE Contacts Delete
+   CLOSED: [2015-02-20 Fri 15:57]
 
 
 * Dispatches

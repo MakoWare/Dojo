@@ -41,22 +41,22 @@
 
     <div class="row">
       <div class="form-group col-md-4">
-	<label for="patient">Complaint*</label>
-	<select class="form-control" ng-model="dispatch.attributes.complaint" ng-options="code as code.attributes.codeDescription for code in eDispatch01 track by code.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="The complaint dispatch reported to the responding unit." required>
+	<label for="patient">Complaint</label>
+	<select class="form-control" ng-model="dispatch.attributes.complaint" ng-options="complaint as complaint.attributes.codeDescription for complaint in complaints track by complaint.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="The complaint dispatch reported to the responding unit." >
 	  <option class="form-control" value=""></option>
         </select>
       </div>
 
       <div class="form-group col-md-2">
 	<label for="emd">EMD Performed</label>
-	<select class="form-control" id="emd" ng-model="dispatch.attributes.emd" ng-options="code as code.attributes.codeDescription for code in eDispatch02 track by code.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="Indication of whether Emergency Medical Dispatch was performed for this EMS event.">
+	<select class="form-control" id="emd" ng-model="dispatch.attributes.emd" ng-options="emd as emd.attributes.codeDescription for emd in emds track by emd.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="Indication of whether Emergency Medical Dispatch was performed for this EMS event.">
 	  <option class="form-control" value=""></option>
         </select>
       </div>
 
       <div class="form-group col-md-2">
 	<label for="priority">Dispatch Priority</label>
-	<select class="form-control" id="priority" ng-model="dispatch.attributes.priority" ng-options="code as code.get('codeDescription') for code in eDispatch05 track by code.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="The actual, apparent, or potential acuity of the patient's condition as determined through information obtained during the EMD process.">
+	<select class="form-control" id="priority" ng-model="dispatch.attributes.priority" ng-options="priority as priority.attributes.codeDescription for priority in priorities track by priority.id" tooltip-trigger="focus" tooltip-placement="top" tooltip="The actual, apparent, or potential acuity of the patient's condition as determined through information obtained during the EMD process.">
 	  <option class="form-control" value=""></option>
         </select>
       </div>
@@ -88,12 +88,12 @@
       </div>
 
       <div class="form-group col-md-3">
-	<label for="pickUpAddress">Pick Up Address*</label>
+	<label for="pickUpAddress">Pick Up Address</label>
 	<input ng-model="dispatch.attributes.pickUpAddress" type="text" class="form-control" placeholder="Address" tooltip-trigger="focus" tooltip-placement="top" tooltip="Address the Patient will be picked up at" typeahead="address.formatted_address for address in addressTypeAhead($viewValue)" typeahead-loading="loadingLocations"  typeahead-on-select="setPickUpAddress($item)" typeahead-wait-ms="100" required/>
       </div>
 
       <div class="form-group col-md-2">
-	<label for="pickUpCity">City*</label>
+	<label for="pickUpCity">City</label>
 	<input ng-model="dispatch.attributes.pickUpCity" type="text" class="form-control" placeholder="City" tooltip-trigger="focus" tooltip-placement="top" tooltip="City the Patient will be picked up at" required/>
       </div>
 

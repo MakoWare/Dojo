@@ -119,6 +119,8 @@ var FacilityCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
         ParseService.saveObject("Facility", $scope.facility, function(result){
             GlobalService.dismissSpinner();
             console.log(result);
+            $location.path("/facilities");
+            $scope.$apply();
         });
     };
 
@@ -130,8 +132,7 @@ var FacilityCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
             if(results.message != null){
                 alert(GlobalService.errorMessage + results.message);
             } else {
-                var newPath = "/facilities" ;
-                $location.path(newPath);
+                $location.path("/facilities");
                 $scope.$apply();
             }
         });

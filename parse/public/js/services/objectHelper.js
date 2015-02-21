@@ -220,7 +220,6 @@ var ObjectHelper = {
         contact.set("firstName", "");
         contact.set("lastName", "");
         contact.set("middleInitial", "");
-        contact.set("type", {});
         contact.set("phoneNumbers", []);
         contact.set("emails", []);
         contact.set("address", "");
@@ -264,19 +263,14 @@ var ObjectHelper = {
         dispatch.set("pickUpCounty", "");
         dispatch.set("pickUpState", "");
         dispatch.set("pickUpZip", "");
+        dispatch.set("states", []);
 
         var acl = new Parse.ACL();
         acl.setRoleReadAccess("EMT_" + agencyId, true);
         acl.setRoleWriteAccess("EMT_" + agencyId, true);
         dispatch.setACL(acl);
 
-        var eDispatch = ObjectHelper.createEmptySectionSection("eDispatch");
-        dispatch.attributes.eDispatch = eDispatch;
-
-        var eTimes = ObjectHelper.createEmptySection("eTimes");
-        dispatch.attributes.eTimes = eTimes;
-
-        callback(dispatch);
+        return dispatch;
     },
 
     //Facility
@@ -624,6 +618,50 @@ var ObjectHelper = {
             }
         });
     },
+
+    //Dispatch
+    saveDispatch: function(dispatch, callback){
+        //1. Set Effectivity
+        var now = new Date();
+        dispatch.set("effectiveFrom", now);
+        dispatch.set("lastUpdatedBy", Parse.User.current());
+
+        //2a. Update the State, if we have one
+        var numberOfStates = dispatch.attributes.states.length;
+        var currentState  = dispatch.attributes;
+        var newState      = {};
+        for(var attr in currentState){
+            if(attr != "states" && attr.substr(1,1) != "$"){
+                newState[attr] = currentState[attr];
+            }
+        }
+
+        if(numberOfStates > 0){
+            dispatch.attributes.states[numberOfStates -1].effectiveTo = now;
+            dispatch.attributes.states.push(newState);
+        }
+        //2b. If we don't create the first one
+        else {
+            dispatch.attributes.states.push(newState);
+        }
+
+        //3. Set everything
+        for(var attr in dispatch.attributes){
+            dispatch.set(attr, dispatch.attributes[attr]);
+        }
+
+
+        //4. Save the Dispatch
+        return dispatch.save(null, {
+            success: function(dispatch){
+                callback(dispatch);
+            },
+            error: function(vehicle, error){
+                callback(error);
+            }
+        });
+    },
+
 
     //Recursive Save Section - also Adds to Parent Section if needed #Not Tested
     saveSection: function(section, parentSection, callback){

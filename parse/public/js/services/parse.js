@@ -556,7 +556,7 @@ angular.module('parseService', [])
 
             //Delete Object
             deleteObject: function(object, objectType, callback){
-                ObjectHelper.deleteObject(objectType, object, callback);
+                return ObjectHelper.deleteObject(objectType, object, callback);
             },
 
 
@@ -700,6 +700,7 @@ angular.module('parseService', [])
             findContactsByAgency: function(callback){
                 var query = new Parse.Query(Contact);
                 query.equalTo("agencyId", Parse.User.current().get("agencyId"));
+                query.equalTo("effectiveTo", null);
                 query.include("type");
                 query.find({
                     success: function(results){
