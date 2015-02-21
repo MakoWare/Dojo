@@ -14,6 +14,7 @@ var ObjectHelper = {
     Personnel: Parse.Object.extend("Personnel"),
     Vehicle: Parse.Object.extend("Vehicle"),
     Facility: Parse.Object.extend("Facility"),
+    Person: Parse.Object.extend("Person"),
     Section: Parse.Object.extend("Section"),
     File: Parse.Object.extend("File"),
     NemsisElement: Parse.Object.extend("NemsisElement"),
@@ -210,7 +211,7 @@ var ObjectHelper = {
         var user = Parse.User.current();
         var agencyId = user.get('agencyId');
 
-        var contact = new ObjectHelper.Contact();
+        var contact = new ObjectHelper.Person();
 
         contact.setACL(ObjectHelper.DispatchACL);
         contact.set("agencyId", agencyId);
@@ -220,15 +221,13 @@ var ObjectHelper = {
         contact.set("firstName", "");
         contact.set("lastName", "");
         contact.set("middleInitial", "");
-        contact.set("phoneNumbers", []);
-        contact.set("emails", []);
         contact.set("address", "");
         contact.set("city", "");
         contact.set("state", "");
         contact.set("zip", "");
         contact.set("country", "");
         contact.set("county", "");
-        contact.set("states", []);
+        contact.set("classType", "contact");
 
         var acl = new Parse.ACL();
         acl.setRoleReadAccess("EMT_" + agencyId, true);
@@ -493,42 +492,87 @@ var ObjectHelper = {
     /***** Save *****/
     //Contact
     saveContact: function(contact, callback){
-        //1. Set() Everything
-        var now = new Date();
-        contact.set("effectiveFrom", now);
-        contact.set("lastUpdatedBy", Parse.User.current());
+        //1. Create a new Person Object
+        var person = new ObjectHelper.Person();
 
-        //2a. Update the State, if we have one
-        var numberOfStates = contact.attributes.states.length;
-        var currentState  = contact.attributes;
-        var newState      = {};
-        for(var attr in currentState){
-            if(attr != "states" && attr.substr(1,1) != "$"){
-                newState[attr] = currentState[attr];
+
+        //2. Give The new Person all of the updated attributes
+        for(var attr in contact.attributes){
+            if(attr.substr(1,1) != "$"){
+                person.set(attr, contact.attributes[attr]);
             }
         }
 
-        if(numberOfStates > 0){
-            contact.attributes.states[numberOfStates -1].effectiveTo = now;
-            contact.attributes.states.push(newState);
+
+        //3. Set EffectiveFrom of the New Person to Now
+        var now = new Date();
+        person.set("EffectiveFrom", now);
+        person.set("lastUpdatedBy", Parse.User.current());
+
+        //4a. If this a new Person, geneate a UId
+        if(person.attributes.foreignId == null){
+            //generate Id
+            return ObjectHelper.generateUid("Person", function(result){
+                console.log(result);
+                person.set("foreignId", result);
+                return person.save(null, {
+                    success: function(person){
+                        callback(person);
+                    },
+                    error: function(person, error){
+                        callback(error);
+                    }
+                });
+            });
         }
-        //2b. If we don't create the first one
+
+        //4b. If not, just save it, and set the old Contact's effectiveTo
         else {
-            contact.attributes.states.push(newState);
+            //Revert Changes to the Contact object, then set Effective To
+            return contact.fetch({
+                success: function(contact){
+                    return contact;
+                },
+                error: function(error){
+                    callback(error);
+                }
+            }).then(function(contact){
+                contact.set("effectiveTo", now);
+                return contact.save({
+                    success: function(contact){
+                        return contact;
+                    },
+                    error: function(contact, error){
+                        callback(error);
+                    }
+                }).then(function(){
+                    return person.save(null, {
+                        success: function(person){
+                            callback(person);
+                        },
+                        error: function(person, error){
+                            callback(error);
+                        }
+                    });
+                });
+            });
         }
+    },
 
-        //3. Set everything
-        for(var attr in contact.attributes){
-            contact.set(attr, contact.attributes[attr]);
-        }
-
-
-        //4. Save the Contact
-        return contact.save(null, {
-            success: function(contact){
-                callback(contact);
+    generateUid: function(classType, callback){
+        console.log("generating Uid for a: " + classType);
+        var query = new Parse.Query(classType);
+        query.descending("foreignId");
+        return query.first({
+            success: function(object){
+                if(object){
+                    console.log(object);
+                    callback(object.attributes.foreignId + 1);
+                } else {
+                    callback(0);
+                }
             },
-            error: function(contact, error){
+            error: function(error){
                 callback(error);
             }
         });
@@ -893,11 +937,7 @@ var ObjectHelper = {
     deleteContact: function(contact, callback){
         //Set effectiveTo on contact and current state
         var now = new Date();
-        var states = contact.attributes.states;
-
         contact.set("effectiveTo", now);
-        states[states.length - 1].effectiveTo = now;
-        contact.set("states", states);
 
         return contact.save(null, {
             success: function(contact){

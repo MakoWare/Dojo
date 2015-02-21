@@ -23,6 +23,7 @@ var ContactCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
     //Create Contact
     $scope.createContact = function(){
         $scope.contact = ParseService.createObject("Contact");
+        console.log($scope.contact);
         $scope.setUpContact();
     };
 

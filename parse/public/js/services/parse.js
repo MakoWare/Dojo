@@ -10,7 +10,7 @@ angular.module('parseService', [])
 	//Define Parse Objects
 	var Agency = Parse.Object.extend("Agency");
 	var User = Parse.Object.extend("User");
-	var Contact = Parse.Object.extend("Contact");
+	var Person = Parse.Object.extend("Person");
 	var Role = Parse.Object.extend("Role");
 	var PCR = Parse.Object.extend("PCR");
 	var AgencyFile = Parse.Object.extend("AgencyFile");
@@ -303,7 +303,7 @@ angular.module('parseService', [])
             },
 
             getContactById: function(objectId, callback){
-                var query = new Parse.Query(Contact);
+                var query = new Parse.Query(Person);
                 query.include("type");
                 query.get(objectId,{
                     success: function(result){
@@ -698,9 +698,10 @@ angular.module('parseService', [])
 
             //Find Contacts by Agency
             findContactsByAgency: function(callback){
-                var query = new Parse.Query(Contact);
+                var query = new Parse.Query(Person);
                 query.equalTo("agencyId", Parse.User.current().get("agencyId"));
                 query.equalTo("effectiveTo", null);
+                query.equalTo("classType", "contact");
                 query.include("type");
                 query.find({
                     success: function(results){
