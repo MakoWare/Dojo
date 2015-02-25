@@ -35,6 +35,11 @@ var NavCtrl = function($scope, $location, ParseService, GlobalService){
         $location.url("/");
     };
 
+    $scope.toggleSideBar = function(){
+        $("body").toggleClass("sidebar-collapse");
+        $.AdminLTE.layout.fixSidebar();
+    };
+
     $scope.init();
 
 };

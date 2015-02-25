@@ -1,53 +1,58 @@
-<div class="box">
-  <div class="box-header">
-    <i class="fa fa-phone"></i>
-    <h3 class="box-title">Contacts</h3>
-    <div class="box-tools pull-right" data-toggle="tooltip" title="Status">
-      <button type="button" class="btn btn-primary btn-success">Add Contact</button>
-    </div>
-  </div>
-  <div class="box-body">
-    <div align="center" class="table-responsive">
-      <table class="table table-bordered">
-        <thead>
-	  <tr>
-            <th><a href="" ng-click="predicate = 'attributes.firstName'; reverse=!reverse">Name</a></th>
-            <th><a href="" ng-click="predicate = 'attributes.phone'; reverse=!reverse">Phone Numbers</a></th>
-            <th><a href="" ng-click="predicate = 'attributes.email'; reverse=!reverse">Emails</a></th>
-            <th><a href="" ng-click="predicate = 'attributes.address'; reverse=!reverse">Address</a></th>
-            <th><a href="" ng-click="predicate = 'attributes.type'; reverse=!reverse">Type</a></th>
-            <th>Edit Contact</th>
-            <th>Delete Contact</th>
-	  </tr>
-        </thead>
-        <tbody>
-	  <tr ng-repeat="object in objects | filter:searchParam:strict | orderBy:predicate:reverse">
-	    <td>{{object.attributes.firstName + " " + object.attributes.lastName}}</td>
-	    <td>
-              <div  ng-repeat="phone in object.attributes.phoneNumbers">
-                <div>
-                  <p>{{phone.type + ": " + phone.value}}</p>
-                </div>
-              </div>
-            </td>
-	    <td>
-              <div  ng-repeat="email in object.attributes.emails">
-                <div>
-                  <p>{{email.type + ": " + email.value}}</p>
-                </div>
-              </div>
-            </td>
-            <td ng-if="object.attributes.address == ''"></td>
-            <td ng-if="object.attributes.address != ''">{{object.attributes.address + ", " + object.attributes.city + ", " + object.attributes.state + ", " + object.attributes.zip}}</td>
-	    <td>{{object.attributes.type.attributes.codeDescription}}</td>
-            <td><a ng-href="#/contacts/{{object.id}}"> <button class="btn btn-primary">Edit</button></a></td>
-            <td><button class="btn btn-danger" ng-click="deleteObject(object)">Delete</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="box-footer">
+<div id="contactList">
+  <div ng-controller="ContactListCtrl">
+    <div class="box" id="contactListContainer">
+      <div class="box-header">
+        <i class="fa fa-phone"></i>
+        <h3 class="box-title">Contacts</h3>
+        <div class="box-tools pull-right" data-toggle="tooltip" title="Status">
+          <button type="button" class="btn btn-primary btn-success">Add Contact</button>
+          <button class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="" data-original-title="Remove"><i class="fa fa-times" ng-click="removeComponent()"></i></button>
+        </div>
+      </div>
+      <div class="box-body">
+        <div align="center" class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+	      <tr>
+                <th><a href="" ng-click="predicate = 'attributes.firstName'; reverse=!reverse">Name</a></th>
+                <th><a href="" ng-click="predicate = 'attributes.phone'; reverse=!reverse">Phone Numbers</a></th>
+                <th><a href="" ng-click="predicate = 'attributes.email'; reverse=!reverse">Emails</a></th>
+                <th><a href="" ng-click="predicate = 'attributes.address'; reverse=!reverse">Address</a></th>
+                <th><a href="" ng-click="predicate = 'attributes.type'; reverse=!reverse">Type</a></th>
+                <th>Edit Contact</th>
+                <th>Delete Contact</th>
+	      </tr>
+            </thead>
+            <tbody>
+	      <tr ng-repeat="object in objects | filter:searchParam:strict | orderBy:predicate:reverse">
+	        <td>{{object.attributes.firstName + " " + object.attributes.lastName}}</td>
+	        <td>
+                  <div  ng-repeat="phone in object.attributes.phoneNumbers">
+                    <div>
+                      <p>{{phone.type + ": " + phone.value}}</p>
+                    </div>
+                  </div>
+                </td>
+	        <td>
+                  <div  ng-repeat="email in object.attributes.emails">
+                    <div>
+                      <p>{{email.type + ": " + email.value}}</p>
+                    </div>
+                  </div>
+                </td>
+                <td ng-if="object.attributes.address == ''"></td>
+                <td ng-if="object.attributes.address != ''">{{object.attributes.address + ", " + object.attributes.city + ", " + object.attributes.state + ", " + object.attributes.zip}}</td>
+	        <td>{{object.attributes.type.attributes.codeDescription}}</td>
+                <td><a ng-href="#/contacts/{{object.id}}"> <button class="btn btn-primary">Edit</button></a></td>
+                <td><button class="btn btn-danger" ng-click="deleteObject(object)">Delete</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="box-footer">
 
+      </div>
+    </div>
   </div>
 </div>

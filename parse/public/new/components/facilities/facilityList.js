@@ -12,8 +12,7 @@ var ContactListCtrl = function($rootScope, $scope, $location, ParseService, Glob
     };
 
     $scope.removeComponent = function(){
-        console.log("broadcast");
-        $rootScope.$broadcast("removeComponent", {id: "contactList"});
+        $rootScope.$broadcast("removeComponent", {templateUrl: "ContactList"});
     };
 
     //Init
