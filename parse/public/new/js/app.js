@@ -45,8 +45,8 @@ angular.module('dojo', [
       })
 //Contacts
       .when('/contacts', {
-          templateUrl: 'partials/read.html',
-          controller: 'ReadCtrl'
+          templateUrl: 'components/contacts/contactList.html',
+          controller: 'ContactListCtrl'
       })
       .when('/contacts/:id', {
           templateUrl: 'partials/contacts/contact.html',

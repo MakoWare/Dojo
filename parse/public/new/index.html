@@ -30,6 +30,8 @@
     <script src="components/componentHeader/componentHeader.js"></script>
     <script src="components/footer/footer.js"></script>
     <script src="components/dashboard/dashboard.js"></script>
+    <script src="components/contacts/contactList.js"></script>
+
 
     <!-- Bootstrap 3.3.2 -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -114,7 +116,9 @@
       <div class="sideBar" data-sidebar=""></div>
       <div class="content-wrapper">
         <div class="componentheader" data-componentheader=""></div>
-        <div ng-view=""></div>
+        <section class="content">
+          <div ng-view=""></div>
+        </section>
       </div>
       <div class="footer" data-footer=""></div>
     </div>
