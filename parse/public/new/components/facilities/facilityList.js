@@ -1,18 +1,25 @@
 'use strict';
 
-//Contact List Controller
-var ContactListCtrl = function($rootScope, $scope, $location, ParseService, GlobalService, $modal){
+//Facility List Controller
+var FacilityListCtrl = function($rootScope, $scope, $location, ParseService, GlobalService, $modal){
     $scope.init = function(){
-        console.log("ContactListCtrl");
-        $scope.dragInit();
+        console.log("FacilityListCtrl");
+
+        $( "#facilityListContainer" ).resizable(
+            {
+                grid: 100,
+                animate: true,
+                ghost: true
+            });
     };
 
-    $scope.dragInit = function(){
-        $( "#contactListContainer" ).draggable({ containment: "#componentContainer", axis: "y", scroll: false });
+    $scope.toggleComponent = function(){
+        $("#facilityComponentBody").toggle();
     };
 
     $scope.removeComponent = function(){
-        $rootScope.$broadcast("removeComponent", {templateUrl: "ContactList"});
+        console.log("facilityList: removeComponent()");
+        $rootScope.$broadcast("removeComponent", {id: "facilityList"});
     };
 
     //Init

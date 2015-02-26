@@ -4,12 +4,20 @@
 var ContactListCtrl = function($rootScope, $scope, $location, ParseService, GlobalService, $modal){
     $scope.init = function(){
         console.log("ContactListCtrl");
-        $scope.dragInit();
+
+        $( "#contactListContainer" ).resizable(
+            {
+                grid: 100,
+                animate: true,
+                ghost: true
+            });
+
     };
 
-    $scope.dragInit = function(){
-        $( "#contactListContainer" ).draggable({ containment: "#componentContainer", axis: "y", scroll: false });
+    $scope.toggleComponent = function(){
+        $("#contactComponentBody").toggle();
     };
+
 
     $scope.removeComponent = function(){
         console.log("broadcast");
