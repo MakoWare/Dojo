@@ -5,6 +5,9 @@ var NavCtrl = function($scope, $location, ParseService, GlobalService){
 
     $scope.init = function(){
         console.log("navigation");
+
+
+
         /*
         $scope.dir = $location.url().slice(1).split("/")[0];
 	$scope.currentUser = ParseService.getCurrentUser();
@@ -38,7 +41,10 @@ var NavCtrl = function($scope, $location, ParseService, GlobalService){
     $scope.toggleSideBar = function(){
         $("body").toggleClass("sidebar-collapse");
         $.AdminLTE.layout.fixSidebar();
+        $("#componentContainer").trigger('resize');
     };
+
+
 
     $scope.init();
 

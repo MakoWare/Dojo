@@ -1,17 +1,28 @@
 'use strict';
 
 //DashBoard Controller
-var DashBoardCtrl = function($scope, $compile, $location, ParseService, GlobalService){
-
+var DashBoardCtrl = function($rootScope, $scope, $compile, $location, ParseService, GlobalService){
     $scope.init = function(){
         console.log("dashboard");
         $scope.$on("addComponent", $scope.addComponent);
         $scope.$on("removeComponent", $scope.removeComponent);
         $scope.componentsInDashboard = [];
 
-//        $( "#dashboard" ).sortable();
-//        $( "#dashboard" ).disableSelection();
+        $("#componentContainer").on("resize", function(){
+            $scope.resize();
+        });
 
+
+        $scope.resize();
+    };
+
+    $scope.resize = function(){
+        setTimeout(function(){
+            var style = window.getComputedStyle(document.getElementById("componentContainer"), null);
+            $("#dashboard").height($("#componentContainer").height() -20);
+            $("#dashboard").width(style.getPropertyValue("width") -20);
+            $rootScope.$broadcast("dashboardResize");
+        }, 100);
     };
 
     //Adds a Component to the DashBoard

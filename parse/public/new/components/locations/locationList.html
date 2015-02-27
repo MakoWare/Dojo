@@ -1,16 +1,15 @@
-<div ng-controller="ContactListCtrl">
-  <div class="box" id="contactListContainer">
+<div ng-controller="LocationListCtrl">
+  <div class="box" id="locationListContainer">
     <div class="box-header">
-      <i class="fa fa-phone"></i>
-      <h3 class="box-title">Contacts</h3>
+      <i class="fa fa-map-marker"></i>
+      <h3 class="box-title">Locations</h3>
       <div class="box-tools pull-right" data-toggle="tooltip" title="Status">
-        <button type="button" class="btn btn-primary btn-success">Create Contact</button>
+        <button type="button" class="btn btn-primary btn-success">Create Location</button>
         <button style="padding: 10px" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="" data-original-title="Remove" ng-click="removeComponent()"><i class="fa fa-times" ></i></button>
         <button style="padding: 10px" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="" data-original-title="Remove" ng-click="toggleComponent()"><i class="fa fa-minus"></i></button>
-        <button style="padding: 10px" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="" data-original-title="Remove" ng-click="fullSizeComponent()"><i class="fa fa-external-link"></i></button>
       </div>
     </div>
-    <div class="box-body" id="contactComponentBody">
+    <div class="box-body" id="locationComponentBody">
       <div align="center" class="table-responsive">
         <table class="table table-bordered">
           <thead>

@@ -1,0 +1,46 @@
+<div ng-controller="PatientListCtrl">
+  <div class="box" id="patientListContainer">
+    <div class="box-header">
+      <i class="fa fa-user"></i>
+      <h3 class="box-title">Patients</h3>
+      <div class="box-tools pull-right" data-toggle="tooltip" title="Status">
+        <button type="button" class="btn btn-primary btn-success">Create Patient</button>
+        <button style="padding: 10px" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="" data-original-title="Remove" ng-click="removeComponent()"><i class="fa fa-times" ></i></button>
+        <button style="padding: 10px" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="" data-original-title="Remove" ng-click="toggleComponent()"><i class="fa fa-minus"></i></button>
+        <button style="padding: 10px" class="btn btn-box-tool" ng-click="fullSizeComponent()"><i class="fa fa-external-link"></i></button>
+      </div>
+    </div>
+    <div class="box-body" id="patientComponentBody">
+
+      <div align="center" class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+	    <tr>
+              <th><a href="" ng-click="predicate = 'attributes.name'; reverse=!reverse">Name</a></th>
+              <th><a href="" ng-click="predicate = 'attributes.address'; reverse=!reverse">Address</a></th>
+              <th><a href="" ng-click="predicate = 'attributes.dob'; reverse=!reverse">D.O.B</a></th>
+              <th><a href="" ng-click="predicate = 'attributes.ssn'; reverse=!reverse">SSN</a></th>
+              <th><a href="" ng-click="predicate = 'attributes.phone'; reverse=!reverse">Phone</a></th>
+              <th>Edit Patient</th>
+              <th>Delete Patient</th>
+	    </tr>
+          </thead>
+          <tbody>
+	    <tr ng-repeat="object in objects | filter:searchParam:strict | orderBy:predicate:reverse">
+              <td>{{object.attributes.firstName + " " + object.attributes.lastName}}</td>
+	      <td>{{object.attributes.address}}</td>
+              <td>{{(object.attributes.dob.getMonth() + 1) + "/" + object.attributes.dob.getDate() + "/" + object.attributes.dob.getFullYear();}}</td>
+              <td>{{"xxx-xx-" + object.attributes.ssn.substr(object.attributes.ssn.length - 4);}}</td>
+              <td>{{object.attributes.phone}}</td>
+              <td><a ng-href="{{'#/patients/' + object.id}}"><button class="btn btn-primary">Edit</button></a></td>
+              <td><button class="btn btn-danger" ng-click="deleteObject(object)">Delete</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="box-footer">
+
+    </div>
+  </div>
+</div>

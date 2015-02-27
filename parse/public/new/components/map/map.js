@@ -15,7 +15,7 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService, GlobalServic
 
         $("#map").draggable({
             snap: true,
-            grid: [ 50, 50 ]
+            containment: "#dashboard"
         });
 
 
@@ -63,7 +63,7 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService, GlobalServic
             $scope.$apply();
         });
 
-
+        $scope.$on("dashboardResize", $scope.resize);
         $scope.resize(400);
     };
 
@@ -73,6 +73,10 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService, GlobalServic
         }
         if(w){
             $("#map").width(w);
+        }
+
+        if( $("#map").width() > $("#dashboard").width()){
+            $("#map").width($("#dashboard").width());
         }
 
         $("#mapContainer").height($("#map").height());
@@ -88,9 +92,32 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService, GlobalServic
 
 
     $scope.toggleComponent = function(){
-        $("#mapComponentBody").toggle();
+        if(!$scope.toggleComponent.init){
+            $scope.toggleComponent.init = true;
+            $scope.toggleComponent.isOpen = true;
+            $scope.toggleComponent.componentHeight = $("#map").height();
+            $scope.toggleComponent.containerHeight = $("#mapContainer").height();
+        }
+
+        if($scope.toggleComponent.isOpen){
+            $scope.toggleComponent.componentHeight = $("#map").height();
+            $scope.toggleComponent.containerHeight = $("#mapContainer").height();
+            $("#map").height(60);
+            $("#mapContainer").height(50);
+            $("#mapComponentBody").toggle();
+            $scope.toggleComponent.isOpen = false;
+        } else {
+            $("#map").height($scope.toggleComponent.componentHeight);
+            $("#mapContainer").height($scope.toggleComponent.containerHeight);
+            $("#mapComponentBody").toggle();
+            $scope.toggleComponent.isOpen = true;
+        }
     };
 
+    //Full Size Component
+    $scope.fullSizeComponent = function(){
+        $scope.resize($("#dashboard").height(), $("#dashboard").width());
+    };
 
     $scope.removeComponent = function(){
         console.log("broadcast");
