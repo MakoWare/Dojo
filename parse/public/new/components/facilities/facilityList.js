@@ -5,12 +5,34 @@ var FacilityListCtrl = function($rootScope, $scope, $location, ParseService, Glo
     $scope.init = function(){
         console.log("FacilityListCtrl");
 
-        $( "#facilityListContainer" ).resizable(
-            {
-                grid: 100,
-                animate: true,
-                ghost: true
-            });
+        $( "#facilityList" ).resizable({
+            grid: 50,
+            ghost: true,
+            stop: function(event, ui){
+                $scope.resize();
+            }
+        });
+
+        $("#facilityList").draggable({
+            snap: true,
+            grid: [ 50, 50 ]
+        });
+
+        $scope.resize();
+
+    };
+
+    $scope.resize = function(h, w){
+        if(h){
+            $("#facilityList").height(h);
+        }
+        if(w){
+            $("#facilityList").width(w);
+        }
+
+        $("#facilityListContainer").height($("#facilityList").height());
+        $("#facilityListContainer").width($("#facilityList").width());
+
     };
 
     $scope.toggleComponent = function(){

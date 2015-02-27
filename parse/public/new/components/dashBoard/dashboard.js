@@ -9,6 +9,9 @@ var DashBoardCtrl = function($scope, $compile, $location, ParseService, GlobalSe
         $scope.$on("removeComponent", $scope.removeComponent);
         $scope.componentsInDashboard = [];
 
+//        $( "#dashboard" ).sortable();
+//        $( "#dashboard" ).disableSelection();
+
     };
 
     //Adds a Component to the DashBoard
@@ -16,7 +19,6 @@ var DashBoardCtrl = function($scope, $compile, $location, ParseService, GlobalSe
         if($.inArray(args.templateUrl, $scope.componentsInDashboard) == -1){
             $scope.componentsInDashboard.push(args.templateUrl);
             var id = args.templateUrl.split("/")[args.templateUrl.split("/").length - 1];
-            console.log("add Component id: " + id);
             var divString = '<div id="' + id + '" ng-include="\'' + args.templateUrl + '.html\'"></div>';
             $("#dashboard").append($compile(divString)($scope));
         } else {
@@ -27,23 +29,16 @@ var DashBoardCtrl = function($scope, $compile, $location, ParseService, GlobalSe
 
     //Removes Component From the DashBoard
     $scope.removeComponent = function(event, args){
-        console.log("removeComponent");
         var children = $("#dashboard").children();
-        console.log(children);
         for(var i = 0; i < children.length; i++){
             var child = children[i];
-            console.log($(child).attr('id'));
             if($(child).attr('id') == args.id){
-                console.log("removing child");
                 $(child).detach();
-//                $("#dashboard").children().slice(i).detach();
             }
         }
 
         for(var j = 0; j < $scope.componentsInDashboard.length; j++){
             var currentComponent = $scope.componentsInDashboard[j].split("/")[$scope.componentsInDashboard[j].split("/").length -1];
-            console.log(currentComponent);
-            console.log($scope.componentsInDashboard[j]);
             if(currentComponent == args.id){
                 $scope.componentsInDashboard.splice(j, 1);
             }

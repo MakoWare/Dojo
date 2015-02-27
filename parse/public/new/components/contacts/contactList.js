@@ -5,12 +5,33 @@ var ContactListCtrl = function($rootScope, $scope, $location, ParseService, Glob
     $scope.init = function(){
         console.log("ContactListCtrl");
 
-        $( "#contactListContainer" ).resizable(
-            {
-                grid: 100,
-                animate: true,
-                ghost: true
-            });
+        $("#contactList").resizable({
+            grid: 50,
+            ghost: true,
+            stop: function(event, ui){
+                $scope.resize();
+            }
+        });
+
+        $("#contactList").draggable({
+            snap: true,
+            grid: [ 50, 50 ]
+        });
+
+        $scope.resize();
+
+    };
+
+    $scope.resize = function(h, w){
+        if(h){
+            $("#contactList").height(h);
+        }
+        if(w){
+            $("#contactList").width(w);
+        }
+
+        $("#contactListContainer").height($("#contactList").height());
+        $("#contactListContainer").width($("#contactList").width());
 
     };
 
