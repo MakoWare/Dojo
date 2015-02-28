@@ -3,8 +3,8 @@
 angular.module('dojo', [
     'navigation',
     'sidebar',
-    'componentheader',
     'footer',
+    'componentBox',
     'globalService',
     'parseService',
     'multi-select',

@@ -27,11 +27,20 @@ var DashBoardCtrl = function($rootScope, $scope, $compile, $location, ParseServi
 
     //Adds a Component to the DashBoard
     $scope.addComponent = function(event, args){
-        if($.inArray(args.templateUrl, $scope.componentsInDashboard) == -1){
+        if($.inArray(args.componentName, $scope.componentsInDashboard) == -1){
+
+            /*
             $scope.componentsInDashboard.push(args.templateUrl);
             var id = args.templateUrl.split("/")[args.templateUrl.split("/").length - 1];
             var divString = '<div id="' + id + '" ng-include="\'' + args.templateUrl + '.html\'"></div>';
             $("#dashboard").append($compile(divString)($scope));
+             */
+
+            var el = "<component-box id='" + args.componentName + "'></component-box>";
+            var componentBox = $compile(el)($scope);
+            $("#dashboard").append(componentBox);
+
+
         } else {
             console.log("already in the dashboard, fuck off");
         }

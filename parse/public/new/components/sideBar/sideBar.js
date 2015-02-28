@@ -7,8 +7,8 @@ var SideBarCtrl = function($rootScope, $scope,$compile, $location, ParseService,
         console.log("sidebar");
     };
 
-    $scope.addComponent = function(templateUrl){
-        $rootScope.$broadcast("addComponent", {templateUrl: templateUrl});
+    $scope.addComponent = function(component){
+        $rootScope.$broadcast("addComponent", {componentName: component});
     };
 
     $scope.init();
