@@ -16,12 +16,6 @@ var DashBoardDirective = BaseDirective.extend({
         this.$scope = $scope;
 	this._super($scope);
 
-
-
-        $("#componentContainer").on("resize", function(){
-            this.resize();
-        });
-
         this.resize();
     },
 
@@ -29,6 +23,11 @@ var DashBoardDirective = BaseDirective.extend({
     defineListeners: function(){
         this.notifications.addEventListener(components.events.ADD_COMPONENT, this.addComponent.bind(this));
         this.notifications.addEventListener(components.events.REMOVE_COMPONENT, this.removeComponent.bind(this));
+
+        var self = this;
+        $("#componentContainer").on("resize", function(){
+            self.resize();
+        });
     },
 
     resize: function(){
@@ -41,19 +40,9 @@ var DashBoardDirective = BaseDirective.extend({
     //Adds a Component to the DashBoard
     addComponent: function(event, args){
         if($.inArray(args.componentName, this.components) == -1){
-
-            /*
-            $scope.componentsInDashboard.push(args.templateUrl);
-            var id = args.templateUrl.split("/")[args.templateUrl.split("/").length - 1];
-            var divString = '<div id="' + id + '" ng-include="\'' + args.templateUrl + '.html\'"></div>';
-            $("#dashboard").append($compile(divString)($scope));
-             */
-
-            var el = "<component-box id='" + args.componentName + "'></component-box>";
+            var el = "<component-box id='" + args + "' name='" + args + "'></component-box>";
             var componentBox = this.$compile(el)(this.$scope);
             $("#dashboard").append(componentBox);
-
-
         } else {
             console.log("already in the dashboard, fuck off");
         }
@@ -61,19 +50,19 @@ var DashBoardDirective = BaseDirective.extend({
 
 
     //Removes Component From the DashBoard
-    removeComponent: function(event, args){
+    removeComponent: function(event, name){
         var children = $("#dashboard").children();
         for(var i = 0; i < children.length; i++){
             var child = children[i];
-            if($(child).attr('id') == args.id){
+            if($(child).attr('id') == name){
                 $(child).detach();
             }
         }
 
-        for(var j = 0; j < $scope.componentsInDashboard.length; j++){
-            var currentComponent = $scope.componentsInDashboard[j].split("/")[$scope.componentsInDashboard[j].split("/").length -1];
-            if(currentComponent == args.id){
-                $scope.componentsInDashboard.splice(j, 1);
+        for(var j = 0; j < this.components.length; j++){
+            var currentComponent = this.components[j].split("/")[this.components[j].split("/").length -1];
+            if(currentComponent == name){
+                this.components.splice(j, 1);
             }
         }
     }
