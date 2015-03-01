@@ -1,14 +1,5 @@
-<div class="box">
-  <div class="box-header">
-    <i class="fa fa-phone" ng-class=""></i>
-    <h3 class="box-title">{{componentTitle}}</h3>
-    <div class="box-tools pull-right" data-toggle="tooltip" title="Status">
-      <button type="button" class="btn btn-primary btn-success">{{componentButton}}</button>
-      <button id="{{name + 'Remove'}}" style="padding: 10px" class="btn btn-box-tool"><i class="fa fa-times" ></i></button>
-      <button id="{{name + 'Min'}}" style="padding: 10px" class="btn btn-box-tool"><i class="fa fa-minus"></i></button>
-      <button id="{{name + 'Max'}}" style="padding: 10px" class="btn btn-box-tool"><i class="fa fa-external-link"></i></button>
-    </div>
-  </div>
+<div class="box" id="{{name + 'box'}}">
+  <div ng-include="componentHeaderUrl"></div>
   <div class="box-body" id="contactComponentBody">
     <div align="center" class="table-responsive" style="overflow-y: scroll">
       <table class="table table-bordered">
