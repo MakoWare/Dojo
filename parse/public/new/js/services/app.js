@@ -2,9 +2,7 @@
 
 angular.module('dojo', [
     'navigation',
-    'notifications',
     'sidebar',
-    'dashboard',
     'footer',
     'componentBox',
     'globalService',

@@ -1,5 +1,5 @@
 <!-- Left side column. contains the logo and sidebar -->
-<aside class="main-sidebar">
+<aside class="main-sidebar" id="tacoloco">
   <!-- sidebar: style can be found in sidebar.less -->
   <section class="sidebar">
     <!-- search form -->
@@ -14,44 +14,43 @@
     <!-- /.search form -->
     <!-- sidebar menu: : style can be found in sidebar.less -->
     <!-- For Dispatchers -->
-    <div ng-if="true">
+    <div>
       <ul class="sidebar-menu">
-        <li class="active">
-          <a href="" ng-click="addComponent('contactList')">
+        <li class="sidebarItem" value="contactList">
+          <a href="">
             <i class="fa fa-phone"></i> <span>Contacts</span>
           </a>
         </li>
-        <li>
+        <li class="sidebarItem" value="dispatchList">
           <a href="" ng-click="addComponent('components/dispatches/dispatchList')">
             <i class="fa fa-clipboard"></i> <span>Dispatches</span>
           </a>
         </li>
-        <li>
+        <li class="sidebarItem" value="facilityList">
           <a href="" ng-click="addComponent('components/facilities/facilityList')">
             <i class="fa fa-h-square"></i> <span>Facilities</span>
           </a>
         </li>
-        <li>
+        <li class="sidebarItem" value="locationList">
           <a href="" ng-click="addComponent('components/locations/locationList')" >
             <i class="fa fa-map-marker"></i> <span>Locations</span>
           </a>
         </li>
-        <li>
+        <li class="sidebarItem" value="map">
           <a href="" ng-click="addComponent('components/map/map')">
             <i class="fa fa-picture-o"></i> <span>Map</span>
           </a>
         </li>
-        <li>
+        <li class="sidebarItem" value="patientList">
           <a href="" ng-click="addComponent('components/patients/patientList')">
             <i class="fa fa-user"></i> <span>Patients</span>
           </a>
         </li>
-        <li>
+        <li class="sidebarItem" value="vehicleList">
           <a href="" ng-click="addComponent('components/vehicles/vehicleList')">
             <i class="fa fa-ambulance"></i> <span>Vehicles</span>
           </a>
         </li>
-
       </ul>
     </div>
     <!-- For Managers -->

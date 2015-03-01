@@ -79,10 +79,13 @@
     <script src="libs/angular/angular-route.min.js"></script>
     <script src="libs/angular/angular-multi-select.js"></script>
     <script src="libs/angular/angular-google-maps.min.js"></script>
+    <script src="libs/class.js"></script>
+    <script src="libs/namespace.js"></script>
     <script src="libs/ui-bootstrap-tpls.min.js"></script>
     <script src="libs/spin.min.js"></script>
     <script src="libs/colorPicker/colorPicker.min.js"></script>
     <script src="libs/colorPicker/tinycolor.min.js"></script>
+
 
 
     <!--Scripts-->
@@ -91,6 +94,10 @@
     <script src="js/services/objectHelper.js"></script>
     <script src="js/services/parse.js"></script>
     <script src="js/services/global.js"></script>
+    <script src="js/base/BaseCtrl.js"></script>
+    <script src="js/base/BaseDir.js"></script>
+    <script src="js/base/EventDispatcher.js"></script>
+    <script src="js/base/Notifications.js"></script>
     <script src="components/navigation/navigation.js"></script>
     <script src="components/sideBar/sideBar.js"></script>
     <script src="components/footer/footer.js"></script>
@@ -115,9 +122,9 @@
   <body class="skin-black fixed">
     <div class="wrapper">
       <div class="navigation" data-navigation=""></div>
-      <div class="sideBar" data-sidebar=""></div>
+      <sideBar></sidebar>
       <div class="content-wrapper" id="componentContainer">
-        <div ng-view=""></div>
+        <dashboard></dashboard>
       </div>
       <div class="footer" data-footer=""></div>
     </div>

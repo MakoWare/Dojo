@@ -1,33 +1,46 @@
 'use strict';
 
+namespace('components.events').COMPONENT_ADDED = "ActivityModel.COMPONENT_ADDED";
+namespace('components.events').COMPONENT_REMOVED = "ActivityModel.COMPONENT_REMOVED";
+namespace('components.events').DASHBOARD_RESIZED = "ActivityModel.DASHBOARD_RESIZED";
+
 //DashBoard Controller
-var DashBoardCtrl = function($rootScope, $scope, $compile, $location, ParseService, GlobalService){
-    $scope.init = function(){
+var DashBoardDirective = BaseDirective.extend({
+    notifications: null,
+    components: [],
+
+    init: function($scope, $elm, $attrs, $compile, notifications){
         console.log("dashboard");
-        $scope.$on("addComponent", $scope.addComponent);
-        $scope.$on("removeComponent", $scope.removeComponent);
-        $scope.componentsInDashboard = [];
+        this.notifications = notifications;
+        this.$compile = $compile;
+        this.$scope = $scope;
+	this._super($scope);
+
+
 
         $("#componentContainer").on("resize", function(){
-            $scope.resize();
+            this.resize();
         });
 
+        this.resize();
+    },
 
-        $scope.resize();
-    };
+    //Called on super();
+    defineListeners: function(){
+        this.notifications.addEventListener(components.events.ADD_COMPONENT, this.addComponent.bind(this));
+        this.notifications.addEventListener(components.events.REMOVE_COMPONENT, this.removeComponent.bind(this));
+    },
 
-    $scope.resize = function(){
-        setTimeout(function(){
-            var style = window.getComputedStyle(document.getElementById("componentContainer"), null);
-            $("#dashboard").height($("#componentContainer").height() -20);
-            $("#dashboard").width(style.getPropertyValue("width") -20);
-            $rootScope.$broadcast("dashboardResize");
-        }, 100);
-    };
+    resize: function(){
+        var style = window.getComputedStyle(document.getElementById("componentContainer"), null);
+        $("#dashboard").height($("#componentContainer").height() -20);
+        $("#dashboard").width(style.getPropertyValue("width") -20);
+        this.notifications.notify(components.events.DASHBOARD_RESIZED);
+    },
 
     //Adds a Component to the DashBoard
-    $scope.addComponent = function(event, args){
-        if($.inArray(args.componentName, $scope.componentsInDashboard) == -1){
+    addComponent: function(event, args){
+        if($.inArray(args.componentName, this.components) == -1){
 
             /*
             $scope.componentsInDashboard.push(args.templateUrl);
@@ -37,18 +50,18 @@ var DashBoardCtrl = function($rootScope, $scope, $compile, $location, ParseServi
              */
 
             var el = "<component-box id='" + args.componentName + "'></component-box>";
-            var componentBox = $compile(el)($scope);
+            var componentBox = this.$compile(el)(this.$scope);
             $("#dashboard").append(componentBox);
 
 
         } else {
             console.log("already in the dashboard, fuck off");
         }
-    };
+    },
 
 
     //Removes Component From the DashBoard
-    $scope.removeComponent = function(event, args){
+    removeComponent: function(event, args){
         var children = $("#dashboard").children();
         for(var i = 0; i < children.length; i++){
             var child = children[i];
@@ -63,8 +76,19 @@ var DashBoardCtrl = function($rootScope, $scope, $compile, $location, ParseServi
                 $scope.componentsInDashboard.splice(j, 1);
             }
         }
-    };
+    }
+});
 
 
-    $scope.init();
-};
+angular.module('dashboard',[])
+    .directive('dashboard',['$compile', 'Notifications',function($compile, Notifications){
+        return {
+	    restrict:'E',
+	    isolate:true,
+	    link: function($scope,$elm,$attrs){
+		new DashBoardDirective($scope,$elm, $attrs, $compile, Notifications);
+	    },
+	    scope:true,
+            templateUrl: 'components/dashboard/dashboard.html'
+	};
+    }]);

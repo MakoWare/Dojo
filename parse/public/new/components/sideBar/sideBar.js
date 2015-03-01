@@ -1,28 +1,43 @@
 'use strict';
 
-//SideBar Controller
-var SideBarCtrl = function($rootScope, $scope,$compile, $location, ParseService, GlobalService){
+namespace('components.events').ADD_COMPONENT = "ActivityModel.ADD_COMPONENT";
+namespace('components.events').REMOVE_COMPONENT = "ActivityModel.REMOVE_COMPONENT";
 
-    $scope.init = function(){
+//SideBar Directive
+var SideBarDirective = BaseDirective.extend({
+    notifications: null,
+
+    init: function($scope,  notifications){
         console.log("sidebar");
-    };
+        this.notifications = notifications;
+	this._super($scope);
+    },
 
-    $scope.addComponent = function(component){
-        $rootScope.$broadcast("addComponent", {componentName: component});
-    };
+    defineListeners: function(){
+        var sideBarItems = $(".sidebarItem");
+        for(var i = 0; i < sideBarItems.length; i++){
+            $(sideBarItems[i]).on("click", this.addComponent.bind(this));
+        }
+    },
 
-    $scope.init();
- };
+    addComponent: function(event){
+        var componentName = $(event.currentTarget).attr("value");
+        this.notifications.notify(components.events.ADD_COMPONENT, componentName);
+    }
+
+
+ });
+
 
 angular.module('sidebar',[])
-    .directive('sidebar',['$rootScope', '$compile', '$location', 'ParseService', 'GlobalService', function($rootScope, $compile, $location, ParseService, GlobalService){
-	return {
-	    restrict:'A',
+    .directive('sidebar',['Notifications',function(Notifications){
+        return {
+	    restrict:'E',
 	    isolate:true,
 	    link: function($scope,$elm,$attrs){
-		new SideBarCtrl($rootScope, $scope, $compile, $location, ParseService, GlobalService);
+		new SideBarDirective($scope, Notifications);
 	    },
 	    scope:true,
-            templateUrl: "components/sideBar/sideBar.html"
+            templateUrl: 'components/sideBar/sideBar.html'
 	};
     }]);
