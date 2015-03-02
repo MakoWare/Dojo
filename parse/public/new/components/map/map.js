@@ -2,23 +2,28 @@
 //Map Controller
 var MapCtrl = function($rootScope, $scope, $location, ParseService, GlobalService){
 
-    //Map
-    $scope.initMap = function(){
-        $("#map").resizable(
-            {
-                grid: 50,
-                ghost: true,
-                stop: function( event, ui ) {
-                    $scope.resize();
-                }
-            });
+    //Scope init
+    $scope.init = function(){
+        $scope.initialLat = 42.8;
+        $scope.initialLon = -73.7;
+	$scope.geocoder = new google.maps.Geocoder();
+	$scope.initMap();
 
-        $("#map").draggable({
-            snap: true,
-            containment: "#dashboard"
+        ParseService.findVehiclesByAgency(function(results){
+            $scope.vehicles = results;
+            $scope.$apply();
         });
 
+        //Addres TypeAhead
+        $scope.addressTypeAhead = function(val){
+            return GlobalService.addressTypeAhead(val);
+        };
+    };
 
+
+
+    //Map
+    $scope.initMap = function(){
 	$scope.center = {
 	    latitude: $scope.initialLat,
 	    longitude: $scope.initialLon
@@ -63,75 +68,10 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService, GlobalServic
             $scope.$apply();
         });
 
-        $scope.$on("dashboardResize", $scope.resize);
-        $scope.resize(400);
+        $("#mymap").height(455);
+        $("#mymap").width(455);
+
     };
-
-    $scope.resize = function(h, w){
-        if(h){
-            $("#map").height(h);
-        }
-        if(w){
-            $("#map").width(w);
-        }
-
-        if( $("#map").width() > $("#dashboard").width()){
-            $("#map").width($("#dashboard").width());
-        }
-
-        $("#mapContainer").height($("#map").height());
-        $("#mapContainer").width($("#map").width());
-
-	var mapElement = $('.angular-google-map-container');
-	var height = $("#map").height() - 60;
-	var width = $("#map").width() - 20;
-	mapElement.height(height);
-	mapElement.width(width);
-    };
-
-
-
-    $scope.toggleComponent = function(){
-        if(!$scope.toggleComponent.init){
-            $scope.toggleComponent.init = true;
-            $scope.toggleComponent.isOpen = true;
-            $scope.toggleComponent.componentHeight = $("#map").height();
-            $scope.toggleComponent.containerHeight = $("#mapContainer").height();
-        }
-
-        if($scope.toggleComponent.isOpen){
-            $scope.toggleComponent.componentHeight = $("#map").height();
-            $scope.toggleComponent.containerHeight = $("#mapContainer").height();
-            $("#map").height(60);
-            $("#mapContainer").height(50);
-            $("#mapComponentBody").toggle();
-            $scope.toggleComponent.isOpen = false;
-        } else {
-            $("#map").height($scope.toggleComponent.componentHeight);
-            $("#mapContainer").height($scope.toggleComponent.containerHeight);
-            $("#mapComponentBody").toggle();
-            $scope.toggleComponent.isOpen = true;
-        }
-    };
-
-    //Full Size Component
-    $scope.fullSizeComponent = function(){
-        $scope.resize($("#dashboard").height(), $("#dashboard").width());
-    };
-
-    $scope.removeComponent = function(){
-        console.log("broadcast");
-        $rootScope.$broadcast("removeComponent", {id: "map"});
-    };
-
-
-    //resize map
-    $scope.resizeMap = function(){
-    };
-
-    $("#map").resize(function(){
-        $scope.resizeMap();
-    });
 
     //Update map
     $scope.centerHome = function(){
@@ -164,29 +104,6 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService, GlobalServic
 
     },
 
-    //Scope init
-    $scope.init = function(){
-	$scope.currentUser = ParseService.getCurrentUser();
-	if($scope.currentUser == undefined){
-	    $location.path('/');
-	}
-
-        $scope.initialLat = 42.8;
-        $scope.initialLon = -73.7;
-	$scope.geocoder = new google.maps.Geocoder();
-	$scope.initMap();
-
-        ParseService.findVehiclesByAgency(function(results){
-            $scope.vehicles = results;
-            $scope.$apply();
-        });
-
-        //Addres TypeAhead
-        $scope.addressTypeAhead = function(val){
-            return GlobalService.addressTypeAhead(val);
-        };
-
-    };
     //Init
     $scope.init();
 };

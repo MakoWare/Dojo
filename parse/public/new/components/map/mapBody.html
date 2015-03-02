@@ -1,0 +1,85 @@
+<div ng-controller="MapCtrl">
+  <google-map id="mymap" center="center" zoom="zoom" draggable="true" options="options" mark-click="false" style="position: absolute">
+    <markers>
+      <marker ng-repeat="marker in markers" coords="marker" icon="marker.icon" idKey="marker.idKey" click="onMarkerClick(marker)">
+	<window class="mapWindow" show="marker.showWindow">
+	  <div ng-controller="WindowCtrl">
+	    <table class="table table-condensed table-bordered" style="font-size: 18px;">
+	      <tr>
+		<th>Vehicle:</th>
+		<th><button class="btn btn-primary" ng-click="viewVehicle('{{marker}}')">{{marker.title}}</button></th>
+	      </tr>
+	      <tr>
+		<th>Dispatch:</th>
+		<th><button class="btn btn-primary" ng-disabled="marker.dispatchId === None" ng-click="viewDispatch('{{marker}}')">{{marker.dispatchId}}</button></th>
+	      </tr>
+	      <tr>
+		<th>Status:</th>
+		<th>{{marker.status}}</th>
+	      </tr>
+	      <tr>
+		<th>Crew:</th>
+                <th>
+                  <h4>{{marker.crew[0].attributes.firstName + " " + marker.crew[0].attributes.lastName}}</h4>
+                  <h4>{{marker.crew[1].attributes.firstName + " " + marker.crew[1].attributes.lastName}}</h4>
+                  <h4>{{marker.crew[2].attributes.firstName + " " + marker.crew[2].attributes.lastName}}</h4>
+                  <h4>{{marker.crew[3].attributes.firstName + " " + marker.crew[3].attributes.lastName}}</h4>
+                  <h4>{{marker.crew[4].attributes.firstName + " " + marker.crew[4].attributes.lastName}}</h4>
+                </th>
+	      </tr>
+	    </table>
+	  </div>
+	</window>
+      </marker>
+    </markers>
+  </google-map>
+</div>
+  <!--
+  <div ng-if="flase">
+    <div class="row">
+      <div class="col-xs-3">
+        <div class="well" style="background-color: rgba(255, 255, 255, .7); padding: 0px;">
+          <accordion close-others="oneAtATime" style="background-color: rgba(255, 255, 255, .0);";>
+            <accordion-group heading="Vehicle List" is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled" style="margin-bottom: 0px; background-color: rgba(255, 255, 255, .0);">
+
+              <div ng-repeat="vehicle in vehicles">
+                <div class="well vehicleWell" style="padding-top: 5px;" ng-click="centerMap(vehicle.attributes.lat, vehicle.attributes.lon)">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <h4>{{vehicle.attributes.name}}</h4>
+                    </div>
+                  </div>
+                  <h5>Crew</h5>
+                  <div ng-repeat="user in vehicle.attributes.crew">
+                    <div class="row" style="margin-bottom: 3px; margin-left: 5px">
+                      <div class="col-md-6">
+                        <p>{{user.attributes.firstName + " " + user.attributes.lastName}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </accordion-group>
+          </accordion>
+        </div>
+      </div>
+
+
+      <div class="col-xs-2" style="padding-top: 5px;">
+        <button  class="btn btn-primary" ng-click="centerHome()">Home</button>
+      </div>
+
+      <form name="form" role="form">
+        <div class="col-xs-4" style="padding-top: 5px;">
+	  <input class="form-control" ng-model="searchAddress" placeholder="Address Search" typeahead="address.formatted_address for address in addressTypeAhead($viewValue)" typeahead-loading="loadingLocations" typeahead-wait-ms="100">
+        </div>
+        <div class="col-xs-1" style="padding-top: 5px;">
+	  <button  type="submit" class="btn btn-primary" ng-click="searchMap()">Search</button>
+        </div>
+      </form>
+</div>
+</div>
+</div>
+
+      -->
