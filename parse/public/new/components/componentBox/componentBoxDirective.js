@@ -1,4 +1,6 @@
 //Component Box
+namespace('components.events').COMPONENT_RESIZED = "ActivityModel.COMPONENT_RESIZED";
+
 var ComponentBoxDirective = BaseDirective.extend({
     notifications: null,
 
@@ -52,12 +54,14 @@ var ComponentBoxDirective = BaseDirective.extend({
         this.$scope.minComponent = function(){ self.minComponent();};
         this.$scope.maxComponent = function(){ self.maxComponent();};
 
+        this.notifications.addEventListener(components.events.SIDEBAR_TOGGLE, this.onSideBarToggle.bind(this));
+
         this.$timeout(function(){
             $("#" + self.name + "box").resizable({
                 grid: 50,
                 ghost: true,
                 stop: function(event, ui){
-                    //$scope.resize();
+                    self.notifications.notify(components.events.COMPONENT_RESIZED, self.name);
                 }
             });
 
@@ -66,6 +70,16 @@ var ComponentBoxDirective = BaseDirective.extend({
                 containment: "#dashboard"
             });
         });
+
+        $("#" + self.name).resize(function(){
+            self.notifications.notify(components.events.COMPONENT_RESIZED, self.name);
+        });
+
+    },
+
+    //On SideBar Toggle
+    onSideBarToggle: function(){
+        this.notifications.notify(components.events.COMPONENT_RESIZED, this.name);
     },
 
     //Notify to Remove
@@ -94,6 +108,7 @@ var ComponentBoxDirective = BaseDirective.extend({
         console.log("max");
         $("#" + this.name + "box").height($('#dashboard').height());
         $("#" + this.name + "box").width($('#dashboard').width());
+        this.notifications.notify(components.events.COMPONENT_RESIZED, this.name);
     }
 
 

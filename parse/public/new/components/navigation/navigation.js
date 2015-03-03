@@ -1,62 +1,43 @@
 'use strict';
+namespace('components.events').SIDEBAR_TOGGLE = "ActivityModel.SIDEBAR_TOGGLE";
 
-//Nav Controller
-var NavCtrl = function($scope, $location, ParseService, GlobalService){
+//Nav Directive
+var NavDirective = BaseDirective.extend({
+    notifications: null,
 
-    $scope.init = function(){
+    init: function($scope, ParseService, notifications){
         console.log("navigation");
+        this.notifications = notifications;
+        this.$scope = $scope;
+        this._super($scope);
 
+    },
 
+    defineListeners: function(){
+        var self = this;
+        $("#toggleNav").click(function(){self.toggleSideBar();});
+    },
 
-        /*
-        $scope.dir = $location.url().slice(1).split("/")[0];
-	$scope.currentUser = ParseService.getCurrentUser();
-        $scope.path = {};
-        $scope.loggedIn = false;
-        $scope.role = "";
-
-	if(!$scope.currentUser){
-            if($scope.dir == "documentation" || $scope.dir == "contact"){
-
-            } else {
-                $location.url("/");
-            }
-	} else {
-            $scope.loggedIn = true;
-            ParseService.getRole(ParseService.getCurrentUser(), function(result){
-                if(result){
-                    $scope.role = result.get('name').split("_")[0];
-                    $scope.$apply();
-                }
-            });
-        }
-         */
-    };
-
-    $scope.logout = function(){
+    logout: function(){
         ParseService.logout();
         $location.url("/");
-    };
+    },
 
-    $scope.toggleSideBar = function(){
+    toggleSideBar: function(){
         $("body").toggleClass("sidebar-collapse");
         $.AdminLTE.layout.fixSidebar();
         $("#componentContainer").trigger('resize');
-    };
+        this.notifications.notify(components.events.SIDEBAR_TOGGLE);
+    }
+});
 
-
-
-    $scope.init();
-
-};
-
-angular.module('navigation',[])
-    .directive('navigation',['$location', 'ParseService', 'GlobalService', function($location, ParseService, GlobalService){
+angular.module('navbar',[])
+    .directive('navbar',['ParseService', 'Notifications', function(ParseService, Notifications){
 	return {
-	    restrict:'A',
+	    restrict:'E',
 	    isolate:true,
 	    link: function($scope,$elm,$attrs){
-		new NavCtrl($scope, $location, ParseService, GlobalService);
+		new NavDirective($scope, ParseService, Notifications);
 	    },
 	    scope:true,
             templateUrl: "components/navigation/navigation.html"

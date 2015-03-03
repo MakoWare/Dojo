@@ -1,13 +1,20 @@
 'use strict';
 //Map Controller
-var MapCtrl = function($rootScope, $scope, $location, ParseService, GlobalService){
+var MapCtrl = BaseController.extend({
+    notifications: null,
 
-    //Scope init
-    $scope.init = function(){
-        $scope.initialLat = 42.8;
-        $scope.initialLon = -73.7;
-	$scope.geocoder = new google.maps.Geocoder();
-	$scope.initMap();
+    // init
+    init: function($scope, $location, ParseService, GlobalService, Notifications){
+        this.notifications = Notifications;
+        this.$scope = $scope;
+        this.$location = $location;
+        this.ParseService = ParseService;
+        this.initialLat = 42.8;
+        this.initialLon = -73.7;
+	this.geocoder = new google.maps.Geocoder();
+        this._super($scope);
+
+	this.initMap();
 
         ParseService.findVehiclesByAgency(function(results){
             $scope.vehicles = results;
@@ -18,18 +25,32 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService, GlobalServic
         $scope.addressTypeAhead = function(val){
             return GlobalService.addressTypeAhead(val);
         };
-    };
+    },
 
+
+    defineListeners: function(){
+        this.notifications.addEventListener(components.events.COMPONENT_RESIZED, this.onComponentResize.bind(this));
+    },
+
+    onComponentResize: function(event, name){
+        console.log("onComponentResize()");
+        console.log(event);
+        console.log(name);
+        if(name == "map"){
+            this.resize();
+        }
+    },
 
 
     //Map
-    $scope.initMap = function(){
-	$scope.center = {
-	    latitude: $scope.initialLat,
-	    longitude: $scope.initialLon
+    initMap: function(){
+        var self = this;
+	this.$scope.center = {
+	    latitude: this.initialLat,
+	    longitude: this.initialLon
 	};
 
-        $scope.options = {
+        this.$scope.options = {
             zoomControlOptions: {
                 style: google.maps.ZoomControlStyle.SMALL,
                 position: google.maps.ControlPosition.RIGHT_CENTER
@@ -43,37 +64,47 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService, GlobalServic
 
         };
 
-	$scope.zoom = 10;
-	$scope.markers = [];
-	$scope.fit = true;
+	this.$scope.zoom = 10;
+	this.$scope.markers = [];
+	this.$scope.fit = true;
 
         $( document ).on('click', function(e){
-            $scope.markers.forEach(function(marker){
+            self.$scope.markers.forEach(function(marker){
                 marker.showWindow = false;
             });
-            $scope.$apply();
+            self.$scope.$apply();
         });
 
-        $scope.onMarkerClick = function(marker){
+        this.$scope.onMarkerClick = function(marker){
             setTimeout(function(){
                 marker.showWindow = true;
-                $scope.$apply();
+                self.$scope.$apply();
             }, 0);
 
         };
 
 
-	ParseService.getMarkers(function(results){
-	    $scope.markers = results;
-            $scope.$apply();
+	this.ParseService.getMarkers(function(results){
+	    self.$scope.markers = results;
+            self.$scope.$apply();
         });
 
-        $("#mymap").height(455);
-        $("#mymap").width(455);
+        $("#mapbox").height(500);
+        this.resize();
 
-    };
+    },
+
+
+    //Resize The Map
+    resize: function(){
+        console.log($("#mapbox").height());
+        console.log($("#mapbox").width());
+        $('.angular-google-map-container').height($("#mapbox").height() - 60);
+        $('.angular-google-map-container').width($("#mapbox").width() - 25);
+    }
 
     //Update map
+    /*
     $scope.centerHome = function(){
         $scope.centerMap($scope.initialLat, $scope.initialLon);
     };
@@ -103,7 +134,8 @@ var MapCtrl = function($rootScope, $scope, $location, ParseService, GlobalServic
 	};
 
     },
+     */
 
-    //Init
-    $scope.init();
-};
+});
+
+MapCtrl.$inject =  ['$scope', '$location', 'ParseService', 'GlobalService', 'Notifications'];

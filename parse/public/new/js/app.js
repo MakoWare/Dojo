@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dojo', [
-    'navigation',
+    'navbar',
     'notifications',
     'sidebar',
     'dashboard',
