@@ -11,7 +11,8 @@ var ComponentBoxDirective = BaseDirective.extend({
         this.$timeout = $timeout;
         this.name = $scope.name;
         this.setUpComponent();
-        this.state = "down";
+        this.min = false;
+        this.max = false;
         this._super($scope);
     },
 
@@ -61,7 +62,7 @@ var ComponentBoxDirective = BaseDirective.extend({
                 grid: 50,
                 ghost: true,
                 stop: function(event, ui){
-                    self.notifications.notify(components.events.COMPONENT_RESIZED, self.name);
+                    self.resize();
                 }
             });
 
@@ -70,10 +71,23 @@ var ComponentBoxDirective = BaseDirective.extend({
                 containment: "#dashboard"
             });
         });
+    },
 
-        $("#" + self.name).resize(function(){
-            self.notifications.notify(components.events.COMPONENT_RESIZED, self.name);
-        });
+    //Resize the Component Box
+    resize: function(){
+        console.log("componentBoxDirective: resize()");
+        console.log("box height: " + $("#" + this.name + "box").height());
+        console.log("box width: " + $("#" + this.name + "box").width());
+
+        console.log("box body: " + $("#" + this.name + "body").height());
+        console.log("box body: " + $("#" + this.name + "body").width());
+
+        //Set Body equal to Box - some
+        $("#" + this.name + "body").height($("#" + this.name + "box").height() - 50);
+        $("#" + this.name + "body").width($("#" + this.name + "box").width() - 20);
+
+        $("#" + this.name + "body").trigger('resize');
+
 
     },
 
@@ -89,29 +103,34 @@ var ComponentBoxDirective = BaseDirective.extend({
 
     //Minimize the Component
     minComponent: function(){
-        if(this.state == "down"){
+        if(!this.min){
             this.minComponent.previousHeight = $("#" + this.name + "box").height();
             $('#' + this.name + 'body').toggle();
             $("#" + this.name + "box").height(50);
-            $("#" + this.name + "box").resizable('destroy');
-            this.state = 'up';
+            //$("#" + this.name + "box").resizable('destroy');
+            this.min = true;
         } else {
             $('#' + this.name + 'body').toggle();
             $("#" + this.name + "box").height(this.minComponent.previousHeight);
-            $("#" + this.name + "box").resizable();
-            this.state = 'down';
+            //$("#" + this.name + "box").resizable();
+            this.min = false;
         }
     },
 
     //Maximize the Component
     maxComponent: function(){
-        console.log("max");
-        $("#" + this.name + "box").height($('#dashboard').height());
-        $("#" + this.name + "box").width($('#dashboard').width());
-        this.notifications.notify(components.events.COMPONENT_RESIZED, this.name);
+        if(!this.max){
+            this.maxComponent.previousHeight = $("#" + this.name + "box").height();
+            this.maxComponent.previousWidth = $("#" + this.name + "box").width();
+            $("#" + this.name + "box").height($('#dashboard').height());
+            $("#" + this.name + "box").width($('#dashboard').width());
+            this.max = true;
+        } else {
+            $("#" + this.name + "box").height(this.maxComponent.previousHeight);
+            $("#" + this.name + "box").width(this.maxComponent.previousWidth);
+            this.max = false;
+        }
     }
-
-
 
 });
 

@@ -33,9 +33,6 @@ var MapCtrl = BaseController.extend({
     },
 
     onComponentResize: function(event, name){
-        console.log("onComponentResize()");
-        console.log(event);
-        console.log(name);
         if(name == "map"){
             this.resize();
         }
@@ -91,16 +88,17 @@ var MapCtrl = BaseController.extend({
 
         $("#mapbox").height(500);
         this.resize();
-
     },
 
 
     //Resize The Map
     resize: function(){
+        console.log("map resize()");
         console.log($("#mapbox").height());
         console.log($("#mapbox").width());
         $('.angular-google-map-container').height($("#mapbox").height() - 60);
         $('.angular-google-map-container').width($("#mapbox").width() - 25);
+
     }
 
     //Update map

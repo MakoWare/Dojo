@@ -5,21 +5,35 @@ namespace('components.events').SIDEBAR_TOGGLE = "ActivityModel.SIDEBAR_TOGGLE";
 var NavDirective = BaseDirective.extend({
     notifications: null,
 
-    init: function($scope, ParseService, notifications){
+
+    init: function($scope, UserModel, ParseService, notifications){
         console.log("navigation");
         this.notifications = notifications;
         this.$scope = $scope;
+        this.userModel = UserModel;
         this._super($scope);
+
+        this.userModel.getCurrentUser();
 
     },
 
     defineListeners: function(){
         var self = this;
         $("#toggleNav").click(function(){self.toggleSideBar();});
+
+        this.notifications.addEventListener(models.events.CURRENT_USER_LOADED, this.onCurrentUserLoaded.bind(this));
+
     },
 
+    onCurrentUserLoaded: function(){
+        this.$scope.username = this.userModel.currentUser.attributes.username;
+
+    },
+
+
+
     logout: function(){
-        ParseService.logout();
+
         $location.url("/");
     },
 
@@ -27,17 +41,18 @@ var NavDirective = BaseDirective.extend({
         $("body").toggleClass("sidebar-collapse");
         $.AdminLTE.layout.fixSidebar();
         $("#componentContainer").trigger('resize');
+
         this.notifications.notify(components.events.SIDEBAR_TOGGLE);
     }
 });
 
 angular.module('navbar',[])
-    .directive('navbar',['ParseService', 'Notifications', function(ParseService, Notifications){
+    .directive('navbar',['UserModel', 'ParseService', 'Notifications', function(UserModel, ParseService, Notifications){
 	return {
 	    restrict:'E',
 	    isolate:true,
 	    link: function($scope,$elm,$attrs){
-		new NavDirective($scope, ParseService, Notifications);
+		new NavDirective($scope, UserModel, ParseService, Notifications);
 	    },
 	    scope:true,
             templateUrl: "components/navigation/navigation.html"
