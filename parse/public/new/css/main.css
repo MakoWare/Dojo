@@ -6,3 +6,8 @@
 .ui-resizable-ghost {
      opacity:0 !important;
  }
+
+
+#logo {
+    font-family: "Orbitron", sans-serif;
+}

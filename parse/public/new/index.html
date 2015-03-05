@@ -36,6 +36,8 @@
     <link href="css/main.css" rel="stylesheet" type="text/css" />
 
     <link href="dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+
+    <link href="http://fonts.googleapis.com/css?family=Orbitron:500" rel="stylesheet" type="text/css">
     <!-- jQuery 2.1.3 -->
     <script src="plugins/jQuery/jQuery-2.1.3.min.js"></script>
     <!-- jQuery UI 1.11.2 -->
@@ -81,6 +83,8 @@
     <script src="js/base/BaseDir.js"></script>
     <script src="js/base/EventDispatcher.js"></script>
     <script src="js/base/Notifications.js"></script>
+    <script src="components/axis/axis.js"></script>
+    <script src="components/login/login.js"></script>
     <script src="components/navigation/navigation.js"></script>
     <script src="components/sideBar/sideBar.js"></script>
     <script src="components/footer/footer.js"></script>
@@ -114,16 +118,7 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body class="skin-black fixed">
-    <div class="wrapper">
-      <navbar></navbar>
-      <sideBar></sidebar>
-      <div class="content-wrapper" id="componentContainer">
-        <dashboard></dashboard>
-      </div>
-      <!--<div class="footer" data-footer=""></div> -->
-    </div>
-
-
+  <body class="skin-black fixed sidebar-collapse" style="background-color: #ecf0f5">
+    <div ng-view=""></div>
   </body>
 </html>

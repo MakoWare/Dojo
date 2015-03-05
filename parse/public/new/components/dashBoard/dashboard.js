@@ -39,10 +39,12 @@ var DashBoardDirective = BaseDirective.extend({
 
     //Adds a Component to the DashBoard
     addComponent: function(event, args){
-        if($.inArray(args.componentName, this.components) == -1){
+        console.log(this.components);
+        if($.inArray(args, this.components) == -1){
             var el = "<component-box id='" + args + "' name='" + args + "'></component-box>";
             var componentBox = this.$compile(el)(this.$scope);
             $("#dashboard").append(componentBox);
+            this.components.push(args);
         } else {
             console.log("already in the dashboard, fuck off");
         }

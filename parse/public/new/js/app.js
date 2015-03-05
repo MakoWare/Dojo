@@ -23,15 +23,14 @@ angular.module('dojo', [
   ])
   .config(function ($routeProvider) {
     $routeProvider
-//DashBoard
       .when('/dashboard', {
-        templateUrl: 'partials/admin.html',
-        controller: 'AdminCtrl'
+        templateUrl: 'components/axis/axis.html',
+        controller: AxisCtrl
       })
 //Login
       .when('/', {
-        templateUrl: 'partials/login.html',
-        controller: 'LoginCtrl'
+        templateUrl: 'components/login/login.html',
+        controller: LoginCtrl
       })
       .otherwise({
         redirectTo: '/'

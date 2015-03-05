@@ -85,10 +85,7 @@ var ComponentBoxDirective = BaseDirective.extend({
         //Set Body equal to Box - some
         $("#" + this.name + "body").height($("#" + this.name + "box").height() - 50);
         $("#" + this.name + "body").width($("#" + this.name + "box").width() - 20);
-
         $("#" + this.name + "body").trigger('resize');
-
-
     },
 
     //On SideBar Toggle
