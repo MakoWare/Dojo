@@ -178,26 +178,6 @@ angular.module('parseService', [])
             },
 
 
-            //Has sibling
-            hasSiblingSection: function(section, callback){
-                var query = new Parse.Query(Section);
-                query.equalTo('name', section.get('name'));
-                query.equalTo('agencyId', section.get('agencyId'));
-                query.count({
-                    success: function(number){
-                        if(number > 1){
-                            callback(true);
-                        } else {
-                            callback(false);
-                        }
-                    },
-                    error: function(error){
-                        alert(ERRORMESSAGE + error.message);
-                    }
-                });
-            },
-
-
             //Create Agency
             createAgency: function(name, callback){
                 /*
@@ -286,6 +266,19 @@ angular.module('parseService', [])
                     ParseService.getPCRById(objectId, callback);
                     break;
                 }
+            },
+
+
+            getAgencyById: function(objectId, callback){
+                var query = new Parse.Query(Agency);
+                query.get(objectId,{
+                    success: function(result){
+                        callback(result);
+                    },
+                    error: function(object, error){
+                        callback(error);
+                    }
+                });
             },
 
             getVehicleById: function(objectId, callback){

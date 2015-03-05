@@ -1,4 +1,5 @@
 namespace('models.events').AGENCIES_LOADED = "ActivityModel.AGENCIES_LOADED";
+namespace('models.events').CURRENT_AGENCY_LOADED = "ActivityModel.CURRENT_AGENCY_LOADED";
 
 //Agency Model
 var AgencyModel = EventDispatcher.extend({
@@ -9,6 +10,16 @@ var AgencyModel = EventDispatcher.extend({
     ParseService:null,
     notifications: null,
 
+
+    //Get The Current Agency of the User
+    getCurrentAgency: function(agencyId){
+        var self = this;
+        this.ParseService.getAgencyById(agencyId, function(results){
+            self.currentAgency = results;
+            self.notifications.notify(models.events.CURRENT_AGENCY_LOADED);
+        });
+    },
+
     //Find Agencies
     findAllAgencies: function(){
         var self = this;
@@ -17,7 +28,6 @@ var AgencyModel = EventDispatcher.extend({
             self.notifications.notify(models.events.AGENCIES_LOADED);
         });
     }
-
 
 });
 
