@@ -39,7 +39,6 @@ var DashBoardDirective = BaseDirective.extend({
 
     //Adds a Component to the DashBoard
     addComponent: function(event, args){
-        console.log(this.components);
         if($.inArray(args, this.components) == -1){
             var el = "<component-box id='" + args + "' name='" + args + "'></component-box>";
             var componentBox = this.$compile(el)(this.$scope);
@@ -57,7 +56,7 @@ var DashBoardDirective = BaseDirective.extend({
         for(var i = 0; i < children.length; i++){
             var child = children[i];
             if($(child).attr('id') == name){
-                $(child).detach();
+                $(child).remove();
             }
         }
 

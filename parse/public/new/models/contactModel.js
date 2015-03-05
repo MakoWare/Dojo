@@ -1,3 +1,6 @@
+namespace('models.events').CURRENT_CONTACT_LOADED = "ActivityModel.CURRENT_CONTACT_LOADED";
+namespace('models.events').CONTACTS_LOADED = "ActivityModel.CONTACTS_LOADED";
+
 //Contact Model
 var ContactModel = EventDispatcher.extend({
     currentContact: null,
@@ -7,6 +10,16 @@ var ContactModel = EventDispatcher.extend({
     //Injected by the provider
     ParseService:null,
     notifications: null,
+    agnencyModel: null,
+
+
+    findContactsByAgency: function(){
+        var self = this;
+        this.ParseService.findContactsByAgency(function(results){
+            self.contacts = results;
+            self.notifications.notify(models.events.CONTACTS_LOADED);
+        });
+    },
 
 
 
@@ -19,7 +32,8 @@ var ContactModel = EventDispatcher.extend({
 	instance: new ContactModel(),
 
         //Init ContactModel
-	$get:['ParseService', 'Notifications', function(ParseService, Notifications){
+	$get:['AgencyModel', 'ParseService', 'Notifications', function(AgencyModel, ParseService, Notifications){
+	    this.instance.agencyModel = AgencyModel;
 	    this.instance.ParseService = ParseService;
             this.instance.notifications = Notifications;
 	    return this.instance;

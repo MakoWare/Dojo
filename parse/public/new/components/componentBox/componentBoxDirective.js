@@ -127,6 +127,12 @@ var ComponentBoxDirective = BaseDirective.extend({
             $("#" + this.name + "box").width(this.maxComponent.previousWidth);
             this.max = false;
         }
+    },
+
+
+    //Destroy
+    destroy: function(){
+        console.log("componentBoxDirective:  destory()");
     }
 
 });
