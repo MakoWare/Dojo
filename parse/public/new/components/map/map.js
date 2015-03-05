@@ -29,7 +29,10 @@ var MapCtrl = BaseController.extend({
 
 
     defineListeners: function(){
-        this.notifications.addEventListener(components.events.COMPONENT_RESIZED, this.onComponentResize.bind(this));
+        var self = this;
+        $("#mapbody").resize(function(){
+            self.resize();
+        });
     },
 
     onComponentResize: function(event, name){
