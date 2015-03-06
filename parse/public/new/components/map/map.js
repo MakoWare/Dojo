@@ -4,11 +4,13 @@ var MapCtrl = BaseController.extend({
     notifications: null,
 
     // init
-    init: function($scope, $location, ParseService, GlobalService, Notifications){
+    init: function($scope, $location, VehicleModel, ParseService, GlobalService, Notifications){
         this.notifications = Notifications;
         this.$scope = $scope;
         this.$location = $location;
         this.ParseService = ParseService;
+        this.GlobalService = GlobalService;
+        this.vehicleModel = VehicleModel;
         this.initialLat = 42.8;
         this.initialLon = -73.7;
 	this.geocoder = new google.maps.Geocoder();
@@ -16,11 +18,7 @@ var MapCtrl = BaseController.extend({
 
 	this.initMap();
 
-        ParseService.findVehiclesByAgency(function(results){
-            $scope.vehicles = results;
-            $scope.$apply();
-        });
-
+        this.vehicleModel.findVehiclesByAgency();
         //Addres TypeAhead
         $scope.addressTypeAhead = function(val){
             return GlobalService.addressTypeAhead(val);
@@ -33,6 +31,13 @@ var MapCtrl = BaseController.extend({
         $("#mapbody").resize(function(){
             self.resize();
         });
+
+        this.notifications.addEventListener(models.events.VEHICLES_LOADED, this.onVehiclesLoaded.bind(this));
+    },
+
+    onVehiclesLoaded: function(){
+        this.$scope.vehicles = this.vehicleModel.vehicles;
+        this.$scope.$apply();
     },
 
     onComponentResize: function(event, name){
@@ -139,4 +144,4 @@ var MapCtrl = BaseController.extend({
 
 });
 
-MapCtrl.$inject =  ['$scope', '$location', 'ParseService', 'GlobalService', 'Notifications'];
+MapCtrl.$inject =  ['$scope', '$location', 'VehicleModel', 'ParseService', 'GlobalService', 'Notifications'];
