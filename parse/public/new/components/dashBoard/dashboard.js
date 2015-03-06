@@ -15,8 +15,7 @@ var DashBoardDirective = BaseDirective.extend({
         this.$compile = $compile;
         this.$scope = $scope;
 	this._super($scope);
-        var self = this;
-        $("#componentContainer").ready(self.resize());
+
     },
 
     defineListeners: function(){
@@ -27,6 +26,7 @@ var DashBoardDirective = BaseDirective.extend({
         $("#componentContainer").on("resize", function(){
             self.resize();
         });
+        $("#componentContainer").trigger("resize");
     },
 
     //When the #componentContainer gets resized
