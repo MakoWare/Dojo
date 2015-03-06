@@ -15,11 +15,10 @@ var DashBoardDirective = BaseDirective.extend({
         this.$compile = $compile;
         this.$scope = $scope;
 	this._super($scope);
-
-        this.resize();
+        var self = this;
+        $("#componentContainer").ready(self.resize());
     },
 
-    //Called on super();
     defineListeners: function(){
         this.notifications.addEventListener(components.events.ADD_COMPONENT, this.addComponent.bind(this));
         this.notifications.addEventListener(components.events.REMOVE_COMPONENT, this.removeComponent.bind(this));
@@ -30,6 +29,7 @@ var DashBoardDirective = BaseDirective.extend({
         });
     },
 
+    //When the #componentContainer gets resized
     resize: function(){
         var style = window.getComputedStyle(document.getElementById("componentContainer"), null);
         $("#dashboard").height($("#componentContainer").height() -20);

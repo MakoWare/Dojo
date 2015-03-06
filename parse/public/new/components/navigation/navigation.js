@@ -16,7 +16,6 @@ var NavDirective = BaseDirective.extend({
         this._super($scope);
 
         this.userModel.getCurrentUser();
-
         setTimeout(function(){
             $("#toggleNav").trigger("click");
         }, 200);
@@ -54,9 +53,7 @@ var NavDirective = BaseDirective.extend({
 
     toggleSideBar: function(){
         $("body").toggleClass("sidebar-collapse");
-        $.AdminLTE.layout.fixSidebar();
         $("#componentContainer").trigger('resize');
-
         this.notifications.notify(components.events.SIDEBAR_TOGGLE);
     }
 });
