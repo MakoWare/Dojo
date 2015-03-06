@@ -1,24 +1,13 @@
-#overlay {
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 980;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    display: none;
-}​
-
-.vehicleWell {
-    background-color: rgba(255, 255, 55, .9);
+.ui-resizable-helper {
+    border: 1px solid black;
+    background-color: none;
+    opacity: 1;
 }
+.ui-resizable-ghost {
+     opacity:0 !important;
+ }
 
-.vehicleWell:hover {
-    background-color: rgba(91, 192, 222, .6);
-}
 
-
-ul.nav li.dropdown:hover > ul.dropdown-menu {
-    display: block;
-    margin: 0;
+#logo {
+    font-family: "Orbitron", sans-serif;
 }

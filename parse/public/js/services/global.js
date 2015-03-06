@@ -42,7 +42,7 @@ angular.module('globalService', [])
                 return "Error";
             },
 
-            showSpinner: function(){
+            showSpinner: function(element){
                 var opts = {
                     lines: 13, // The number of lines to draw
                     length: 15, // The length of each line
@@ -61,13 +61,8 @@ angular.module('globalService', [])
                     top: '50%', // Top position relative to parent
                     left: '50%' // Left position relative to parent
                 };
-                var target = document.getElementById('overlay');
+                var target = $(element);
                 spinner = new Spinner(opts).spin(target);
-
-                var windowH = $(document).outerHeight();
-                $("#overlay").height(windowH);
-                $("#overlay").toggle();
-
             },
 
             dismissSpinner: function(){
