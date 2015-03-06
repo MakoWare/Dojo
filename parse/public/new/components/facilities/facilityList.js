@@ -1,24 +1,37 @@
 'use strict';
 
 //Facility List Controller
-var FacilityListCtrl = function($rootScope, $scope, $location, ParseService, GlobalService, $modal){
-    $scope.init = function(){
+var FacilityListCtrl = BaseController.extend({
+    init: function($scope, FacilityModel, Notifications){
         console.log("FacilityListCtrl");
-        $scope.findFacilities();
-    };
+        this.notifications = Notifications;
+        this.facilityModel = FacilityModel;
+        this.$scope = $scope;
+        this._super($scope);
 
-    //Find Facilities
-    $scope.findFacilities = function(){
-        ParseService.findObjectsByAgency("Facility", function(results){
-            console.log(results);
-            $scope.$apply(function(){
-                $scope.objects = results;
-            });
-        });
-    };
+        this.facilityModel.findFacilitiesByAgency();
+    },
+
+    defineListeners: function(){
+        this.notifications.addEventListener(models.events.FACILITIES_LOADED, this.onFacilitiesLoaded.bind(this));
+
+        $("#facilityList").on("remove", this.destroy.bind(this));
+    },
+
+    //On Facilities Loaded
+    onFacilitiesLoaded: function(){
+        console.log("onFacilitiesLoaded");
+        this.$scope.objects = this.facilityModel.facilities;
+        this.$scope.$apply();
+    },
+
+    //Destroy
+    destroy: function(){
+        console.log("destroy");
+        this.notifications.removeEventListener(models.events.FACILITIES_LOADED, this.onFacilitiesLoaded.bind(this));
+    }
 
 
+});
 
-    //Init
-    $scope.init();
-};
+FacilityListCtrl.$inject =  ['$scope', 'FacilityModel', 'Notifications'];

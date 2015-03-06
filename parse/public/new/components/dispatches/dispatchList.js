@@ -1,23 +1,37 @@
 'use strict';
 
 //Dispatch List Controller
-var DispatchListCtrl = function($rootScope, $scope, $location, ParseService, GlobalService, $modal){
-    $scope.init = function(){
+var DispatchListCtrl = BaseController.extend({
+
+    init: function($scope, DispatchModel, Notifications){
         console.log("DispatchListCtrl");
-        //$scope.findDispatches();
-    };
+        this.notifications = Notifications;
+        this.dispatchModel = DispatchModel;
+        this.$scope = $scope;
+        this._super($scope);
 
-    //Find Contacts
-    $scope.findDispatches = function(){
-        ParseService.findObjectsByAgency("Dispatch", function(results){
-          //  $scope.dismissSpinner();
-            console.log(results);
-            $scope.$apply(function(){
-                $scope.objects = results;
-            });
-        });
-    };
+        this.dispatchModel.findDispatchesByAgency();
+    },
 
-    //Init
-    $scope.init();
-};
+    defineListeners: function(){
+        this.notifications.addEventListener(models.events.DISPATCHES_LOADED, this.onDispatchesLoaded.bind(this));
+
+        $("#dispatchList").on("remove", this.destroy.bind(this));
+    },
+
+    //On Dispatches Loaded
+    onDispatchesLoaded: function(){
+        this.$scope.objects = this.dispatchModel.dispatches;
+        this.$scope.$apply();
+    },
+
+    //Destroy
+    destroy: function(){
+        console.log("destroy");
+        this.notifications.removeEventListener(models.events.DISPATCHES_LOADED, this.onDispatchesLoaded.bind(this));
+    }
+
+
+});
+
+DispatchListCtrl.$inject =  ['$scope', 'DispatchModel', 'Notifications'];

@@ -9,30 +9,18 @@ var ContactListCtrl = BaseController.extend({
         this.$scope = $scope;
         this._super($scope);
 
-        this.findContactsByAgency();
+        this.contactModel.findContactsByAgency();
     },
 
-
     defineListeners: function(){
-        console.log("defining listeners");
         this.notifications.addEventListener(models.events.CONTACTS_LOADED, this.onContactsLoaded.bind(this));
-        this.notifications.addEventListener(components.events.DESTROY_COMPONENT, this.destroy.bind(this));
-
         $("#contactList").on("remove", this.destroy.bind(this));
-
     },
 
     //On Contacts Loaded
     onContactsLoaded: function(){
-        console.log("onContactsLoaded");
         this.$scope.objects = this.contactModel.contacts;
         this.$scope.$apply();
-    },
-
-
-    //Find Contacts
-    findContactsByAgency: function(){
-        this.contactModel.findContactsByAgency();
     },
 
     //Destroy

@@ -13,6 +13,7 @@ angular.module('dojo', [
     'dojo.AgencyModel',
     'dojo.ContactModel',
     'dojo.FacilityModel',
+    'dojo.LocationModel',
     'dojo.DispatchModel',
     'dojo.PatientModel',
     'dojo.VehicleModel',

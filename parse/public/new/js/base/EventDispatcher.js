@@ -30,21 +30,14 @@ var EventDispatcher = Class.extend({
        */
     removeEventListener:function(type,listener){
         console.log("removeEventListener()");
-        console.log(type);
-        console.log(listener);
-        console.log(this._listeners);
       if(this._listeners[type]){
-          console.log("found listener of type");
-          console.log(this._listeners[type]);
           var index = this._listeners[type].indexOf(listener);
-
 
         if(index!==-1){
             this._listeners[type].splice(index,1);
             console.log("removed a listener");
         }
       }
-        console.log(this._listeners);
     },
 
 
