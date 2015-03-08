@@ -1,4 +1,4 @@
-<div align="center" class="table-responsive" style="overflow-y: scroll">
+<div class="table-responsive">
   <table class="table table-bordered">
     <thead>
       <tr>
@@ -31,7 +31,7 @@
         <td ng-if="object.attributes.address == ''"></td>
         <td ng-if="object.attributes.address != ''">{{object.attributes.address + ", " + object.attributes.city + ", " + object.attributes.state + ", " + object.attributes.zip}}</td>
 	<td>{{object.attributes.type.attributes.codeDescription}}</td>
-        <td><a ng-href="#/contacts/{{object.id}}"> <button class="btn btn-primary">Edit</button></a></td>
+        <td><button class="btn btn-primary" ng-click="editContact(object)">Edit</button></a></td>
         <td><button class="btn btn-danger" ng-click="deleteObject(object)">Delete</button></td>
       </tr>
     </tbody>

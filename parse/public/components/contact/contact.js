@@ -14,9 +14,10 @@ var ContactCtrl = BaseController.extend({
 
     //Define Listeners
     defineListeners: function(){
+        var self = this;
         this.notifications.addEventListener(models.events.CONTACTS_LOADED, this.onContactsLoaded.bind(this));
-        //$("#contactButton").on("click", this.onBackButtonClick.bind(this));
-
+        $("#contactButton").on("click", this.onContactButtonClicked.bind(this));
+        this.$scope.editContact = function(contact){ self.editContact(contact);};
     },
 
 
@@ -86,12 +87,49 @@ var ContactCtrl = BaseController.extend({
          */
     },
 
+    //Edit Contact Button Clicked
+    editContact: function(contact){
+        this.contactModel.currentContact = contact;
+        this.$scope.template = "/components/contact/contactForm.html";
+        this.$scope.list = false;
+        this.$scope.title = "Update " + contact.attributes.firstName + " " + contact.attributes.lastName;
+        this.$scope.buttonAction = "Back";
+        this.$scope.contact = this.contactModel.currentContact;
+    },
+
     //On Contacts Loaded
     onContactsLoaded: function(){
         this.$scope.objects = this.contactModel.contacts;
         this.$scope.$apply();
     },
 
+    //On Contact Button Clicked
+    onContactButtonClicked: function(){
+        if(this.$scope.list){
+            this.createContact();
+        } else {
+            this.back();
+        }
+    },
+
+    //create Contact
+    createContact: function(){
+        this.$scope.list = false;
+        this.$scope.title = "New Contact";
+        this.$scope.buttonAction = "Back";
+        this.$scope.template = "/components/contact/contactForm.html";
+        this.$scope.$apply();
+    },
+
+    //back
+    back: function(){
+        this.$scope.title = "Contacts";
+        this.$scope.buttonAction = "Create Contact";
+        this.$scope.list = true;
+        this.$scope.template = "/components/contact/contactList.html";
+        this.contactModel.findContactsByAgency();
+        this.$scope.$apply();
+    },
 
     //Add Phone
     addPhone: function(){
@@ -127,31 +165,12 @@ var ContactCtrl = BaseController.extend({
 
     //Save Contact
     saveContact: function(){
-        console.log("saveContact()");
-        console.log($scope.contact);
-
-        GlobalService.showSpinner();
-        ParseService.saveObject("Contact", $scope.contact, function(result){
-            GlobalService.dismissSpinner();
-            console.log(JSON.stringify(result));
-            console.log(result);
-            $location.path("/contacts");
-            $scope.$apply();
-        });
+        console.log("saveContact");
     },
 
     //Delete Contact
     deleteContact: function(){
-        GlobalService.showSpinner();
-        ParseService.deleteObject($scope.contact, "Contact", function(results){
-            GlobalService.dismissSpinner();
-            if(results.message){
-                alert(GlobalService.errorMessage + results.message);
-            } else {
-                $location.path("/contacts");
-                $scope.$apply();
-            }
-        });
+        console.log("delete Contact");
     }
 
 });
