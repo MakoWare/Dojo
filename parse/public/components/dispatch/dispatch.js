@@ -12,18 +12,24 @@ var DispatchCtrl = BaseController.extend({
         this._super($scope);
 
 
-        if(this.dispatchModel.currentDispatch){
-            this.$scope.title = "Update Dispatch";
-
-        } else {
-            this.$scope.title = "New Dispatch";
-            this.dispatchModel.createDispatch();
-        }
     },
 
+    //Define Listeners
+    defineListeners: function(){
+        this.notifications.addEventListener(models.events.DISPATCHES_LOADED, this.onDispatchesLoaded.bind(this));
+
+        $("#dispatchButton").on("click", this.onDispatchButtonClicked.bind(this));
+        this.$scope.editDispatch = this.editDispatch.bind(this);
+    },
 
     //Setup Dispatch
     defineScope: function(){
+        this.$scope.title = "Dispatches";
+        this.$scope.buttonAction = "Create Dispatch";
+        this.$scope.list = true;
+        this.$scope.template = "/components/dispatch/dispatchList.html";
+        this.dispatchModel.findDispatchesByAgency();
+
         /*
         //Get Codes for Selects
         var promises = [];
@@ -92,6 +98,58 @@ var DispatchCtrl = BaseController.extend({
             GlobalService.dismissSpinner();
         });
         */
+    },
+
+    //Edit Dispatch Button Clicked
+    editDispatch: function(dispatch){
+        console.log("editDispatch");
+        this.dispatchModel.currentDispatch = dispatch;
+        this.$scope.template = "/components/dispatch/dispatchForm.html";
+        this.$scope.list = false;
+        this.$scope.title = "Update " + dispatch.attributes.firstName;
+        this.$scope.buttonAction = "Back";
+        this.$scope.dispatch = this.dispatchModel.currentDispatch;
+    },
+
+    //On Contact Button Clicked
+    onDispatchButtonClicked: function(){
+        if(this.$scope.list){
+            this.createDispatch();
+        } else {
+            this.back();
+        }
+    },
+
+    //create Dispatch
+    createDispatch: function(){
+        this.$scope.list = false;
+        this.$scope.title = "New Dispatch";
+        this.$scope.buttonAction = "Back";
+        this.$scope.template = "/components/dispatch/dispatchForm.html";
+        this.$scope.$apply();
+    },
+
+    //back
+    back: function(){
+        this.$scope.title = "Dispatches";
+        this.$scope.buttonAction = "Create Dispatch";
+        this.$scope.list = true;
+        this.$scope.template = "/components/dispatch/dispatchList.html";
+        this.dispatchModel.findDispatchesByAgency();
+        this.$scope.$apply();
+    },
+
+
+    //On Dispatches Loaded
+    onDispatchesLoaded: function(){
+        this.$scope.objects = this.dispatchModel.dispatches;
+        this.$scope.$apply();
+    },
+
+    //Destroy
+    destroy: function(){
+        console.log("destroy");
+        this.notifications.removeEventListener(models.events.DISPATCHES_LOADED, this.onDispatchesLoaded.bind(this));
     },
 
 

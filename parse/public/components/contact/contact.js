@@ -17,7 +17,7 @@ var ContactCtrl = BaseController.extend({
         var self = this;
         this.notifications.addEventListener(models.events.CONTACTS_LOADED, this.onContactsLoaded.bind(this));
         $("#contactButton").on("click", this.onContactButtonClicked.bind(this));
-        this.$scope.editContact = function(contact){ self.editContact(contact);};
+        this.$scope.editContact = this.editContact.bind(this);
     },
 
 
