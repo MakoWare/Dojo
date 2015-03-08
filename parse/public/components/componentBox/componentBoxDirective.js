@@ -38,6 +38,12 @@ var ComponentBoxDirective = BaseDirective.extend({
                 snap: true,
                 containment: "#dashboard"
             });
+
+            $("#" + self.name + "box").css({
+                "minWidth": "550px",
+                "minHeight": "40px"
+            });
+
         });
     },
 
