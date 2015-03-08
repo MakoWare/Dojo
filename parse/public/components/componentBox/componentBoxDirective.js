@@ -1,6 +1,5 @@
 //Component Box
 namespace('components.events').COMPONENT_RESIZED = "ActivityModel.COMPONENT_RESIZED";
-namespace('components.events').SWAP_COMPONENT = "ActivityModel.SWAP_COMPONENT";
 
 var ComponentBoxDirective = BaseDirective.extend({
     notifications: null,
@@ -11,42 +10,11 @@ var ComponentBoxDirective = BaseDirective.extend({
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.name = $scope.name;
-        this.setUpComponent();
         this.min = false;
         this.max = false;
         this._super($scope);
-    },
 
-    setUpComponent: function(){
-        switch(this.name){
-        case "contactList":
-            this.$scope.componentUrl = "/components/contacts/contactList.html";
-            break;
-        case "dispatchList":
-            this.$scope.componentHeaderUrl = "/components/dispatches/dispatchListHeader.html";
-            this.$scope.componentBodyUrl = "/components/dispatches/dispatchListBody.html";
-            break;
-        case "facilityList":
-            this.$scope.componentHeaderUrl = "/components/facilities/facilityListHeader.html";
-            this.$scope.componentBodyUrl = "/components/facilities/facilityListBody.html";
-            break;
-        case "locationList":
-            this.$scope.componentHeaderUrl = "/components/locations/locationListHeader.html";
-            this.$scope.componentBodyUrl = "/components/locations/locationListBody.html";
-            break;
-        case "map":
-            this.$scope.componentHeaderUrl = "/components/map/mapHeader.html";
-            this.$scope.componentBodyUrl = "/components/map/mapBody.html";
-            break;
-        case "patientList":
-            this.$scope.componentHeaderUrl = "/components/patients/patientListHeader.html";
-            this.$scope.componentBodyUrl = "/components/patients/patientListBody.html";
-            break;
-        case "vehicleList":
-            this.$scope.componentHeaderUrl = "/components/vehicles/vehicleListHeader.html";
-            this.$scope.componentBodyUrl = "/components/vehicles/vehicleListBody.html";
-            break;
-        }
+        this.$scope.componentUrl = "/components/" + this.name + "/" + this.name + ".html";
     },
 
     defineListeners: function(){
@@ -56,8 +24,6 @@ var ComponentBoxDirective = BaseDirective.extend({
         this.$scope.maxComponent = function(){ self.maxComponent();};
 
         this.notifications.addEventListener(components.events.SIDEBAR_TOGGLE, this.onSideBarToggle.bind(this));
-
-        this.notifications.addEventListener(components.events.SWAP_COMPONENT, this.swapComponent.bind(this));
 
         this.$timeout(function(){
             $("#" + self.name + "box").resizable({
@@ -73,15 +39,6 @@ var ComponentBoxDirective = BaseDirective.extend({
                 containment: "#dashboard"
             });
         });
-    },
-
-    //Swap Component
-    swapComponent: function(event, name, componentUrl){
-        if(this.name == name){
-            console.log("swapping component");
-            this.$scope.componentUrl = componentUrl;
-            this.$scope.$apply();
-        }
     },
 
 

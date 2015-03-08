@@ -1,48 +1,30 @@
 'use strict';
 
 //Dispatch Controller
-var DispatchCtrl = function($rootScope, $scope, $location, ParseService, GlobalService, $modal){
+var DispatchCtrl = BaseController.extend({
 
-    $scope.init = function(){
-        GlobalService.showSpinner();
-        $scope.$modal = $modal;
-        $scope.ParseService = ParseService;
-        var last = $location.url().split("/")[$location.url().split("/").length -1];
+    init: function($scope, $modal, DispatchModel, Notifications){
+        console.log("ContactCtrl");
+        this.notifications = Notifications;
+        this.dispatchModel = DispatchModel;
+        this.$modal = $modal;
+        this.$scope = $scope;
+        this._super($scope);
 
-        if(last == "create"){
-            $scope.action = "Create";
-            $scope.title = "New Dispatch";
-            $scope.createDispatch();
+
+        if(this.dispatchModel.currentDispatch){
+            this.$scope.title = "Update Dispatch";
+
         } else {
-            $scope.action = "Update";
-            $scope.title = "Update Dispatch";
-            $scope.getDispatch(last);
+            this.$scope.title = "New Dispatch";
+            this.dispatchModel.createDispatch();
         }
-    };
+    },
 
-    //Create Dispatch
-    $scope.createDispatch = function(){
-        $scope.dispatch = ParseService.createObject("Dispatch");
-        $scope.setUpDispatch();
-    };
-
-    //Get Dispatch
-    $scope.getDispatch = function(id){
-        ParseService.getObjectById("Dispatch", id, function(results){
-            if(results.id){
-                console.log(results);
-                $scope.dispatch = results;
-                $scope.setUpDispatch();
-            } else {
-                var newPath = "/dispatches";
-                $location.path(newPath);
-                $scope.$apply();
-            }
-        });
-    };
 
     //Setup Dispatch
-    $scope.setUpDispatch = function(){
+    defineScope: function(){
+        /*
         //Get Codes for Selects
         var promises = [];
         promises.push(ParseService.findNemsisElementCodes("eDispatch.01", function(results){
@@ -109,12 +91,13 @@ var DispatchCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
             $scope.$apply();
             GlobalService.dismissSpinner();
         });
-    };
+        */
+    },
 
 
 
     //Save Dispatch
-    $scope.saveDispatch = function(){
+    saveDispatch: function(){
         console.log("saveDispatch()");
         console.log($scope.dispatch);
 
@@ -130,10 +113,10 @@ var DispatchCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
         });
          */
 
-    };
+    },
 
-    //Delete Contact
-    $scope.deleteDispatch = function(){
+    //Delete Dispatch
+    deleteDispatch: function(){
         /*
         GlobalService.showSpinner();
         ParseService.deleteObject($scope.dispatch, "Dispatch", function(results){
@@ -147,9 +130,7 @@ var DispatchCtrl = function($rootScope, $scope, $location, ParseService, GlobalS
             }
         });
          */
-    };
+    }
+});
 
-
-    //Init
-    $scope.init();
-};
+DispatchCtrl.$inject =  ['$scope', '$modal', 'DispatchModel', 'Notifications'];

@@ -1,13 +1,18 @@
-<div class="container-widescreen" style="margin-right : 5%; margin-left: 5%">
-  <div class="page-header" style="margin-top: 0px; margin-bottom: 15px;">
-    <div class="row">
-      <div class="col-sm-12">
-        <h1 style="margin-top: 10px;">{{title}} {{fullName}}</h1>
-      </div>
+<div ng-controller="FacilityCtrl">
+  <div class="box-header">
+    <i class="fa fa-h-square"></i>
+    <h3 class="box-title">{{title}}</h3>
+    <div class="box-tools pull-right" data-toggle="tooltip" title="Status">
+      <button type="button" class="btn btn-primary btn-warning" id="facilityBackButton">Back</button>
+      <button ng-click="removeComponent()" style="padding: 10px" class="btn btn-box-tool"><i class="fa fa-times" ></i></button>
+      <button  ng-click="minComponent()" style="padding: 10px" class="btn btn-box-tool"><i class="fa fa-minus"></i></button>
+      <button ng-click="maxComponent()" style="padding: 10px" class="btn btn-box-tool"><i class="fa fa-external-link" ></i></button>
     </div>
   </div>
 
-  <form name="contactForm">
+
+  <div class="box-body" id="facilityBody" style="overflow: scroll; padding-left: 10px; padding-right; 10px; padding-bottom: 0px;">
+  <form name="facilityForm">
     <div class="row">
       <div class="form-group col-md-4" ng-class="{ 'has-error': contactForm.firstName.$invalid }">
         <label for="firstName">First Name</label>

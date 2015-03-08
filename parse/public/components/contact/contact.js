@@ -10,53 +10,25 @@ var ContactCtrl = BaseController.extend({
         this.$scope = $scope;
         this._super($scope);
 
-
-        if(this.contactModel.currentContact){
-            this.$scope.title = this.contactModel.currentContact.attributes.firstName;
-
-        } else {
-            this.$scope.title = "New Contact";
-            this.contactModel.createContact();
-        }
-        //this.contactModel.findContactsByAgency();
     },
 
+    //Define Listeners
     defineListeners: function(){
-        $("#contactListButton").on("click", this.onBackButtonClick.bind(this));
+        this.notifications.addEventListener(models.events.CONTACTS_LOADED, this.onContactsLoaded.bind(this));
+        //$("#contactButton").on("click", this.onBackButtonClick.bind(this));
+
     },
 
-    onBackButtonClick: function(){
-        this.notifications.notify(components.events.SWAP_COMPONENT, "contactList", "/components/contacts/contactList.html");
-    },
 
-    //Create Contact
-    createContact: function(){
-        $scope.contact = ParseService.createObject("Contact");
-        console.log($scope.contact);
-        $scope.setUpContact();
-    },
+    //Define Scope
+    defineScope: function(){
+        this.$scope.title = "Contacts";
+        this.$scope.buttonAction = "Create Contact";
+        this.$scope.list = true;
+        this.$scope.template = "/components/contact/contactList.html";
+        this.contactModel.findContactsByAgency();
 
-    //Get Contact
-    getContact: function(id){
-        ParseService.getObjectById("Contact", id, function(results){
-            if(results.id){
-                console.log(results);
-                $scope.contact = results;
-                if(results.attributes.firstName && results.attributes.lastName){
-                    $scope.fullName = results.attributes.firstName + " " + results.attributes.lastName;
-                }
-                $scope.setUpContact();
-            } else {
-                alert(GlobalService.errorMessage + "Could not find Contact");
-                var newPath = "/contacts";
-                $location.path(newPath);
-                $scope.$apply();
-            }
-        });
-    },
-
-    //Setup Contact
-    setUpContact: function(){
+        /*
         $scope.addressTypeAhead = function(val){
             return GlobalService.addressTypeAhead(val);
         };
@@ -110,7 +82,16 @@ var ContactCtrl = BaseController.extend({
             $scope.$apply();
             GlobalService.dismissSpinner();
         });
+
+         */
     },
+
+    //On Contacts Loaded
+    onContactsLoaded: function(){
+        this.$scope.objects = this.contactModel.contacts;
+        this.$scope.$apply();
+    },
+
 
     //Add Phone
     addPhone: function(){
