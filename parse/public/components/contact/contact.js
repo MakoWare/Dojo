@@ -14,7 +14,6 @@ var ContactCtrl = BaseController.extend({
 
     //Define Listeners
     defineListeners: function(){
-        var self = this;
         this.notifications.addEventListener(models.events.CONTACTS_LOADED, this.onContactsLoaded.bind(this));
         $("#contactButton").on("click", this.onContactButtonClicked.bind(this));
         this.$scope.editContact = this.editContact.bind(this);
@@ -124,7 +123,7 @@ var ContactCtrl = BaseController.extend({
     //back
     back: function(){
         this.$scope.title = "Contacts";
-        this.$scope.buttonAction = "Create Contact";
+        this.$scope.buttonAction = "Add Contact";
         this.$scope.list = true;
         this.$scope.template = "/components/contact/contactList.html";
         this.contactModel.findContactsByAgency();

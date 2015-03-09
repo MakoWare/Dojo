@@ -1,26 +1,24 @@
-<div ng-controller="FacilityListCtrl">
-  <div align="center" class="table-responsive">
-    <table class="table table-bordered">
-      <thead>
-	<tr>
-          <th><a href="" ng-click="predicate = 'attributes.name'; reverse=!reverse">Name</a></th>
-          <th><a href="" ng-click="predicate = 'attributes.address'; reverse=!reverse">Address</a></th>
-          <th><a href="" ng-click="predicate = 'attributes.type.attributes.codeDescription'; reverse=!reverse">Type</a></th>
-          <th><a href="" ng-click="predicate = 'attributes.comments'; reverse=!reverse">Information</a></th>
-          <th>Edit Facility</th>
-          <th>Delete Facility</th>
-	</tr>
-      </thead>
-      <tbody>
-	<tr ng-repeat="object in objects | filter:searchParam:strict | orderBy:predicate:reverse">
-	  <td>{{object.attributes.name}}</td>
-	  <td>{{object.attributes.address + ", " + object.attributes.city + ", " + object.attributes.state + ", " + object.attributes.zip}}</td>
-	  <td>{{object.attributes.type.attributes.codeDescription}}</td>
-	  <td>{{object.attributes.comments}}</td>
-          <td><a ng-href="#/facilities/{{object.id}}"> <button class="btn btn-primary">Edit</button></a></td>
-          <td><button class="btn btn-danger" ng-click="deleteObject(object)">Delete</button></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<div align="center" class="table-responsive">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th><a href="" ng-click="predicate = 'attributes.name'; reverse=!reverse">Name</a></th>
+        <th><a href="" ng-click="predicate = 'attributes.address'; reverse=!reverse">Address</a></th>
+        <th><a href="" ng-click="predicate = 'attributes.type.attributes.codeDescription'; reverse=!reverse">Type</a></th>
+        <th><a href="" ng-click="predicate = 'attributes.comments'; reverse=!reverse">Information</a></th>
+        <th>Edit Facility</th>
+        <th>Delete Facility</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="object in objects | filter:searchParam:strict | orderBy:predicate:reverse">
+	<td>{{object.attributes.name}}</td>
+	<td>{{object.attributes.address + ", " + object.attributes.city + ", " + object.attributes.state + ", " + object.attributes.zip}}</td>
+	<td>{{object.attributes.type.attributes.codeDescription}}</td>
+	<td>{{object.attributes.comments}}</td>
+        <td><button class="btn btn-primary" ng-click="editFacility(object)">Edit</button></a></td>
+        <td><button class="btn btn-danger" ng-click="deleteObject(object)">Delete</button></td>
+      </tr>
+    </tbody>
+  </table>
 </div>

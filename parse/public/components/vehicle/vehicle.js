@@ -1,53 +1,32 @@
 'use strict';
 
 //Vehicle Controller
-var VehicleCtrl = function($rootScope, $scope, $location, ParseService, GlobalService, $modal){
+var VehicleCtrl = BaseController.extend({
+    init: function($scope, VehicleModel, Notifications){
+        console.log("VehicleListCtrl");
+        this.notifications = Notifications;
+        this.vehicleModel = VehicleModel;
+        this.$scope = $scope;
+        this._super($scope);
 
-    $scope.init = function(){
-        GlobalService.showSpinner();
-        $scope.$modal = $modal;
-        $scope.ParseService = ParseService;
-        var last = $location.url().split("/")[$location.url().split("/").length -1];
 
-        if(last == "create"){
-            $scope.action = "Create";
-            $scope.title = "New Vehicle";
-            $scope.createVehicle();
-        } else {
-            $scope.action = "Update";
-            $scope.title = "Update";
-            $scope.getVehicle(last);
-        }
-    };
+    },
 
-    //Create Vehicle
-    $scope.createVehicle = function(){
-        $scope.vehicle =  ParseService.createObject("Vehicle");
-        console.log($scope.vehicle);
-        $scope.setUpVehicle();
-    };
+    //Define Listeners
+    defineListeners: function(){
+        this.notifications.addEventListener(models.events.VEHICLES_LOADED, this.onVehiclesLoaded.bind(this));
+        this.$scope.vehicleButton = this.onVehicleButtonClicked.bind(this);
+        this.$scope.editVehicle = this.editVehicle.bind(this);
+    },
 
-    //Get Vehicle
-    $scope.getVehicle = function(id){
-        ParseService.getObjectById("Vehicle", id, function(results){
-            if(results.id){
-                console.log(results);
-                $scope.vehicle = results;
-                if(results.attributes.name){
-                    $scope.fullName = results.attributes.name;
-                }
-                $scope.setUpVehicle();
-            } else {
-                alert(GlobalService.errorMessage + "Could not find Vehicle");
-                var newPath = "/vehicles";
-                $location.path(newPath);
-                $scope.$apply();
-            }
-        });
-    };
-
-    //Setup Vehicle
-    $scope.setUpVehicle = function(){
+    //Define Scope
+    defineScope: function(){
+        this.$scope.title = "Vehicles";
+        this.$scope.buttonAction = "Create Vehicle";
+        this.$scope.list = true;
+        this.$scope.template = "/components/vehicle/vehicleList.html";
+        this.vehicleModel.findVehiclesByAgency();
+        /*
         //get Codes for Vehicle Type
         var promises = [];
         promises.push(ParseService.findNemsisElementCodes("dVehicle.04", function(results){
@@ -75,54 +54,61 @@ var VehicleCtrl = function($rootScope, $scope, $location, ParseService, GlobalSe
             GlobalService.dismissSpinner();
             $scope.$apply();
         });
-    };
+        */
+    },
 
+    //On Vehicles Loaded
+    onVehiclesLoaded: function(){
+        this.$scope.objects = this.vehicleModel.vehicles;
+        this.$scope.$apply();
+    },
 
-    //Save Vehicle
-    $scope.saveVehicle = function(){
-        console.log("saveVehicle()");
-        console.log($scope.vehicle);
+    //Edit Vehicle
+    editVehicle: function(vehicle){
+        this.vehicleModel.currentVehicle = vehicle;
+        this.$scope.template = "/components/vehicle/vehicleForm.html";
+        this.$scope.list = false;
+        this.$scope.title = "Update " + vehicle.attributes.name;
+        this.$scope.buttonAction = "Back";
+        this.$scope.vehicle = vehicle;
+    },
 
-        /*
-        GlobalService.showSpinner();
-
-        $scope.vehicle.attributes.crew = [];
-        angular.forEach( $scope.users, function(user) {
-            if (user.ticked === true) {
-                $scope.vehicle.attributes.crew.push(user);
-            }
-        });
-
-        ParseService.saveObject("Vehicle", $scope.vehicle, function(result){
-            GlobalService.dismissSpinner();
-            console.log(JSON.stringify(result));
-            console.log(result);
-        });
-
-         */
-    };
-
-    //Delete Vehicle
-    $scope.deleteVehicle = function(){
-        if($scope.vehicle.id){
-            GlobalService.showSpinner();
-            ParseService.deleteObject($scope.vehicle, "Vehicle", function(results){
-                GlobalService.dismissSpinner();
-                if(results.message != null){
-                    alert(GlobalService.errorMessage + results.message);
-                } else {
-                    var newPath = "/vehicles" ;
-                    $location.path(newPath);
-                    $scope.$apply();
-                }
-            });
+    //On Vehicle Button Clicked
+    onVehicleButtonClicked: function(){
+        if(this.$scope.list){
+            this.createVehicle();
         } else {
-            var newPath = "/vehicles" ;
-            $location.path(newPath);
+            this.back();
         }
-    };
+    },
+
+    //create Vehicle
+    createVehicle: function(){
+        this.$scope.list = false;
+        this.$scope.title = "New Vehicle";
+        this.$scope.buttonAction = "Back";
+        this.$scope.template = "/components/vehicle/vehicleForm.html";
+        //this.$scope.$apply();
+    },
+
+    //back
+    back: function(){
+        this.$scope.title = "Vehicles";
+        this.$scope.buttonAction = "Add Vehicle";
+        this.$scope.list = true;
+        this.$scope.template = "/components/vehicle/vehicleList.html";
+        this.vehicleModel.findVehiclesByAgency();
+        //this.$scope.$apply();
+    },
 
 
-    //Init
-    $scope.init();
-};
+
+    //Destroy
+    destroy: function(){
+        console.log("destroy");
+        this.notifications.removeEventListener(models.events.VEHICLES_LOADED, this.onVehiclesLoaded.bind(this));
+    }
+
+});
+
+VehicleCtrl.$inject =  ['$scope', 'VehicleModel', 'Notifications'];
